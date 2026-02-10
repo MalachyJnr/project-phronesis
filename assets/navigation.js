@@ -269,7 +269,7 @@ function logout() {
 }
 
 function confirmLogout() {
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 // Results Page Functions
