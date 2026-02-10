@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Student Home Dashboard - PHRONESIS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1E3A8A", // Navy Blue
+              secondary: "#D4AF37", // Gold
+              "background-light": "#F8FAFC",
+              "background-dark": "#0F172A",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "12px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .status-bar-safe {
+        padding-top: env(safe-area-inset-top);
+      }
+      .bottom-nav-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      .glass-card {
+        backdrop-filter: blur(8px);
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out forwards;
+      }
+      .animate-scaleIn {
+        animation: scaleIn 0.2s ease-out forwards;
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-out;
+      }
+    </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+    <script>
+      // Timetable data for each day
+      const timetableData = {
+        Monday: [
+          { time: '8:00', period: 'AM', subject: 'Mathematics', room: 'Room 204', teacher: 'Mr. Thompson', color: 'blue' },
+          { time: '10:00', period: '', subject: 'Short Break', room: '', teacher: '', color: 'break' },
+          { time: '11:00', period: 'AM', subject: 'Biology', room: 'Lab 1', teacher: 'Mrs. Phronesis', color: 'orange' }
+        ],
+        Tuesday: [
+          { time: '8:00', period: 'AM', subject: 'English Language', room: 'Room 105', teacher: 'Mrs. Johnson', color: 'green' },
+          { time: '10:00', period: '', subject: 'Short Break', room: '', teacher: '', color: 'break' },
+          { time: '11:00', period: 'AM', subject: 'Chemistry', room: 'Lab 2', teacher: 'Dr. Williams', color: 'purple' }
+        ],
+        Wednesday: [
+          { time: '8:00', period: 'AM', subject: 'Physics', room: 'Room 301', teacher: 'Mr. Anderson', color: 'red' },
+          { time: '10:00', period: '', subject: 'Short Break', room: '', teacher: '', color: 'break' },
+          { time: '11:00', period: 'AM', subject: 'Mathematics', room: 'Room 204', teacher: 'Mr. Thompson', color: 'blue' }
+        ],
+        Thursday: [
+          { time: '8:00', period: 'AM', subject: 'Chemistry', room: 'Lab 2', teacher: 'Dr. Williams', color: 'purple' },
+          { time: '10:00', period: '', subject: 'Short Break', room: '', teacher: '', color: 'break' },
+          { time: '11:00', period: 'AM', subject: 'English Language', room: 'Room 105', teacher: 'Mrs. Johnson', color: 'green' }
+        ],
+        Friday: [
+          { time: '8:00', period: 'AM', subject: 'Biology', room: 'Lab 1', teacher: 'Mrs. Phronesis', color: 'orange' },
+          { time: '10:00', period: '', subject: 'Short Break', room: '', teacher: '', color: 'break' },
+          { time: '11:00', period: 'AM', subject: 'Physics', room: 'Room 301', teacher: 'Mr. Anderson', color: 'red' }
+        ]
+      };
+
+      // Color classes for different subjects
+      const colorClasses = {
+        blue: 'bg-blue-50 dark:bg-blue-900/20 text-primary dark:text-blue-400',
+        green: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
+        orange: 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400',
+        purple: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
+        red: 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400',
+        break: 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+      };
+
+      function switchDay(day) {
+        // Update button states
+        document.querySelectorAll('.day-btn').forEach(btn => {
+          if (btn.textContent.trim() === day) {
+            btn.className = 'day-btn px-4 py-2 bg-primary text-white rounded-full text-xs font-bold whitespace-nowrap';
+          } else {
+            btn.className = 'day-btn px-4 py-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-xs font-medium whitespace-nowrap';
+          }
+        });
+
+        // Update timetable content
+        const schedule = timetableData[day];
+        const container = document.getElementById('timetable-container');
+        
+        container.innerHTML = schedule.map(item => {
+          if (item.color === 'break') {
+            return `
+              <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-10 ${colorClasses[item.color]} rounded-lg flex flex-col items-center justify-center">
+                    <span class="text-[10px] font-bold">${item.time}</span>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-semibold text-slate-500 dark:text-slate-400 italic">
+                      ${item.subject}
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            return `
+              <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 ${colorClasses[item.color]} rounded-lg flex flex-col items-center justify-center">
+                    <span class="text-[10px] font-bold">${item.time}</span>
+                    <span class="text-[8px] uppercase">${item.period}</span>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold">${item.subject}</h4>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400">
+                      ${item.room} • ${item.teacher}
+                    </p>
+                  </div>
+                </div>
+                <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-300 hover:text-primary dark:hover:text-blue-400" onclick="toggleTimetableMenu(event, '${item.subject}')">
+                  <span class="material-icons-outlined">more_vert</span>
+                </button>
+              </div>
+            `;
+          }
+        }).join('');
+      }
+
+      // Dark mode toggle functionality
+      function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        if (newTheme === 'dark') {
+          html.classList.add('dark');
+          document.getElementById('theme-icon').textContent = 'light_mode';
+        } else {
+          html.classList.remove('dark');
+          document.getElementById('theme-icon').textContent = 'dark_mode';
+        }
+        
+        // Save preference to localStorage
+        localStorage.setItem('theme', newTheme);
+      }
+
+      // Initialize theme on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        const html = document.documentElement;
+        
+        if (savedTheme === 'dark') {
+          html.classList.add('dark');
+          document.getElementById('theme-icon').textContent = 'light_mode';
+        } else {
+          html.classList.remove('dark');
+          document.getElementById('theme-icon').textContent = 'dark_mode';
+        }
+      });
+    </script>
+    <script src="assets/navigation.js"></script>
+  </head>
+  <body
+    class="bg-slate-200 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen"
+  >
+    <!-- Mobile-only container -->
+    <div id="page-container" class="max-w-[480px] mx-auto bg-background-light dark:bg-background-dark min-h-screen relative shadow-2xl fade-in">
+    
+    <header
+      class="bg-white dark:bg-slate-900 px-4 py-4 sticky top-0 z-20 border-b border-slate-100 dark:border-slate-800"
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-[60px] h-[60px] bg-white rounded-full flex items-center justify-center overflow-hidden p-1"
+          >
+            <img src="assets/school_logo.png" alt="PHRONESIS Logo" class="w-full h-full object-contain">
+          </div>
+          <div>
+            <h1
+              class="text-sm font-bold text-primary dark:text-blue-400 uppercase tracking-wider leading-none"
+            >
+              PHRONESIS
+            </h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Secondary School
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            id="theme-toggle"
+            class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            onclick="toggleTheme()"
+          >
+            <span class="material-icons-outlined text-slate-600 dark:text-slate-400 text-lg" id="theme-icon">dark_mode</span>
+          </button>
+          <button class="relative p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" onclick="toggleNotifications()">
+            <span
+              class="material-icons-outlined text-slate-600 dark:text-slate-400"
+              >notifications</span
+            >
+            <span
+              class="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white dark:border-slate-900"
+              >2</span
+            >
+          </button>
+          <button
+            class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center hover:ring-2 hover:ring-primary/20 dark:hover:ring-blue-400/20 transition-all"
+            onclick="toggleProfile()"
+          >
+            <span
+              class="material-icons-outlined text-slate-600 dark:text-slate-400"
+              >person</span
+            >
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="p-4 space-y-6 pb-24">
+      <section>
+        <h2 class="text-2xl font-bold dark:text-white">Welcome, John!</h2>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+          Here's a quick overview of your current status.
+        </p>
+      </section>
+      <div class="grid grid-cols-2 gap-4">
+        <div
+          class="bg-gradient-to-br from-primary to-blue-700 p-4 rounded-2xl text-white shadow-lg shadow-blue-900/10"
+        >
+          <div class="flex items-center gap-2 mb-3">
+            <div class="p-1.5 bg-white/20 rounded-lg">
+              <span class="material-icons-outlined text-[18px]"
+                >check_circle</span
+              >
+            </div>
+            <span class="text-xs font-medium opacity-90">Attendance</span>
+          </div>
+          <div class="space-y-1">
+            <div class="text-2xl font-bold">
+              90%
+              <span class="text-[10px] font-normal opacity-80 block"
+                >This Term</span
+              >
+            </div>
+            <p class="text-[11px] opacity-75">Good attendance!</p>
+          </div>
+          <a
+            href="results.html"
+            class="w-full mt-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-[10px] font-semibold transition-colors block text-center"
+          >
+            View Details
+          </a>
+        </div>
+        <div
+          class="bg-gradient-to-br from-secondary to-yellow-600 p-4 rounded-2xl text-white shadow-lg shadow-yellow-900/10"
+        >
+          <div class="flex items-center gap-2 mb-3">
+            <div class="p-1.5 bg-white/20 rounded-lg">
+              <span class="material-icons-outlined text-[18px]">star_rate</span>
+            </div>
+            <span class="text-xs font-medium opacity-90">GPA</span>
+          </div>
+          <div class="space-y-1">
+            <div class="text-2xl font-bold">
+              3.8
+              <span class="text-[10px] font-normal opacity-80 block"
+                >Current GPA</span
+              >
+            </div>
+            <p class="text-[11px] opacity-75">Keep it up!</p>
+          </div>
+          <a
+            href="results.html"
+            class="w-full mt-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-[10px] font-semibold transition-colors block text-center"
+          >
+            View Details
+          </a>
+        </div>
+      </div>
+      <section
+        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden shadow-sm"
+      >
+        <div class="bg-primary px-4 py-3 flex items-center justify-between">
+          <div class="flex items-center gap-2 text-white">
+            <span class="material-icons-outlined text-[18px]"
+              >account_balance_wallet</span
+            >
+            <span class="text-sm font-semibold uppercase tracking-wide"
+              >Payment Status</span
+            >
+          </div>
+          <span class="material-icons-outlined text-white/50 text-sm"
+            >chevron_right</span
+          >
+        </div>
+        <div class="p-4 flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-bold">Up-to-Date</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              All dues for Term 1 cleared
+            </p>
+          </div>
+          <div
+            class="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 p-2 rounded-full"
+          >
+            <span class="material-icons-outlined">verified</span>
+          </div>
+        </div>
+        <div class="px-4 pb-4">
+          <a
+            href="payments.html"
+            class="w-full py-2.5 bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors block text-center"
+          >
+            View Billing History
+          </a>
+        </div>
+      </section>
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold dark:text-white">Weekly Timetable</h2>
+          <div class="flex items-center gap-2 text-primary dark:text-blue-400">
+            <span id="current-day-label" class="text-xs font-semibold">Today</span>
+            <span class="material-icons-outlined text-sm">calendar_today</span>
+          </div>
+        </div>
+        <div class="flex overflow-x-auto gap-2 pb-2 hide-scrollbar">
+          <button
+            class="day-btn px-4 py-2 bg-primary text-white rounded-full text-xs font-bold whitespace-nowrap transition-all"
+            onclick="switchDay('Monday', this)"
+          >
+            Monday
+          </button>
+          <button
+            class="day-btn px-4 py-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            onclick="switchDay('Tuesday', this)"
+          >
+            Tuesday
+          </button>
+          <button
+            class="day-btn px-4 py-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            onclick="switchDay('Wednesday', this)"
+          >
+            Wednesday
+          </button>
+          <button
+            class="day-btn px-4 py-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            onclick="switchDay('Thursday', this)"
+          >
+            Thursday
+          </button>
+          <button
+            class="day-btn px-4 py-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            onclick="switchDay('Friday', this)"
+          >
+            Friday
+          </button>
+        </div>
+        <div id="timetable-container" class="relative">
+          <!-- Monday Schedule -->
+          <div id="monday-schedule" class="schedule-section space-y-3">
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-[10px] font-bold">8:00</span>
+                  <span class="text-[8px] uppercase">AM</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold">Mathematics</h4>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Room 204 • Mr. Thompson</p>
+                </div>
+              </div>
+              <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-300 hover:text-primary dark:hover:text-blue-400" onclick="toggleTimetableMenu(event, 'Mathematics')">
+                <span class="material-icons-outlined">more_vert</span>
+              </button>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-10 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-[10px] font-bold">10:00</span>
+                </div>
+                <div>
+                  <h4 class="text-xs font-semibold text-slate-500 dark:text-slate-400 italic">Short Break</h4>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-[10px] font-bold">11:00</span>
+                  <span class="text-[8px] uppercase">AM</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold">Biology</h4>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Lab 1 • Mrs. Phronesis</p>
+                </div>
+              </div>
+              <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-300 hover:text-primary dark:hover:text-blue-400" onclick="toggleTimetableMenu(event, 'Biology')">
+                <span class="material-icons-outlined">more_vert</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tuesday Schedule -->
+          <div id="tuesday-schedule" class="schedule-section space-y-3 hidden">
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-[10px] font-bold">8:30</span>
+                  <span class="text-[8px] uppercase">AM</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold">English Language</h4>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Room 105 • Mrs. Johnson</p>
+                </div>
+              </div>
+              <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-300 hover:text-primary dark:hover:text-blue-400" onclick="toggleTimetableMenu(event, 'English Language')">
+                <span class="material-icons-outlined">more_vert</span>
+              </button>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-[10px] font-bold">10:00</span>
+                  <span class="text-[8px] uppercase">AM</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold">Mathematics</h4>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Room 204 • Mr. Thompson</p>
+                </div>
+              </div>
+              <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-300 hover:text-primary dark:hover:text-blue-400" onclick="toggleTimetableMenu(event, 'Mathematics')">
+                <span class="material-icons-outlined">more_vert</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Wednesday Schedule -->
+          <div id="wednesday-schedule" class="schedule-section space-y-3 hidden">
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-[10px] font-bold">9:00</span>
+                  <span class="text-[8px] uppercase">AM</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold">Chemistry</h4>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Lab 2 • Dr. Williams</p>
+                </div>
+              </div>
+              <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-300 hover:text-primary dark:hover:text-blue-400" onclick="toggleTimetableMenu(event, 'Chemistry')">
+                <span class="material-icons-outlined">more_vert</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Thursday Schedule -->
+          <div id="thursday-schedule" class="schedule-section space-y-3 hidden">
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-[10px] font-bold">11:00</span>
+                  <span class="text-[8px] uppercase">AM</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold">Physics</h4>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Room 301 • Mr. Anderson</p>
+                </div>
+              </div>
+              <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-300 hover:text-primary dark:hover:text-blue-400" onclick="toggleTimetableMenu(event, 'Physics')">
+                <span class="material-icons-outlined">more_vert</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Friday Schedule -->
+          <div id="friday-schedule" class="schedule-section space-y-3 hidden">
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg flex flex-col items-center justify-center">
+                  <span class="text-[10px] font-bold">2:00</span>
+                  <span class="text-[8px] uppercase">PM</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold">Biology</h4>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Lab 1 • Mrs. Phronesis</p>
+                </div>
+              </div>
+              <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-300 hover:text-primary dark:hover:text-blue-400" onclick="toggleTimetableMenu(event, 'Biology')">
+                <span class="material-icons-outlined">more_vert</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <a
+          href="timetable.html"
+          class="w-full py-3 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-primary dark:text-blue-400 rounded-xl text-xs font-bold transition-all active:scale-[0.98] block text-center"
+        >
+          View Full Timetable
+        </a>
+      </section>
+    </main>
+    <nav
+      class="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white/80 dark:bg-slate-900/80 glass-card border-t border-slate-100 dark:border-slate-800 bottom-nav-safe z-30"
+    >
+      <div class="flex justify-around items-center py-3">
+        <a class="flex flex-col items-center gap-1 text-primary" href="home-dashboard.html">
+          <span class="material-icons-outlined">home</span>
+          <span class="text-[10px] font-bold">Home</span>
+        </a>
+        <a
+          class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500"
+          href="results.html"
+        >
+          <span class="material-icons-outlined">fact_check</span>
+          <span class="text-[10px] font-medium">Results</span>
+        </a>
+        <a
+          class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500"
+          href="timetable.html"
+        >
+          <span class="material-icons-outlined">calendar_today</span>
+          <span class="text-[10px] font-medium">Timetable</span>
+        </a>
+        <a
+          class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500"
+          href="assessments.html"
+        >
+          <span class="material-icons-outlined">description</span>
+          <span class="text-[10px] font-medium">Assessments</span>
+        </a>
+        <a
+          class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500"
+          href="payments.html"
+        >
+          <span class="material-icons-outlined">payments</span>
+          <span class="text-[10px] font-medium">Payments</span>
+        </a>
+      </div>
+    </nav>
+    <div
+      class="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full opacity-40"
+    ></div>
+
+    <!-- Global Overlay -->
+    <div id="menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden" onclick="closeAllMenus()"></div>
+
+    <!-- Notification Panel -->
+    <div id="notification-panel" class="fixed top-0 right-0 h-full w-[320px] bg-white dark:bg-slate-900 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out border-l border-slate-200 dark:border-slate-800">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-lg">Notifications</h3>
+        <button onclick="toggleNotifications()" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+          <span class="material-icons-outlined">close</span>
+        </button>
+      </div>
+      <div class="p-4 space-y-4 overflow-y-auto h-[calc(100%-60px)]">
+        <!-- New Result -->
+        <div class="flex gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800/50">
+          <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="material-icons-outlined text-white text-sm">fact_check</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-xs font-bold">New Results Available</p>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Mid-term results for Term 2 have been published.</p>
+            <span class="text-[9px] text-slate-400 mt-2 block">2 hours ago</span>
+          </div>
+        </div>
+        <!-- Payment Due -->
+        <div class="flex gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-800/50">
+          <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="material-icons-outlined text-white text-sm">payments</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-xs font-bold">Outstanding Balance</p>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Please settle your Term 3 fees to avoid service disruption.</p>
+            <span class="text-[9px] text-slate-400 mt-2 block">1 day ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Dropdown -->
+    <div id="profile-dropdown" class="fixed top-16 right-4 w-48 bg-white dark:bg-slate-900 shadow-2xl rounded-2xl border border-slate-100 dark:border-slate-800 z-50 hidden overflow-hidden mr-[max(0px,calc((100vw-480px)/2))]">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+        <p class="text-xs font-bold text-slate-900 dark:text-white">John Sunesis</p>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400">Class: Jss1A</p>
+      </div>
+      <div class="p-2">
+        <a href="profile.html" class="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-700 dark:text-slate-300">
+          <span class="material-icons-outlined text-sm text-slate-400">person</span>
+          My Profile
+        </a>
+        <a href="settings.html" class="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-700 dark:text-slate-300">
+          <span class="material-icons-outlined text-sm text-slate-400">settings</span>
+          Account Settings
+        </a>
+        <div class="my-1 border-t border-slate-100 dark:border-slate-800"></div>
+        <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+          <span class="material-icons-outlined text-sm">logout</span>
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- Timetable Action Menu -->
+    <div id="timetable-action-menu" class="fixed w-48 bg-white dark:bg-slate-900 shadow-2xl rounded-2xl border border-slate-100 dark:border-slate-800 z-50 hidden overflow-hidden">
+      <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+        <p id="menu-subject-name" class="text-[10px] font-bold text-primary dark:text-blue-400 uppercase tracking-wider"></p>
+      </div>
+      <div class="p-2 text-slate-900 dark:text-slate-100">
+        <button class="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" onclick="showSubjectDetails(document.getElementById('menu-subject-name').textContent)">
+          <span class="material-icons-outlined text-sm text-slate-400">info</span>
+          View Class Details
+        </button>
+        <button class="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" onclick="showAddNote(document.getElementById('menu-subject-name').textContent)">
+          <span class="material-icons-outlined text-sm text-slate-400">edit_note</span>
+          Add Private Note
+        </button>
+        <button class="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" onclick="showCourseMaterials(document.getElementById('menu-subject-name').textContent)">
+          <span class="material-icons-outlined text-sm text-slate-400">link</span>
+          Course Materials
+        </button>
+      </div>
+    </div>
+
+    <!-- Global Modal -->
+    <div id="global-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden relative">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
+          <h3 id="modal-title" class="font-bold text-slate-900 dark:text-white">Modal Title</h3>
+          <button onclick="closeModal()" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+            <span class="material-icons-outlined text-slate-500">close</span>
+          </button>
+        </div>
+        <div id="modal-body" class="p-6">
+          <!-- Modal content injected here -->
+        </div>
+      </div>
+    </div>
+    
+
+    </div> <!-- End mobile-only container -->
+  </body>
+</html>
