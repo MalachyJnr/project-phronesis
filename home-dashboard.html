@@ -124,6 +124,10 @@
           }
         });
 
+        // Update label
+        const dayLabel = document.getElementById('current-day-label');
+        if (dayLabel) dayLabel.textContent = day;
+
         // Update timetable content
         const schedule = timetableData[day];
         const container = document.getElementById('timetable-container');
@@ -362,7 +366,7 @@
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-bold dark:text-white">Weekly Timetable</h2>
           <div class="flex items-center gap-2 text-primary dark:text-blue-400">
-            <span id="current-day-label" class="text-xs font-semibold">Today</span>
+            <span id="current-day-label" class="text-xs font-semibold">Monday</span>
             <span class="material-icons-outlined text-sm">calendar_today</span>
           </div>
         </div>

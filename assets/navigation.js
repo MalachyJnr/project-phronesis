@@ -388,7 +388,7 @@ function switchDay(day, element) {
     // Update Day Info Card
     const dayLabel = document.getElementById('current-day-label');
     const classCount = document.getElementById('class-count');
-    if (dayLabel) dayLabel.textContent = `${day}, Feb ${8 + ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].indexOf(day)}`;
+    if (dayLabel) dayLabel.textContent = day;
     
     // Hide all schedule sections
     const sections = document.querySelectorAll('.schedule-section');
