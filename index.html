@@ -1,11 +1,176 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Login - PHRONESIS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1E3A8A",
+              secondary: "#D4AF37",
+              "background-light": "#F1F5F9",
+              "background-dark": "#0F172A",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      }
+      .dark body {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .dark .glass-card {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+      }
+      .float-animation {
+        animation: float 4s ease-in-out infinite;
+      }
+      @keyframes pulse-custom {
+        0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0px rgba(30, 58, 138, 0)); }
+        50% { transform: scale(1.1); opacity: 0.8; filter: drop-shadow(0 0 20px rgba(30, 58, 138, 0.3)); }
+      }
+      .pulse-animation {
+        animation: pulse-custom 1.5s ease-in-out infinite;
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      });
+
+      function handleLogin(e) {
+        e.preventDefault();
+        
+        const loginCard = document.getElementById('login-card');
+        const loadingState = document.getElementById('loading-state');
+        
+        // Hide login card with a fade effect
+        loginCard.style.opacity = '0';
+        loginCard.style.transform = 'scale(0.95)';
+        loginCard.style.transition = 'all 0.4s ease';
+        
+        setTimeout(() => {
+          loginCard.classList.add('hidden');
+          loadingState.classList.remove('hidden');
+          loadingState.classList.add('flex');
+          
+          // Redirect after loading phase
+          setTimeout(() => {
+            window.location.href = 'home-dashboard.html';
+          }, 2500);
+        }, 400);
+      }
+    </script>
+  </head>
+  <body class="min-h-screen flex items-center justify-center p-6 overflow-hidden">
+    <div class="max-w-md w-full space-y-8 relative">
+      <!-- Decorative background elements -->
+      <div class="absolute -top-24 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-24 -right-20 w-64 h-64 bg-secondary/10 rounded-full blur-3xl"></div>
+
+      <!-- Loading State -->
+      <div id="loading-state" class="hidden flex-col items-center justify-center space-y-6 py-12">
+        <div class="w-32 h-32 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-2xl pulse-animation">
+          <img src="assets/school_logo.png" alt="Logo" class="w-20 h-20 object-contain">
+        </div>
+        <div class="text-center space-y-2">
+          <p class="text-lg font-bold text-primary dark:text-blue-400">Authenticating...</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide italic">Preparing your dashboard</p>
+        </div>
+      </div>
+
+      <!-- Login Card -->
+      <div id="login-card" class="glass-card p-8 rounded-[32px] shadow-2xl relative z-10 text-center transition-all duration-500">
+        <!-- Logo -->
+        <div class="mb-8 float-animation">
+          <div class="w-24 h-24 bg-white rounded-full mx-auto p-2 shadow-lg flex items-center justify-center">
+            <img src="assets/school_logo.png" alt="Logo" class="w-full h-full object-contain">
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Welcome Back</h1>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Sign in to your student portal</p>
+        </div>
+
+        <form class="space-y-5" onsubmit="handleLogin(event)">
+          <div class="space-y-2 text-left">
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Student ID / Email</label>
+            <div class="relative group">
+              <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-lg">person</span>
+              <input type="text" required placeholder="PS-2024-0891" class="w-full pl-12 pr-4 py-4 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:text-white text-sm">
+            </div>
+          </div>
+
+          <div class="space-y-2 text-left">
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Password</label>
+            <div class="relative group">
+              <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-lg">lock</span>
+              <input type="password" required placeholder="••••••••" class="w-full pl-12 pr-4 py-4 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:text-white text-sm">
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between px-1">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary">
+              <span class="text-xs text-slate-500 dark:text-slate-400">Remember me</span>
+            </label>
+            <a href="#" class="text-xs font-bold text-primary dark:text-blue-400 hover:underline">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="w-full py-4 bg-primary text-white rounded-2xl font-bold text-sm shadow-xl shadow-primary/20 hover:bg-blue-900 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4">
+            Sign In
+            <span class="material-icons-outlined text-sm">arrow_forward</span>
+          </button>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Don't have an account? 
+            <a href="#" class="font-bold text-primary dark:text-blue-400">Contact Administrator</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- School Footer Info -->
+      <div class="text-center">
+        <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">PHRONESIS Academy</p>
+        <p class="text-[9px] text-slate-400 dark:text-slate-500 mt-1">Version 2.4.0 • © 2026 All Rights Reserved</p>
+      </div>
+    </div>
+  </body>
 </html>
