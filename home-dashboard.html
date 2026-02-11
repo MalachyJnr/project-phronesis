@@ -19,7 +19,7 @@
         theme: {
           extend: {
             colors: {
-              primary: "#1E3A8A", // Navy Blue
+              primary: "#4169E1", // Royal Blue
               secondary: "#D4AF37", // Gold
               "background-light": "#F8FAFC",
               "background-dark": "#0F172A",
@@ -106,11 +106,9 @@
 
       // Color classes for different subjects
       const colorClasses = {
-        blue: 'bg-blue-50 dark:bg-blue-900/20 text-primary dark:text-blue-400',
-        green: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
-        orange: 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400',
-        purple: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
-        red: 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400',
+        primary: 'bg-primary/10 text-primary dark:text-blue-400',
+        secondary: 'bg-secondary/10 text-secondary',
+        neutral: 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400',
         break: 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
       };
 
@@ -137,7 +135,7 @@
             return `
               <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-between">
                 <div class="flex items-center gap-4">
-                  <div class="w-12 h-10 ${colorClasses[item.color]} rounded-lg flex flex-col items-center justify-center">
+                  <div class="w-12 h-10 ${colorClasses.neutral} rounded-lg flex flex-col items-center justify-center">
                     <span class="text-[10px] font-bold">${item.time}</span>
                   </div>
                   <div>
@@ -152,7 +150,7 @@
             return `
               <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
                 <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 ${colorClasses[item.color]} rounded-lg flex flex-col items-center justify-center">
+                  <div class="w-12 h-12 ${colorClasses.primary} rounded-lg flex flex-col items-center justify-center">
                     <span class="text-[10px] font-bold">${item.time}</span>
                     <span class="text-[8px] uppercase">${item.period}</span>
                   </div>
@@ -247,7 +245,7 @@
               >notifications</span
             >
             <span
-              class="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white dark:border-slate-900"
+              class="absolute top-0 right-0 bg-secondary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white dark:border-slate-900"
               >2</span
             >
           </button>
@@ -299,7 +297,7 @@
           </a>
         </div>
         <div
-          class="bg-gradient-to-br from-secondary to-yellow-600 p-4 rounded-2xl text-white shadow-lg shadow-yellow-900/10"
+          class="bg-gradient-to-br from-secondary to-yellow-600 p-4 rounded-2xl text-white shadow-lg"
         >
           <div class="flex items-center gap-2 mb-3">
             <div class="p-1.5 bg-white/20 rounded-lg">
@@ -318,7 +316,7 @@
           </div>
           <a
             href="results.html"
-            class="w-full mt-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-[10px] font-semibold transition-colors block text-center"
+            class="w-full mt-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-[10px] font-semibold transition-colors block text-center"
           >
             View Details
           </a>
@@ -348,7 +346,7 @@
             </p>
           </div>
           <div
-            class="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 p-2 rounded-full"
+            class="bg-primary/10 text-primary dark:text-blue-400 p-2 rounded-full"
           >
             <span class="material-icons-outlined">verified</span>
           </div>
@@ -407,7 +405,7 @@
           <div id="monday-schedule" class="schedule-section space-y-3">
             <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
+                <div class="w-12 h-12 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
                   <span class="text-[10px] font-bold">8:00</span>
                   <span class="text-[8px] uppercase">AM</span>
                 </div>
@@ -432,7 +430,7 @@
             </div>
             <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg flex flex-col items-center justify-center">
+                <div class="w-12 h-12 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
                   <span class="text-[10px] font-bold">11:00</span>
                   <span class="text-[8px] uppercase">AM</span>
                 </div>
@@ -451,7 +449,7 @@
           <div id="tuesday-schedule" class="schedule-section space-y-3 hidden">
             <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg flex flex-col items-center justify-center">
+                <div class="w-12 h-12 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
                   <span class="text-[10px] font-bold">8:30</span>
                   <span class="text-[8px] uppercase">AM</span>
                 </div>
@@ -485,7 +483,7 @@
           <div id="wednesday-schedule" class="schedule-section space-y-3 hidden">
             <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-lg flex flex-col items-center justify-center">
+                <div class="w-12 h-12 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
                   <span class="text-[10px] font-bold">9:00</span>
                   <span class="text-[8px] uppercase">AM</span>
                 </div>
@@ -504,7 +502,7 @@
           <div id="thursday-schedule" class="schedule-section space-y-3 hidden">
             <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg flex flex-col items-center justify-center">
+                <div class="w-12 h-12 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
                   <span class="text-[10px] font-bold">11:00</span>
                   <span class="text-[8px] uppercase">AM</span>
                 </div>
@@ -523,7 +521,7 @@
           <div id="friday-schedule" class="schedule-section space-y-3 hidden">
             <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg flex flex-col items-center justify-center">
+                <div class="w-12 h-12 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
                   <span class="text-[10px] font-bold">2:00</span>
                   <span class="text-[8px] uppercase">PM</span>
                 </div>
@@ -612,8 +610,8 @@
           </div>
         </div>
         <!-- Payment Due -->
-        <div class="flex gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-800/50">
-          <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+        <div class="flex gap-3 p-3 bg-primary/10 rounded-xl border border-primary/20 dark:border-primary/30">
+          <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
             <span class="material-icons-outlined text-white text-sm">payments</span>
           </div>
           <div class="flex-1">
@@ -641,7 +639,7 @@
           Account Settings
         </a>
         <div class="my-1 border-t border-slate-100 dark:border-slate-800"></div>
-        <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+        <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
           <span class="material-icons-outlined text-sm">logout</span>
           Logout
         </button>

@@ -138,22 +138,22 @@ function showSubjectDetails(subject) {
     
     const content = `
         <div class="space-y-4">
-            <div class="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+            <div class="flex items-center gap-3 p-3 bg-primary/5 dark:bg-primary/10 rounded-xl">
                 <span class="material-icons-outlined text-primary">person</span>
                 <div>
                     <p class="text-[10px] text-slate-500 uppercase">Teacher</p>
                     <p class="text-sm font-bold">${data.teacher}</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
-                <span class="material-icons-outlined text-orange-500">place</span>
+            <div class="flex items-center gap-3 p-3 bg-secondary/10 rounded-xl">
+                <span class="material-icons-outlined text-secondary">place</span>
                 <div>
                     <p class="text-[10px] text-slate-500 uppercase">Location</p>
                     <p class="text-sm font-bold">${data.room}</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
-                <span class="material-icons-outlined text-green-500">schedule</span>
+            <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <span class="material-icons-outlined text-slate-500">schedule</span>
                 <div>
                     <p class="text-[10px] text-slate-500 uppercase">Schedule</p>
                     <p class="text-sm font-bold">${data.time}</p>
@@ -204,14 +204,14 @@ function showCourseMaterials(subject) {
             </a>
             <a href="#" class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl hover:border-primary transition-colors">
                 <div class="flex items-center gap-3">
-                    <span class="material-icons-outlined text-blue-500">description</span>
+                    <span class="material-icons-outlined text-primary">description</span>
                     <span class="text-sm">Practice Exercises.docx</span>
                 </div>
                 <span class="material-icons-outlined text-slate-400 text-sm">download</span>
             </a>
             <a href="#" class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl hover:border-primary transition-colors">
                 <div class="flex items-center gap-3">
-                    <span class="material-icons-outlined text-orange-500">slideshow</span>
+                    <span class="material-icons-outlined text-secondary">slideshow</span>
                     <span class="text-sm">Introduction Slides.pptx</span>
                 </div>
                 <span class="material-icons-outlined text-slate-400 text-sm">download</span>
@@ -255,12 +255,12 @@ function logout() {
     closeAllMenus();
     const content = `
         <div class="text-center space-y-4">
-            <div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-2 text-red-500">
+            <div class="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-2 text-slate-500">
                 <span class="material-icons-outlined text-3xl">logout</span>
             </div>
             <p class="text-sm text-slate-500 dark:text-slate-400">Are you sure you want to log out of your student portal?</p>
             <div class="flex flex-col gap-2 pt-2">
-                <button onclick="confirmLogout()" class="w-full py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-colors shadow-lg shadow-red-900/10">Confirm Logout</button>
+                <button onclick="confirmLogout()" class="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors shadow-lg">Confirm Logout</button>
                 <button onclick="closeModal()" class="w-full py-3 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">Cancel</button>
             </div>
         </div>
@@ -309,11 +309,11 @@ function showSubjectResults(subject, grade, percentage, teacher) {
                 <div class="space-y-2">
                     <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-50 dark:border-slate-800">
                         <span class="text-xs font-semibold">Continuous Assessment</span>
-                        <span class="text-xs font-bold text-green-500">28/30</span>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">28/30</span>
                     </div>
                     <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-50 dark:border-slate-800">
                         <span class="text-xs font-semibold">Mid-Term Exam</span>
-                        <span class="text-xs font-bold text-green-500">18/20</span>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">18/20</span>
                     </div>
                     <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-50 dark:border-slate-800">
                         <span class="text-xs font-semibold">Final Examination</span>
@@ -361,12 +361,12 @@ function downloadReport() {
                 Downloaded Successfully
             </div>
         `;
-        btn.classList.replace('bg-primary', 'bg-green-500');
+        btn.classList.replace('bg-primary', 'bg-secondary');
         
         // Mock download notification
         setTimeout(() => {
             btn.innerHTML = originalText;
-            btn.classList.replace('bg-green-500', 'bg-primary');
+            btn.classList.replace('bg-secondary', 'bg-primary');
             btn.disabled = false;
         }, 2000);
     }, 3000);
@@ -454,14 +454,14 @@ function showAssessmentDetails(title, subject, type, date, info) {
     modalTitle.textContent = title;
     
     let typeColor = 'blue';
-    if (type === 'Upcoming') typeColor = 'orange';
-    if (type === 'Completed') typeColor = 'green';
-    if (type === 'Overdue' || title.includes('Mid-Term')) typeColor = 'red';
+    if (type === 'Upcoming') typeColor = 'secondary';
+    if (type === 'Completed') typeColor = 'slate';
+    if (type === 'Overdue' || title.includes('Mid-Term')) typeColor = 'primary';
 
     modalBody.innerHTML = `
         <div class="space-y-4">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-${typeColor}-50 dark:bg-${typeColor}-900/20 text-${typeColor}-600 dark:text-${typeColor}-400 rounded-lg flex items-center justify-center">
+                <div class="w-10 h-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
                     <span class="material-icons-outlined text-xl">${title.includes('Test') || title.includes('Quiz') ? 'quiz' : 'assignment'}</span>
                 </div>
                 <div>
@@ -514,7 +514,7 @@ function showReceiptDetails(term, year, amount, date, method, id) {
     modalBody.innerHTML = `
         <div class="space-y-6">
             <div class="text-center pb-4 border-b border-dashed border-slate-200 dark:border-slate-700">
-                <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                <div class="w-16 h-16 bg-primary/10 text-primary dark:text-blue-400 rounded-full flex items-center justify-center mx-auto mb-3">
                     <span class="material-icons-outlined text-3xl">check_circle</span>
                 </div>
                 <h4 class="text-lg font-bold">₦${amount}</h4>
@@ -589,12 +589,12 @@ function downloadReceipt() {
             </div>
         `;
         btn.classList.remove('bg-primary', 'dark:bg-blue-600');
-        btn.classList.add('bg-green-600');
+        btn.classList.add('bg-secondary');
 
         setTimeout(() => {
             btn.disabled = false;
             btn.innerHTML = originalText;
-            btn.classList.remove('bg-green-600');
+            btn.classList.remove('bg-secondary');
             btn.classList.add('bg-primary', 'dark:bg-blue-600');
             if (document.getElementById('global-modal') && !document.getElementById('global-modal').classList.contains('hidden')) {
                 closeModal();

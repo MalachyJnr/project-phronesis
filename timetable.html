@@ -19,7 +19,7 @@
         theme: {
           extend: {
             colors: {
-              primary: "#1E3A8A", // Navy Blue
+              primary: "#4169E1", // Royal Blue
               secondary: "#D4AF37", // Gold
               "background-light": "#F8FAFC",
               "background-dark": "#0F172A",
@@ -118,7 +118,7 @@
               >notifications</span
             >
             <span
-              class="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white dark:border-slate-900"
+              class="absolute top-0 right-0 bg-secondary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white dark:border-slate-900"
               >2</span
             >
           </button>
@@ -178,7 +178,7 @@
       </div>
 
       <!-- Current Day Info -->
-      <div class="bg-gradient-to-r from-primary to-blue-700 p-4 rounded-2xl text-white shadow-lg">
+      <div class="bg-primary p-4 rounded-2xl text-white shadow-lg">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs opacity-90 mb-1">Schedule for</p>
@@ -193,7 +193,7 @@
 
       <section id="monday-schedule" class="schedule-section space-y-3">
         <h3 class="text-lg font-bold dark:text-white flex items-center gap-2">
-          <span class="material-icons-outlined text-primary dark:text-blue-400">schedule</span>
+          <span class="material-icons-outlined text-primary">schedule</span>
           Monday Schedule
         </h3>
         
@@ -203,7 +203,7 @@
         >
           <div class="flex items-center gap-4">
             <div
-              class="w-14 h-14 bg-blue-50 dark:bg-blue-900/20 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center"
+              class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center"
             >
               <span class="text-xs font-bold">8:00</span>
               <span class="text-[9px] uppercase">AM</span>
@@ -230,7 +230,7 @@
         >
           <div class="flex items-center gap-4">
             <div
-              class="w-14 h-14 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg flex flex-col items-center justify-center"
+              class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center"
             >
               <span class="text-xs font-bold">9:30</span>
               <span class="text-[9px] uppercase">AM</span>
@@ -278,7 +278,7 @@
         >
           <div class="flex items-center gap-4">
             <div
-              class="w-14 h-14 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg flex flex-col items-center justify-center"
+              class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center"
             >
               <span class="text-xs font-bold">11:00</span>
               <span class="text-[9px] uppercase">AM</span>
@@ -327,7 +327,7 @@
         >
           <div class="flex items-center gap-4">
             <div
-              class="w-14 h-14 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-lg flex flex-col items-center justify-center"
+              class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center"
             >
               <span class="text-xs font-bold">1:15</span>
               <span class="text-[9px] uppercase">PM</span>
@@ -354,7 +354,7 @@
         >
           <div class="flex items-center gap-4">
             <div
-              class="w-14 h-14 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg flex flex-col items-center justify-center"
+              class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center"
             >
               <span class="text-xs font-bold">2:30</span>
               <span class="text-[9px] uppercase">PM</span>
@@ -379,12 +379,12 @@
       <!-- Tuesday Schedule -->
       <section id="tuesday-schedule" class="schedule-section space-y-3 hidden">
         <h3 class="text-lg font-bold dark:text-white flex items-center gap-2">
-          <span class="material-icons-outlined text-green-500">schedule</span>
+          <span class="material-icons-outlined text-primary">schedule</span>
           Tuesday Schedule
         </h3>
         <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg flex flex-col items-center justify-center">
+            <div class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
               <span class="text-xs font-bold">8:30</span>
               <span class="text-[9px] uppercase">AM</span>
             </div>
@@ -399,7 +399,7 @@
         </div>
         <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-blue-50 dark:bg-blue-900/20 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
+            <div class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
               <span class="text-xs font-bold">10:00</span>
               <span class="text-[9px] uppercase">AM</span>
             </div>
@@ -417,12 +417,12 @@
       <!-- Wednesday Schedule -->
       <section id="wednesday-schedule" class="schedule-section space-y-3 hidden">
         <h3 class="text-lg font-bold dark:text-white flex items-center gap-2">
-          <span class="material-icons-outlined text-purple-500">schedule</span>
+          <span class="material-icons-outlined text-primary">schedule</span>
           Wednesday Schedule
         </h3>
         <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-lg flex flex-col items-center justify-center">
+            <div class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
               <span class="text-xs font-bold">9:00</span>
               <span class="text-[9px] uppercase">AM</span>
             </div>
@@ -440,12 +440,12 @@
       <!-- Thursday Schedule -->
       <section id="thursday-schedule" class="schedule-section space-y-3 hidden">
         <h3 class="text-lg font-bold dark:text-white flex items-center gap-2">
-          <span class="material-icons-outlined text-red-500">schedule</span>
+          <span class="material-icons-outlined text-primary">schedule</span>
           Thursday Schedule
         </h3>
         <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg flex flex-col items-center justify-center">
+            <div class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
               <span class="text-xs font-bold">11:00</span>
               <span class="text-[9px] uppercase">AM</span>
             </div>
@@ -463,12 +463,12 @@
       <!-- Friday Schedule -->
       <section id="friday-schedule" class="schedule-section space-y-3 hidden">
         <h3 class="text-lg font-bold dark:text-white flex items-center gap-2">
-          <span class="material-icons-outlined text-orange-500">schedule</span>
+          <span class="material-icons-outlined text-primary">schedule</span>
           Friday Schedule
         </h3>
         <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg flex flex-col items-center justify-center">
+            <div class="w-14 h-14 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex flex-col items-center justify-center">
               <span class="text-xs font-bold">2:00</span>
               <span class="text-[9px] uppercase">PM</span>
             </div>
@@ -582,8 +582,8 @@
           </div>
         </div>
         <!-- Payment Due -->
-        <div class="flex gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-800/50">
-          <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+        <div class="flex gap-3 p-3 bg-primary/10 rounded-xl border border-primary/20 dark:border-primary/30">
+          <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
             <span class="material-icons-outlined text-white text-sm">payments</span>
           </div>
           <div class="flex-1">
@@ -611,7 +611,7 @@
           Account Settings
         </a>
         <div class="my-1 border-t border-slate-100 dark:border-slate-800"></div>
-        <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+        <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
           <span class="material-icons-outlined text-sm">logout</span>
           Logout
         </button>

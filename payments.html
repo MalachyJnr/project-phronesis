@@ -19,7 +19,7 @@
         theme: {
           extend: {
             colors: {
-              primary: "#1E3A8A", // Navy Blue
+              primary: "#4169E1", // Royal Blue
               secondary: "#D4AF37", // Gold
               "background-light": "#F8FAFC",
               "background-dark": "#0F172A",
@@ -118,7 +118,7 @@
               >notifications</span
             >
             <span
-              class="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white dark:border-slate-900"
+              class="absolute top-0 right-0 bg-secondary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white dark:border-slate-900"
               >2</span
             >
           </button>
@@ -144,7 +144,7 @@
       </section>
 
       <!-- Payment Status Card -->
-      <div class="bg-gradient-to-br from-green-500 to-green-600 p-5 rounded-2xl text-white shadow-lg">
+      <div class="bg-primary p-5 rounded-2xl text-white shadow-lg">
         <div class="flex items-center justify-between mb-4">
           <div>
             <p class="text-xs opacity-90 mb-1">Current Status</p>
@@ -170,7 +170,7 @@
           <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Terms Paid</p>
         </div>
         <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700 text-center">
-          <div class="text-xl font-bold text-green-600 dark:text-green-400">100%</div>
+          <div class="text-xl font-bold text-primary dark:text-blue-400">100%</div>
           <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">On Time</p>
         </div>
         <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700 text-center">
@@ -193,7 +193,7 @@
         >
           <div class="flex items-start justify-between mb-3">
             <div class="flex items-start gap-3">
-              <div class="w-10 h-10 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg flex items-center justify-center">
+              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center text-primary">
                 <span class="material-icons-outlined text-xl">check_circle</span>
               </div>
               <div>
@@ -201,7 +201,7 @@
                 <p class="text-[10px] text-slate-500 dark:text-slate-400">2025/2026 Academic Year</p>
               </div>
             </div>
-            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-[9px] font-bold rounded-full">
+            <span class="px-2 py-1 bg-primary/10 text-primary dark:text-blue-400 text-[9px] font-bold rounded-full">
               PAID
             </span>
           </div>
@@ -228,7 +228,7 @@
         >
           <div class="flex items-start justify-between mb-3">
             <div class="flex items-start gap-3">
-              <div class="w-10 h-10 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg flex items-center justify-center">
+              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center">
                 <span class="material-icons-outlined text-xl">check_circle</span>
               </div>
               <div>
@@ -236,7 +236,7 @@
                 <p class="text-[10px] text-slate-500 dark:text-slate-400">2024/2025 Academic Year</p>
               </div>
             </div>
-            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-[9px] font-bold rounded-full">
+            <span class="px-2 py-1 bg-primary/10 text-primary dark:text-blue-400 text-[9px] font-bold rounded-full">
               PAID
             </span>
           </div>
@@ -263,7 +263,7 @@
         >
           <div class="flex items-start justify-between mb-3">
             <div class="flex items-start gap-3">
-              <div class="w-10 h-10 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg flex items-center justify-center">
+              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center">
                 <span class="material-icons-outlined text-xl">check_circle</span>
               </div>
               <div>
@@ -271,7 +271,7 @@
                 <p class="text-[10px] text-slate-500 dark:text-slate-400">2024/2025 Academic Year</p>
               </div>
             </div>
-            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-[9px] font-bold rounded-full">
+            <span class="px-2 py-1 bg-primary/10 text-primary dark:text-blue-400 text-[9px] font-bold rounded-full">
               PAID
             </span>
           </div>
@@ -350,7 +350,7 @@
         <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
           <h3 id="modal-title" class="font-bold text-slate-900 dark:text-white">Modal Title</h3>
           <button onclick="closeModal()" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-            <span class="material-icons-outlined text-slate-400 hover:text-red-500 transition-colors">close</span>
+            <span class="material-icons-outlined text-slate-400 hover:text-slate-700 transition-colors">close</span>
           </button>
         </div>
         <div id="modal-body" class="p-6">
@@ -373,7 +373,7 @@
       </div>
       <div class="p-4 space-y-4 overflow-y-auto h-[calc(100%-60px)]">
         <!-- New Result -->
-        <div class="flex gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800/50">
+        <div class="flex gap-3 p-3 bg-primary/5 dark:bg-blue-900/20 rounded-xl border border-primary/10 dark:border-blue-800/50">
           <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
             <span class="material-icons-outlined text-white text-sm">fact_check</span>
           </div>
@@ -384,8 +384,8 @@
           </div>
         </div>
         <!-- Payment Due -->
-        <div class="flex gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-800/50">
-          <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+        <div class="flex gap-3 p-3 bg-primary/10 rounded-xl border border-primary/20 dark:border-primary/30">
+          <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
             <span class="material-icons-outlined text-white text-sm">payments</span>
           </div>
           <div class="flex-1">
@@ -413,7 +413,7 @@
           Account Settings
         </a>
         <div class="my-1 border-t border-slate-100 dark:border-slate-800"></div>
-        <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+        <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
           <span class="material-icons-outlined text-sm">logout</span>
           Logout
         </button>

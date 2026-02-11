@@ -19,8 +19,8 @@
         theme: {
           extend: {
             colors: {
-              primary: "#1E3A8A",
-              secondary: "#D4AF37",
+              primary: "#4169E1", // Royal Blue
+              secondary: "#D4AF37", // Gold
               "background-light": "#F8FAFC",
               "background-dark": "#0F172A",
             },
@@ -163,7 +163,7 @@
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" checked class="sr-only peer">
-                  <div class="w-10 h-5 bg-slate-200 dark:bg-slate-700 rounded-full toggle-bg"></div>
+                  <div class="w-10 h-5 bg-slate-200 dark:bg-slate-700 rounded-full toggle-bg peer-checked:bg-primary"></div>
                   <div class="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-5"></div>
                 </label>
               </div>
