@@ -45,6 +45,15 @@
         border-color: #4169E1;
         outline: none;
       }
+      .date-picker-overlay::-webkit-calendar-picker-indicator {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
     </style>
     <script>
       // Simulated Auth Check
@@ -206,6 +215,76 @@
         imageField.classList.add("hidden");
         placeholder.classList.remove("hidden");
       }
+
+      function updateDateDisplay(input) {
+        const display = document.getElementById('dob-display');
+        if(input.value) {
+            const parts = input.value.split('-');
+            display.textContent = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : input.value;
+            display.classList.remove('text-slate-500');
+            display.classList.add('text-slate-900', 'dark:text-white');
+        } else {
+            display.textContent = 'Select Date';
+            display.classList.add('text-slate-500');
+            display.classList.remove('text-slate-900', 'dark:text-white');
+        }
+        input.setCustomValidity(''); 
+      }
+
+      function toggleCustomDropdown(id) {
+        const select = document.querySelector(`.custom-select[data-id="${id}"]`);
+        if(!select) return;
+        const options = select.querySelector('.select-options');
+        const icon = select.querySelector('.select-icon');
+        const isOpen = !options.classList.contains('pointer-events-none');
+
+        // Close all other dropdowns
+        document.querySelectorAll('.custom-select').forEach(dropdown => {
+          if (dropdown.dataset.id !== id) {
+             const opts = dropdown.querySelector('.select-options');
+             const icn = dropdown.querySelector('.select-icon');
+             opts.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2', 'scale-95');
+             opts.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+             icn.classList.remove('rotate-180');
+          }
+        });
+
+        if (isOpen) {
+          options.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2', 'scale-95');
+          options.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+          icon.classList.remove('rotate-180');
+        } else {
+          options.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2', 'scale-95');
+          options.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+          icon.classList.add('rotate-180');
+        }
+      }
+
+      function selectOption(id, value, text) {
+        const select = document.querySelector(`.custom-select[data-id="${id}"]`);
+        const input = document.getElementById(id);
+        const display = select.querySelector('.select-display');
+        
+        input.value = value;
+        display.textContent = text;
+        display.classList.remove('text-slate-500');
+        display.classList.add('text-slate-900', 'dark:text-white'); 
+        
+        toggleCustomDropdown(id);
+        input.setCustomValidity(''); 
+      }
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-select')) {
+          document.querySelectorAll('.custom-select').forEach(dropdown => {
+             const opts = dropdown.querySelector('.select-options');
+             const icn = dropdown.querySelector('.select-icon');
+             opts.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2', 'scale-95');
+             opts.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+             icn.classList.remove('rotate-180');
+          });
+        }
+      });
     </script>
   </head>
   <body class="bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen">
@@ -267,25 +346,51 @@
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">DOB *</label>
-                  <input type="date" id="reg-dob" required class="form-input-styled w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs dark:text-white">
+                  <div class="relative w-full" onclick="try{document.getElementById('reg-dob').showPicker()}catch(e){}">
+                    <input type="date" id="reg-dob" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 date-picker-overlay" onchange="updateDateDisplay(this)">
+                    <div class="form-input-styled w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs flex justify-between items-center text-left transition-all duration-200 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary">
+                      <span id="dob-display" class="text-slate-500">Select Date</span>
+                      <span class="material-icons-outlined text-[16px] text-slate-400">calendar_today</span>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">Gender *</label>
-                  <select id="reg-gender" required class="form-input-styled w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs dark:text-white">
-                    <option value="">Select</option>
-                    <option value="m">Male</option>
-                    <option value="f">Female</option>
-                  </select>
+                  <div class="relative custom-select" data-id="reg-gender">
+                    <input type="text" id="reg-gender" required class="absolute inset-x-0 bottom-0 w-full h-0 opacity-0 pointer-events-none" tabindex="-1">
+                    <button type="button" class="form-input-styled w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs dark:text-white flex justify-between items-center text-left transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary" onclick="toggleCustomDropdown('reg-gender')">
+                      <span class="select-display text-slate-500">Select</span>
+                      <span class="material-icons-outlined text-[16px] text-slate-400 transition-transform duration-300 select-icon">expand_more</span>
+                    </button>
+                    <div class="select-options absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none opacity-0 pointer-events-none transform -translate-y-2 scale-95 transition-all duration-200 origin-top">
+                      <ul class="py-1.5 max-h-48 overflow-y-auto hide-scrollbar flex flex-col gap-0.5 px-1.5">
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors flex items-center gap-2" onclick="selectOption('reg-gender', 'm', 'Male')">Male</li>
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors flex items-center gap-2" onclick="selectOption('reg-gender', 'f', 'Female')">Female</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">Class Applying For *</label>
-                  <select id="reg-class" required class="form-input-styled w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs dark:text-white">
-                      <option value="">Select Class</option>
-                      <option>JSS 1</option> <option>JSS 2</option> <option>JSS 3</option>
-                      <option>SS 1</option> <option>SS 2</option> <option>SS 3</option>
-                  </select>
+                  <div class="relative custom-select" data-id="reg-class">
+                    <input type="text" id="reg-class" required class="absolute inset-x-0 bottom-0 w-full h-0 opacity-0 pointer-events-none" tabindex="-1">
+                    <button type="button" class="form-input-styled w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs dark:text-white flex justify-between items-center text-left transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary" onclick="toggleCustomDropdown('reg-class')">
+                      <span class="select-display text-slate-500">Select Class</span>
+                      <span class="material-icons-outlined text-[16px] text-slate-400 transition-transform duration-300 select-icon">expand_more</span>
+                    </button>
+                    <div class="select-options absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none opacity-0 pointer-events-none transform -translate-y-2 scale-95 transition-all duration-200 origin-top">
+                      <ul class="py-1.5 max-h-48 overflow-y-auto hide-scrollbar flex flex-col gap-0.5 px-1.5">
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors" onclick="selectOption('reg-class', 'JSS 1', 'JSS 1')">JSS 1</li>
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors" onclick="selectOption('reg-class', 'JSS 2', 'JSS 2')">JSS 2</li>
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors" onclick="selectOption('reg-class', 'JSS 3', 'JSS 3')">JSS 3</li>
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors" onclick="selectOption('reg-class', 'SS 1', 'SS 1')">SS 1</li>
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors" onclick="selectOption('reg-class', 'SS 2', 'SS 2')">SS 2</li>
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors" onclick="selectOption('reg-class', 'SS 3', 'SS 3')">SS 3</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">Nationality *</label>
@@ -357,10 +462,20 @@
                 </div>
                 <div>
                   <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">Method *</label>
-                  <select id="reg-method" required class="form-input-styled w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs dark:text-white">
-                    <option value="">Select</option>
-                    <option>Transfer</option> <option>Cash</option> <option>POS</option>
-                  </select>
+                  <div class="relative custom-select" data-id="reg-method">
+                    <input type="text" id="reg-method" required class="absolute inset-x-0 bottom-0 w-full h-0 opacity-0 pointer-events-none" tabindex="-1">
+                    <button type="button" class="form-input-styled w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs dark:text-white flex justify-between items-center text-left transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary" onclick="toggleCustomDropdown('reg-method')">
+                      <span class="select-display text-slate-500">Select</span>
+                      <span class="material-icons-outlined text-[16px] text-slate-400 transition-transform duration-300 select-icon">expand_more</span>
+                    </button>
+                    <div class="select-options absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none opacity-0 pointer-events-none transform -translate-y-2 scale-95 transition-all duration-200 origin-top">
+                      <ul class="py-1.5 max-h-48 overflow-y-auto hide-scrollbar flex flex-col gap-0.5 px-1.5">
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors" onclick="selectOption('reg-method', 'Transfer', 'Transfer')">Transfer</li>
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors" onclick="selectOption('reg-method', 'Cash', 'Cash')">Cash</li>
+                        <li class="px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer dark:text-white transition-colors" onclick="selectOption('reg-method', 'POS', 'POS')">POS</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div>
