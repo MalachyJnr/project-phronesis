@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Admissions Info - PHRONESIS Academy</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4169E1",
+              secondary: "#D4AF37",
+              "background-light": "#F8FAFC",
+              "background-dark": "#0F172A",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "16px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        background-color: theme('colors.background-light');
+      }
+      .dark body {
+        background-color: theme('colors.background-dark');
+      }
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      
+      .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      .dark .glass-card {
+        background: rgba(15, 23, 42, 0.75);
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+      .animate-float { animation: float 6s ease-in-out infinite; }
+    </style>
+    <script>
+      function toggleTheme() {
+        const html = document.documentElement;
+        if(html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('theme-icon').textContent = 'dark_mode';
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('theme-icon').textContent = 'light_mode';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        if(localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+            const icon = document.getElementById('theme-icon');
+            if(icon) icon.textContent = 'light_mode';
+        }
+      });
+    </script>
+  </head>
+  <body class="text-slate-900 dark:text-slate-100 antialiased min-h-screen relative">
+    
+    <div class="max-w-[480px] mx-auto min-h-screen bg-background-light dark:bg-background-dark relative overflow-hidden shadow-2xl border-x border-slate-200/50 dark:border-slate-800/50 flex flex-col">
+        
+        <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 px-5 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <span class="material-icons-outlined text-[18px] text-slate-600 dark:text-slate-400">arrow_back</span>
+                </a>
+                <h1 class="text-base font-black tracking-tight dark:text-white uppercase">Admissions</h1>
+            </div>
+            
+            <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <span id="theme-icon" class="material-icons-outlined text-[18px] text-slate-600 dark:text-slate-400">dark_mode</span>
+            </button>
+        </header>
+
+        <main class="flex-1 overflow-y-auto hide-scrollbar z-10 pb-28">
+            <section class="px-5 pt-10 pb-8 text-center">
+                <div class="w-24 h-24 mx-auto bg-primary/10 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6 animate-float">
+                    <span class="material-icons-outlined text-[48px] text-primary dark:text-blue-400">how_to_reg</span>
+                </div>
+                
+                <h2 class="text-3xl font-black mb-4 leading-[1.1] tracking-tight text-slate-900 dark:text-white">
+                    Apply to Join <br> Phronesis Academy
+                </h2>
+                
+                <p class="text-[14px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-[300px] mx-auto mb-8">
+                    To ensure the highest standard of verification and a personalized consultation, our student registration is conducted physically at the school premises.
+                </p>
+            </section>
+
+            <section class="px-5 py-6">
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full pointer-events-none text-primary"></div>
+                    
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Registration Steps</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shrink-0">1</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white">Visit the Admin Office</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Visit our campus between 8:00 AM and 3:00 PM, Monday to Friday.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 dark:bg-primary/40 text-primary dark:text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-inner">2</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white">Collect Forms</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Obtain the official admission package from the Desk Officer.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 text-primary dark:text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-inner">3</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white">Submit Documentation</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Return completed forms with the student's birth certificate and past records.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700">
+                        <p class="text-sm font-bold text-slate-900 dark:text-white mb-2">Need assistance?</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                            <span class="material-icons-outlined text-[16px]">call</span> +234 800 123 4567
+                        </p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 mt-2">
+                            <span class="material-icons-outlined text-[16px]">email</span> admissions@phronesis.edu
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="px-5 mt-4">
+                <a href="index.html" class="w-full py-4 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-white font-bold rounded-2xl flex items-center justify-center border border-slate-200 dark:border-slate-700 transition-all active:scale-[0.98]">
+                    Return to Home
+                </a>
+            </div>
+
+        </main>
+
+        <!-- Fixed Bottom Navigation (Linked out) -->
+        <nav class="fixed bottom-0 inset-x-0 mx-auto max-w-[480px] bg-white/95 dark:bg-slate-900/95 glass-card border-t border-slate-200/50 dark:border-slate-800 pb-safe z-50">
+            <div class="flex justify-around items-center py-3 px-2">
+                <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+                    <span class="material-icons-outlined text-[24px]">home</span>
+                    <span class="text-[9px] font-bold tracking-wide">Home</span>
+                </a>
+                <a href="#" class="flex flex-col items-center gap-1 text-primary dark:text-blue-400 w-16">
+                    <span class="material-icons-outlined text-[24px]">person_add</span>
+                    <span class="text-[9px] font-black tracking-wide">Admissions</span>
+                </a>
+                <a href="student-login.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+                    <span class="material-icons-outlined text-[24px]">login</span>
+                    <span class="text-[9px] font-bold tracking-wide">Portal</span>
+                </a>
+                <a href="admin-login.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+                    <span class="material-icons-outlined text-[24px]">admin_panel_settings</span>
+                    <span class="text-[9px] font-bold tracking-wide">Admin</span>
+                </a>
+            </div>
+        </nav>
+
+    </div>
+  </body>
+</html>

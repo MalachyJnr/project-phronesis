@@ -269,7 +269,8 @@ function logout() {
 }
 
 function confirmLogout() {
-    window.location.href = 'index.html';
+    localStorage.removeItem('isAdmin');
+    window.location.href = 'student-login.html';
 }
 
 // Results Page Functions

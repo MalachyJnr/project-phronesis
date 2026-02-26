@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <title>All Registrations - Admin - PHRONESIS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4169E1", // Royal Blue
+              secondary: "#D4AF37", // Gold
+              "background-light": "#F8FAFC",
+              "background-dark": "#0F172A",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "12px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        min-height: 100dvh;
+        background-color: theme('colors.background-light');
+      }
+      .dark body { background-color: theme('colors.background-dark'); }
+      .status-bar-safe { padding-top: env(safe-area-inset-top); }
+      .bottom-nav-safe { padding-bottom: env(safe-area-inset-bottom); }
+      .glass-card { backdrop-filter: blur(8px); }
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+      .animate-scaleIn { animation: scaleIn 0.2s ease-out forwards; }
+      .fade-in { animation: fadeIn 0.5s ease-out; }
+    </style>
+    <script>
+      // Dark mode toggle functionality
+      function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        if (newTheme === 'dark') {
+          html.classList.add('dark');
+          document.getElementById('theme-icon').textContent = 'light_mode';
+        } else {
+          html.classList.remove('dark');
+          document.getElementById('theme-icon').textContent = 'dark_mode';
+        }
+        localStorage.setItem('theme', newTheme);
+      }
+
+      // Initialize theme
+      document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        const html = document.documentElement;
+        if (savedTheme === 'dark') {
+          html.classList.add('dark');
+          const icon = document.getElementById('theme-icon');
+          if(icon) icon.textContent = 'light_mode';
+        }
+      });
+
+      function toggleProfile() {
+        const dropdown = document.getElementById('profile-dropdown');
+        if(dropdown.classList.contains('hidden')) {
+            dropdown.classList.remove('hidden');
+            dropdown.classList.add('animate-scaleIn');
+        } else {
+            dropdown.classList.add('hidden');
+            dropdown.classList.remove('animate-scaleIn');
+        }
+      }
+
+      function logout() {
+        const modal = document.getElementById('logout-modal');
+        const content = document.getElementById('logout-modal-content');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          content.classList.remove('scale-95', 'opacity-0');
+          content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+      }
+
+      function closeLogoutModal() {
+        const modal = document.getElementById('logout-modal');
+        const content = document.getElementById('logout-modal-content');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+          modal.classList.add('hidden');
+        }, 200);
+      }
+
+      function confirmLogout() {
+        localStorage.removeItem('isAdmin');
+        window.location.href = '../admin-login.html';
+      }
+    </script>
+  </head>
+  <body class="bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen">
+    
+    <!-- Mobile-only container -->
+    <div id="page-container" class="max-w-[480px] mx-auto bg-background-light dark:bg-background-dark min-h-screen relative fade-in border-x border-slate-200/50 dark:border-slate-800/50 shadow-2xl">
+    
+      <header class="bg-background-light dark:bg-background-dark px-4 py-4 sticky top-0 z-20 border-b border-transparent dark:border-slate-800/50">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center overflow-hidden p-1 shadow-sm">
+              <img src="../assets/school_logo.png" alt="PHRONESIS Logo" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/40'">
+            </div>
+            <div>
+              <h1 class="text-sm font-bold text-primary dark:text-blue-400 uppercase tracking-wider leading-none">PHRONESIS</h1>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-wide">Admin Portal</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="theme-toggle" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" onclick="toggleTheme()">
+              <span class="material-icons-outlined text-slate-600 dark:text-slate-400 text-[18px]" id="theme-icon">dark_mode</span>
+            </button>
+            <button class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center hover:ring-2 hover:ring-primary/20 transition-all font-bold text-primary dark:text-blue-400 text-xs" onclick="toggleProfile()">
+              J
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Profile Dropdown -->
+      <div id="profile-dropdown" class="absolute top-16 right-4 w-48 bg-white dark:bg-slate-900 shadow-2xl rounded-2xl border border-slate-100 dark:border-slate-800 z-50 hidden overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+          <p class="text-xs font-bold text-slate-900 dark:text-white">Mr. John</p>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400">Desk Officer</p>
+        </div>
+        <div class="p-2">
+          <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2 text-xs text-red-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors font-medium">
+            <span class="material-icons-outlined text-sm">logout</span>
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <main class="p-4 space-y-6 pb-24">
+        <section>
+          <div class="flex items-center gap-3">
+            <a href="admin-dashboard.html" class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+              <span class="material-icons-outlined text-[18px]">arrow_back</span>
+            </a>
+            <div>
+              <h2 class="text-xl font-bold dark:text-white">All Registrations</h2>
+              <p class="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5 font-medium">
+                Viewing all 142 complete and pending records.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Search and Filter Bar -->
+        <section class="flex gap-2">
+          <div class="flex-1 relative">
+            <span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+            <input type="text" placeholder="Search by name or ID..." class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs focus:ring-primary focus:border-primary dark:text-white dark:placeholder-slate-500 shadow-sm">
+          </div>
+          <button class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-colors">
+            <span class="material-icons-outlined text-[18px]">filter_list</span>
+          </button>
+        </section>
+
+        <section class="space-y-4">
+          <div class="space-y-3">
+            <!-- Registration Card 1 -->
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm relative overflow-hidden flex flex-col gap-3">
+              <div class="absolute top-3 right-3">
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-bold bg-green-100 text-green-800 uppercase tracking-widest">Paid</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-400">
+                  <span class="material-icons-outlined text-lg">person</span>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-tight">David Smith</h3>
+                  <p class="text-[10px] font-semibold text-primary dark:text-blue-400 mt-0.5">JSS 1 <span class="text-slate-400 dark:text-slate-500 font-normal ml-1">• REG-001</span></p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/50 mt-1">
+                <div>
+                  <p class="text-[8px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">Date</p>
+                  <p class="text-[10px] font-medium text-slate-700 dark:text-slate-300">12 Oct, 2026</p>
+                </div>
+                <div>
+                  <p class="text-[8px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">Guardian</p>
+                  <p class="text-[10px] font-medium text-slate-700 dark:text-slate-300 truncate">Mr. John Smith</p>
+                </div>
+              </div>
+              <button onclick='openModal({id:"REG-001", name:"David Smith", cls:"JSS 1", status:"Paid", amount:"₦25,000", dob:"12 Apr, 2012", gender:"Male", nationality:"Nigerian", address:"123 Layout St, Phase 1", prevSchool:"Springfield Primary", medical:"None", gname:"Mr. John Smith", relation:"Father", phone:"08012345678", email:"j.smith@email.com", altphone:"08123456789", proxy:"N/A", method:"Transfer", ref:"TRX-99824001", date:"12 Oct, 2026"})' class="w-full py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-700/50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-[10px] font-bold transition-colors flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-600/50">
+                <span class="material-icons-outlined text-[14px]">visibility</span> View Details
+              </button>
+            </div>
+
+            <!-- Registration Card 2 -->
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm relative overflow-hidden flex flex-col gap-3">
+              <div class="absolute top-3 right-3">
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-bold bg-yellow-100 text-yellow-800 uppercase tracking-widest">Pending</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-400">
+                  <span class="material-icons-outlined text-lg">person</span>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-tight">Sarah Johnson</h3>
+                  <p class="text-[10px] font-semibold text-primary dark:text-blue-400 mt-0.5">SSS 2 <span class="text-slate-400 dark:text-slate-500 font-normal ml-1">• REG-002</span></p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/50 mt-1">
+                <div>
+                  <p class="text-[8px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">Date</p>
+                  <p class="text-[10px] font-medium text-slate-700 dark:text-slate-300">14 Oct, 2026</p>
+                </div>
+                <div>
+                  <p class="text-[8px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">Guardian</p>
+                  <p class="text-[10px] font-medium text-slate-700 dark:text-slate-300 truncate">Mrs. Mary Johnson</p>
+                </div>
+              <button onclick='openModal({id:"REG-002", name:"Sarah Johnson", cls:"SSS 2", status:"Pending", amount:"₦0", dob:"24 Aug, 2010", gender:"Female", nationality:"Nigerian", address:"456 Kings Way", prevSchool:"City High School", medical:"Asthma", gname:"Mrs. Mary Johnson", relation:"Mother", phone:"08087654321", email:"mary.j@email.com", altphone:"08187654321", proxy:"Uncle Bob", method:"Pending", ref:"N/A", date:"14 Oct, 2026"})' class="w-full py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-700/50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-[10px] font-bold transition-colors flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-600/50">
+                <span class="material-icons-outlined text-[14px]">visibility</span> View Details
+              </button>
+            </div>
+
+            <!-- Registration Card 3 -->
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm relative overflow-hidden flex flex-col gap-3">
+              <div class="absolute top-3 right-3">
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-bold bg-green-100 text-green-800 uppercase tracking-widest">Paid</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-400">
+                  <span class="material-icons-outlined text-lg">person</span>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-tight">Michael Adewale</h3>
+                  <p class="text-[10px] font-semibold text-primary dark:text-blue-400 mt-0.5">SSS 1 <span class="text-slate-400 dark:text-slate-500 font-normal ml-1">• REG-003</span></p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/50 mt-1">
+                <div>
+                  <p class="text-[8px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">Date</p>
+                  <p class="text-[10px] font-medium text-slate-700 dark:text-slate-300">10 Oct, 2026</p>
+                </div>
+                <div>
+                  <p class="text-[8px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">Guardian</p>
+                  <p class="text-[10px] font-medium text-slate-700 dark:text-slate-300 truncate">Mr. Samuel Adewale</p>
+                </div>
+              </div>
+              <button onclick='openModal({id:"REG-003", name:"Michael Adewale", cls:"SSS 1", status:"Paid", amount:"₦40,000", dob:"05 Mar, 2011", gender:"Male", nationality:"Nigerian", address:"789 Estate Blvd", prevSchool:"Kings College", medical:"None", gname:"Mr. Samuel Adewale", relation:"Father", phone:"08098765432", email:"sam.adewale@email.com", altphone:"08198765432", proxy:"N/A", method:"Transfer", ref:"TRX-55424009", date:"10 Oct, 2026"})' class="w-full py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-700/50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-[10px] font-bold transition-colors flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-600/50">
+                <span class="material-icons-outlined text-[14px]">visibility</span> View Details
+              </button>
+            </div>
+            
+            <!-- Registration Card 4 -->
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm relative overflow-hidden flex flex-col gap-3">
+              <div class="absolute top-3 right-3">
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-bold bg-green-100 text-green-800 uppercase tracking-widest">Paid</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-400">
+                  <span class="material-icons-outlined text-lg">person</span>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-tight">Blessing Okoro</h3>
+                  <p class="text-[10px] font-semibold text-primary dark:text-blue-400 mt-0.5">Primary 4 <span class="text-slate-400 dark:text-slate-500 font-normal ml-1">• REG-004</span></p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/50 mt-1">
+                <div>
+                  <p class="text-[8px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">Date</p>
+                  <p class="text-[10px] font-medium text-slate-700 dark:text-slate-300">08 Oct, 2026</p>
+                </div>
+                <div>
+                  <p class="text-[8px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">Guardian</p>
+                  <p class="text-[10px] font-medium text-slate-700 dark:text-slate-300 truncate">Mrs. Chidinma Okoro</p>
+                </div>
+              </div>
+              <button onclick='openModal({id:"REG-004", name:"Blessing Okoro", cls:"Primary 4", status:"Paid", amount:"₦30,000", dob:"16 Jul, 2016", gender:"Female", nationality:"Nigerian", address:"321 Freedom Way", prevSchool:"N/A", medical:"None", gname:"Mrs. Chidinma Okoro", relation:"Mother", phone:"08011223344", email:"chidi.ok@email.com", altphone:"08111223344", proxy:"Aunty Joy", method:"Cash", ref:"RCPT-1029", date:"08 Oct, 2026"})' class="w-full py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-700/50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-[10px] font-bold transition-colors flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-600/50">
+                <span class="material-icons-outlined text-[14px]">visibility</span> View Details
+              </button>
+            </div>
+            
+          </div>
+        </section>
+      </main>
+
+      <!-- Bottom Nav -->
+      <nav class="fixed bottom-0 inset-x-0 mx-auto max-w-[480px] bg-white/90 dark:bg-slate-900/90 glass-card border-t border-slate-100 dark:border-slate-800 bottom-nav-safe z-30">
+        <div class="flex justify-around items-center py-3 px-2">
+          <a class="flex flex-col items-center gap-1 text-primary dark:text-blue-400 w-16" href="admin-dashboard.html">
+            <span class="material-icons-outlined text-[22px]">dashboard</span>
+            <span class="text-[9px] font-bold">Dashboard</span>
+          </a>
+          <a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-blue-400 transition-colors w-16" href="register.html">
+            <span class="material-icons-outlined text-[22px]">person_add</span>
+            <span class="text-[9px] font-bold">Register</span>
+          </a>
+          <a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-blue-400 transition-colors w-16" href="reports.html">
+            <span class="material-icons-outlined text-[22px]">summarize</span>
+            <span class="text-[9px] font-bold">Reports</span>
+          </a>
+        </div>
+      </nav>
+
+      <!-- View Details Modal (Student Aesthetics Global Modal) -->
+      <div id="details-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div id="modal-content" class="bg-white dark:bg-slate-900 w-full max-w-[400px] rounded-3xl shadow-2xl overflow-hidden relative z-10 transform scale-95 opacity-0 transition-all duration-200">
+          <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-2">
+              Registration <span id="modal-reg-id" class="text-primary dark:text-blue-400 bg-primary/10 px-2 py-0.5 rounded text-[10px]">#</span>
+            </h3>
+            <button onclick="closeModal()" class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors">
+              <span class="material-icons-outlined text-[18px] text-slate-500">close</span>
+            </button>
+          </div>
+          <div class="p-5 overflow-y-auto max-h-[70vh] hide-scrollbar">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 shadow-inner">
+                 <span class="material-icons-outlined text-3xl">person</span>
+              </div>
+              <div class="flex-1">
+                <h4 id="modal-student-name" class="text-base font-bold text-slate-900 dark:text-white leading-tight">Name</h4>
+                <p id="modal-class" class="text-[11px] font-semibold text-primary dark:text-blue-400 mt-1">Class</p>
+                <div class="mt-2 text-[10px] text-slate-500 dark:text-slate-400">
+                  <span class="inline-flex items-center gap-1"><span class="material-icons-outlined text-[12px]">event</span> <span id="modal-dob"></span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
+                <h5 class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+                  <span class="material-icons-outlined text-[12px]">badge</span> Demographics
+                </h5>
+                <div class="space-y-1.5 text-[11px]">
+                   <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Gender</span> <span id="modal-gender" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                   <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Nationality</span> <span id="modal-nationality" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                   <div class="flex flex-col mt-1"><span class="text-slate-500 dark:text-slate-400">Address</span> <span id="modal-address" class="font-bold text-slate-900 dark:text-slate-200 leading-tight"></span></div>
+                   <div class="flex justify-between mt-1"><span class="text-slate-500 dark:text-slate-400">Prev. School</span> <span id="modal-prevschool" class="font-bold text-slate-900 dark:text-slate-200 truncate max-w-[120px]"></span></div>
+                   <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Medical</span> <span id="modal-medical" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
+                <h5 class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+                  <span class="material-icons-outlined text-[12px]">family_restroom</span> Guardian
+                </h5>
+                <div class="space-y-1.5 text-[11px]">
+                   <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Name</span> <span id="modal-gname" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                   <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Relation</span> <span id="modal-relation" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                   <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Phone</span> <span id="modal-phone" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                   <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Alt Phone</span> <span id="modal-altphone" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                   <div class="flex flex-col mt-1"><span class="text-slate-500 dark:text-slate-400">Email</span> <span id="modal-email" class="font-bold text-slate-900 dark:text-slate-200 truncate"></span></div>
+                   <div class="flex justify-between mt-1"><span class="text-slate-500 dark:text-slate-400">Proxy</span> <span id="modal-proxy" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
+                <h5 class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+                  <span class="material-icons-outlined text-[12px]">payments</span> Payment
+                </h5>
+                <div class="space-y-1.5 text-[11px]">
+                   <div class="flex justify-between items-center text-slate-500 dark:text-slate-400">Status <span id="modal-status" class="px-2 py-0.5 rounded text-[9px] font-bold bg-green-100 text-green-800"></span></div>
+                   <div class="flex justify-between text-slate-500 dark:text-slate-400">Amount <span id="modal-amount" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                   <div class="flex justify-between text-slate-500 dark:text-slate-400">Method <span id="modal-method" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                   <div class="flex justify-between text-slate-500 dark:text-slate-400">Ref <span id="modal-ref" class="font-bold text-slate-900 dark:text-slate-200"></span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex gap-2">
+              <button onclick="printDashboardModal()" class="flex-1 py-2.5 bg-primary text-white hover:bg-blue-700 rounded-xl text-[11px] font-bold transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-primary/20">
+                <span class="material-icons-outlined text-[16px]">print</span> Print
+              </button>
+              <button onclick="closeModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl text-[11px] font-bold transition-colors flex items-center justify-center gap-1.5">
+                <span class="material-icons-outlined text-[16px]">edit</span> Edit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- End mobile container -->
+
+    <script>
+      let currentModalData = null;
+
+      function openModal(data) {
+        currentModalData = data;
+        document.getElementById('modal-reg-id').innerText = '#' + data.id;
+        document.getElementById('modal-student-name').innerText = data.name;
+        document.getElementById('modal-class').innerText = data.cls;
+        document.getElementById('modal-dob').innerText = data.dob || 'N/A';
+        document.getElementById('modal-gender').innerText = data.gender || 'N/A';
+        document.getElementById('modal-nationality').innerText = data.nationality || 'N/A';
+        document.getElementById('modal-address').innerText = data.address || 'N/A';
+        document.getElementById('modal-prevschool').innerText = data.prevSchool || 'N/A';
+        document.getElementById('modal-medical').innerText = data.medical || 'N/A';
+        
+        document.getElementById('modal-gname').innerText = data.gname || 'N/A';
+        document.getElementById('modal-relation').innerText = data.relation || 'N/A';
+        document.getElementById('modal-phone').innerText = data.phone || 'N/A';
+        document.getElementById('modal-altphone').innerText = data.altphone || 'N/A';
+        document.getElementById('modal-email').innerText = data.email || 'N/A';
+        document.getElementById('modal-proxy').innerText = data.proxy || 'N/A';
+        
+        const statusEl = document.getElementById('modal-status');
+        statusEl.innerText = data.status;
+        if(data.status === 'Paid') {
+            statusEl.className = 'px-2 py-0.5 rounded text-[9px] font-bold bg-green-100 text-green-800';
+        } else {
+            statusEl.className = 'px-2 py-0.5 rounded text-[9px] font-bold bg-yellow-100 text-yellow-800';
+        }
+        
+        document.getElementById('modal-amount').innerText = data.amount;
+        document.getElementById('modal-method').innerText = data.method || 'N/A';
+        document.getElementById('modal-ref').innerText = data.ref || 'N/A';
+
+        const modal = document.getElementById('details-modal');
+        const content = document.getElementById('modal-content');
+        modal.classList.remove('hidden');
+        
+        requestAnimationFrame(() => {
+          content.classList.remove('scale-95', 'opacity-0');
+          content.classList.add('scale-100', 'opacity-100');
+        });
+      }
+
+      function closeModal() {
+        const modal = document.getElementById('details-modal');
+        const content = document.getElementById('modal-content');
+        
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+          modal.classList.add('hidden');
+        }, 200);
+      }
+
+      function printDashboardModal() {
+        if(!currentModalData) return;
+        const printObj = {
+          fullName: currentModalData.name,
+          classApplied: currentModalData.cls,
+          dob: currentModalData.dob,
+          gender: currentModalData.gender,
+          nationality: currentModalData.nationality,
+          address: currentModalData.address,
+          prevSchool: currentModalData.prevSchool,
+          medical: currentModalData.medical,
+          guardianName: currentModalData.gname,
+          relation: currentModalData.relation,
+          phone: currentModalData.phone,
+          email: currentModalData.email,
+          altPhone: currentModalData.altphone,
+          proxy: currentModalData.proxy,
+          fee: currentModalData.amount.replace('₦', ''),
+          method: currentModalData.method,
+          reference: currentModalData.ref,
+          date: currentModalData.date
+        };
+        localStorage.setItem('printData', JSON.stringify(printObj));
+        window.location.href = 'print.html';
+      }
+    </script>
+      <!-- Logout Confirmation Modal -->
+      <div id="logout-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeLogoutModal()"></div>
+        <div id="logout-modal-content" class="bg-white dark:bg-slate-900 w-full max-w-[320px] rounded-3xl shadow-2xl relative z-10 transform scale-95 opacity-0 transition-all duration-200">
+          <div class="p-6 text-center space-y-4">
+            <div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto text-red-500">
+                <span class="material-icons-outlined text-3xl">logout</span>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Confirm Logout</h3>
+                <p class="text-[13px] text-slate-500 dark:text-slate-400 mt-1">Are you sure you want to end your admin session?</p>
+            </div>
+            <div class="flex flex-col gap-2 pt-2">
+                <button onclick="confirmLogout()" class="w-full py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-colors shadow-lg shadow-red-500/30">Yes, Logout</button>
+                <button onclick="closeLogoutModal()" class="w-full py-3 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </body>
+</html>

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Admin Login - PHRONESIS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4169E1", // Royal Blue
+              secondary: "#D4AF37", // Gold
+              "background-light": "#F8FAFC",
+              "background-dark": "#0F172A",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "12px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        min-height: 100dvh;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      .dark .glass-card {
+        background: rgba(15, 23, 42, 0.85);
+      }
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes blob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1); }
+      }
+      .animate-blob {
+        animation: blob 7s infinite;
+      }
+      .animation-delay-2000 {
+        animation-delay: 2s;
+      }
+      .animation-delay-4000 {
+        animation-delay: 4s;
+      }
+    </style>
+    <script>
+      // Apply theme on load
+      function applyTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        const html = document.documentElement;
+        if (savedTheme === 'dark') {
+          html.classList.add('dark');
+        } else {
+          html.classList.remove('dark');
+        }
+      }
+      document.addEventListener('DOMContentLoaded', applyTheme);
+
+      function handleLogin(event) {
+        event.preventDefault();
+        
+        // Visual feedback
+        const btn = document.getElementById('login-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="material-icons-outlined animate-spin text-[18px]">refresh</span> Logging in...';
+        btn.disabled = true;
+
+        // In a real app, you would validate credentials here.
+        // For now, we simulate a slight delay and redirect to the dashboard.
+        localStorage.setItem('isAdmin', 'true');
+        setTimeout(() => {
+          window.location.href = 'Admin/admin-dashboard.html';
+        }, 800);
+      }
+    </script>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 relative overflow-hidden flex items-center justify-center">
+    
+    <!-- Decorative Background Shapes -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-primary/10 tracking-wider"></div>
+      <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-secondary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:bg-secondary/10"></div>
+      <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-purple-300/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000 dark:bg-purple-900/10"></div>
+    </div>
+
+    <!-- Login Container -->
+    <main class="w-full max-w-[440px] px-6 relative z-10">
+      <div class="glass-card rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-slate-700/50">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <div class="w-20 h-20 mx-auto bg-white rounded-2xl flex items-center justify-center p-2 shadow-sm mb-4 animate-float border border-slate-100 dark:border-slate-800">
+             <img src="assets/school_logo.png" alt="Logo" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/64'">
+          </div>
+          <h1 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">Admin Portal</h1>
+          <p class="text-[13px] text-slate-500 dark:text-slate-400 mt-1 font-medium">Welcome back, securely sign in to manage records.</p>
+        </div>
+
+        <!-- Form -->
+        <form class="space-y-5" onsubmit="handleLogin(event)">
+          
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Admin ID / Email</label>
+            <div class="relative">
+              <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10 pointer-events-none">badge</span>
+              <input type="text" required class="w-full bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all dark:text-white dark:placeholder-slate-500 backdrop-blur-sm relative z-0" placeholder="Enter your credentials">
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex items-center justify-between pl-1">
+              <label class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Password</label>
+            </div>
+            <div class="relative">
+              <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10 pointer-events-none">lock</span>
+              <input type="password" required class="w-full bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all dark:text-white dark:placeholder-slate-500 backdrop-blur-sm relative z-0" placeholder="••••••••">
+            </div>
+          </div>
+
+          <button id="login-btn" type="submit" class="w-full py-4 bg-primary text-white hover:bg-blue-700 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-2 mt-4 hover:shadow-primary/40 active:scale-[0.98]">
+            Sign In <span class="material-icons-outlined text-[18px]">arrow_forward</span>
+          </button>
+
+        </form>
+        
+        <div class="mt-8 text-center text-[11px] text-slate-400 font-medium">
+          <p>&copy; 2026 Phronesis School System. All rights reserved.</p>
+        </div>
+
+      </div>
+      
+      <!-- Navigation Links -->
+      <div class="flex flex-col items-center gap-3 mt-6">
+          <a href="student-login.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors bg-white/50 dark:bg-slate-800/50 px-4 py-2 rounded-full backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 shadow-sm">
+             <span class="material-icons-outlined text-[14px]">arrow_back</span> Return to Student Login
+          </a>
+          <a href="index.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors bg-white/50 dark:bg-slate-800/50 px-4 py-2 rounded-full backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 shadow-sm">
+             <span class="material-icons-outlined text-[14px]">home</span> Back to Home
+          </a>
+      </div>
+    </main>
+
+  </body>
+</html>

@@ -2,17 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Login - PHRONESIS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Welcome to PHRONESIS Academy</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
     <script>
       tailwind.config = {
         darkMode: "class",
@@ -27,6 +21,9 @@
             fontFamily: {
               display: ["Inter", "sans-serif"],
             },
+            borderRadius: {
+              DEFAULT: "16px",
+            },
           },
         },
       };
@@ -34,143 +31,212 @@
     <style>
       body {
         font-family: "Inter", sans-serif;
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        -webkit-tap-highlight-color: transparent;
+        background-color: theme('colors.background-light');
       }
       .dark body {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        background-color: theme('colors.background-dark');
       }
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      
+      /* Glass and Blob Utilities */
       .glass-card {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
       }
       .dark .glass-card {
-        background: rgba(30, 41, 59, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(15, 23, 42, 0.75);
       }
+      
       @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
       }
-      .float-animation {
-        animation: float 4s ease-in-out infinite;
+      .animate-float { animation: float 6s ease-in-out infinite; }
+      
+      @keyframes blob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1); }
       }
-      @keyframes pulse-custom {
-        0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0px rgba(30, 58, 138, 0)); }
-        50% { transform: scale(1.1); opacity: 0.8; filter: drop-shadow(0 0 20px rgba(30, 58, 138, 0.3)); }
+      .animate-blob { animation: blob 8s infinite; }
+      .animation-delay-2000 { animation-delay: 2s; }
+      .animation-delay-4000 { animation-delay: 4s; }
+
+      /* Gradient Text */
+      .bg-gradient-text {
+        background: linear-gradient(135deg, #4169E1 0%, #D4AF37 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
-      .pulse-animation {
-        animation: pulse-custom 1.5s ease-in-out infinite;
+      .dark .bg-gradient-text {
+        background: linear-gradient(135deg, #60a5fa 0%, #fbbf24 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
     </style>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        if (savedTheme === 'dark') {
-          document.documentElement.classList.add('dark');
+      function toggleTheme() {
+        const html = document.documentElement;
+        if(html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('theme-icon').textContent = 'dark_mode';
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('theme-icon').textContent = 'light_mode';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        if(localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+            const icon = document.getElementById('theme-icon');
+            if(icon) icon.textContent = 'light_mode';
         }
       });
-
-      function handleLogin(e) {
-        e.preventDefault();
-        
-        const loginCard = document.getElementById('login-card');
-        const loadingState = document.getElementById('loading-state');
-        
-        // Hide login card with a fade effect
-        loginCard.style.opacity = '0';
-        loginCard.style.transform = 'scale(0.95)';
-        loginCard.style.transition = 'all 0.4s ease';
-        
-        setTimeout(() => {
-          loginCard.classList.add('hidden');
-          loadingState.classList.remove('hidden');
-          loadingState.classList.add('flex');
-          
-          // Redirect after loading phase
-          setTimeout(() => {
-            window.location.href = 'home-dashboard.html';
-          }, 2500);
-        }, 400);
-      }
     </script>
   </head>
-  <body class="min-h-[100dvh] flex items-center justify-center p-4 overflow-hidden">
-    <div class="max-w-md w-full space-y-4 relative">
-      <!-- Decorative background elements -->
-      <div class="absolute -top-24 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
-      <div class="absolute -bottom-24 -right-20 w-64 h-64 bg-secondary/10 rounded-full blur-3xl"></div>
-
-      <!-- Loading State -->
-      <div id="loading-state" class="hidden flex-col items-center justify-center space-y-6 py-12">
-        <div class="w-32 h-32 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-2xl pulse-animation">
-          <img src="assets/school_logo.png" alt="Logo" class="w-20 h-20 object-contain">
-        </div>
-        <div class="text-center space-y-2">
-          <p class="text-lg font-bold text-primary dark:text-blue-400">Authenticating...</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide italic">Preparing your dashboard</p>
-        </div>
-      </div>
-
-      <!-- Login Card -->
-      <div id="login-card" class="glass-card p-8 rounded-[32px] relative z-10 text-center transition-all duration-500">
-        <!-- Logo -->
-        <div class="mb-4 float-animation">
-          <div class="w-20 h-20 bg-white rounded-full mx-auto p-2 flex items-center justify-center">
-            <img src="assets/school_logo.png" alt="Logo" class="w-full h-full object-contain">
-          </div>
+  <body class="text-slate-900 dark:text-slate-100 antialiased min-h-screen relative">
+    
+    <!-- Mobile App Container -->
+    <div class="max-w-[480px] mx-auto min-h-screen bg-background-light dark:bg-background-dark relative overflow-hidden shadow-2xl border-x border-slate-200/50 dark:border-slate-800/50 flex flex-col">
+        
+        <!-- Decorative Blobs -->
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-[-5%] left-[-10%] w-72 h-72 bg-primary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-primary/20"></div>
+            <div class="absolute top-[10%] right-[-10%] w-72 h-72 bg-secondary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:bg-secondary/20"></div>
         </div>
 
-        <div class="mb-6">
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Welcome Back</h1>
-          <p class="text-sm text-slate-500 dark:text-slate-400">Sign in to your student portal</p>
-        </div>
-
-        <form class="space-y-5" onsubmit="handleLogin(event)">
-          <div class="space-y-2 text-left">
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Student ID / Email</label>
-            <div class="relative group">
-              <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-lg">person</span>
-              <input type="text" required placeholder="PS-2024-0891" class="w-full pl-12 pr-4 py-4 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:text-white text-sm">
+        <!-- Sticky Header -->
+        <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 px-5 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-[40px] h-[40px] bg-white rounded-full flex items-center justify-center overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 p-1">
+                    <img src="assets/school_logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/40'">
+                </div>
+                <h1 class="text-base font-black tracking-tight dark:text-white uppercase">Phronesis</h1>
             </div>
-          </div>
+            
+            <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <span id="theme-icon" class="material-icons-outlined text-[18px] text-slate-600 dark:text-slate-400">dark_mode</span>
+            </button>
+        </header>
 
-          <div class="space-y-2 text-left">
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Password</label>
-            <div class="relative group">
-              <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-lg">lock</span>
-              <input type="password" required placeholder="••••••••" class="w-full pl-12 pr-4 py-4 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:text-white text-sm">
+        <!-- Main Scrollable Content -->
+        <main class="flex-1 overflow-y-auto hide-scrollbar z-10 pb-28">
+            
+            <!-- Hero Section -->
+            <section class="relative px-5 pt-14 pb-12 text-center overflow-hidden">
+                <!-- Background Image & Overlay -->
+                <div class="absolute inset-0 z-0">
+                    <img src="assets/hero_bg.png" alt="School Campus" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-white/85 dark:bg-slate-900/85 backdrop-blur-[2px]"></div>
+                </div>
+                
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/50 dark:bg-slate-800/50 text-primary dark:text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-6 animate-float backdrop-blur-md border border-slate-200/50 dark:border-slate-700/50 shadow-sm">
+                        <span class="material-icons-outlined text-[14px]">school</span>
+                        Excellence in Education
+                    </div>
+                    
+                    <h2 class="text-4xl font-black mb-4 leading-[1.1] tracking-tight text-slate-900 dark:text-white">
+                        Empowering <br> <span class="bg-gradient-text">Future Leaders</span>
+                    </h2>
+                    
+                    <p class="text-[13px] text-slate-700 dark:text-slate-300 font-medium leading-relaxed max-w-[300px] mx-auto mb-8">
+                        Discover a vibrant learning community where academic excellence meets character development.
+                    </p>
+                    
+                    <div class="flex flex-col gap-3 px-4">
+                        <a href="student-login.html" class="w-full py-4 bg-primary text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all active:scale-[0.98]">
+                            Student Portal <span class="material-icons-outlined text-[18px]">arrow_forward</span>
+                        </a>
+                        <a href="admission-info.html" class="w-full py-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-slate-900 dark:text-white font-bold rounded-2xl flex items-center justify-center border border-slate-200/50 dark:border-slate-700/50 shadow-sm transition-all active:scale-[0.98]">
+                            Apply for Admission
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Stats -->
+            <section class="px-5 py-6">
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 text-center shadow-sm border border-slate-100 dark:border-slate-700/50">
+                        <h4 class="text-primary dark:text-blue-400 text-2xl font-black mb-1">15+</h4>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Years Exp.</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 text-center shadow-sm border border-slate-100 dark:border-slate-700/50">
+                        <h4 class="text-secondary text-2xl font-black mb-1">98%</h4>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Pass Rate</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 text-center shadow-sm border border-slate-100 dark:border-slate-700/50">
+                        <h4 class="text-primary dark:text-blue-400 text-2xl font-black mb-1">24</h4>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Clubs</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Latest Announcements -->
+            <section class="px-5 py-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Announcements</h3>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex gap-4 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-secondary/20 to-transparent rounded-bl-full pointer-events-none"></div>
+                        <div class="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/20 text-orange-500 flex items-center justify-center shrink-0">
+                            <span class="material-icons-outlined text-[24px]">campaign</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 mb-1">OCTOBER 15, 2026</p>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white leading-tight mb-1">2026/2027 Admissions Open</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Applications for the new academic session are now being accepted online.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-primary dark:text-blue-400 flex items-center justify-center shrink-0">
+                            <span class="material-icons-outlined text-[24px]">emoji_events</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 mb-1">OCTOBER 10, 2026</p>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white leading-tight mb-1">Inter-House Sports Day</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Join us for our annual sports competition at the main stadium.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Fixed Bottom Navigation (Linked out) -->
+        <nav class="fixed bottom-0 inset-x-0 mx-auto max-w-[480px] bg-white/95 dark:bg-slate-900/95 glass-card border-t border-slate-200/50 dark:border-slate-800 pb-safe z-50">
+            <div class="flex justify-around items-center py-3 px-2">
+                <a href="#" class="flex flex-col items-center gap-1 text-primary dark:text-blue-400 w-16">
+                    <span class="material-icons-outlined text-[24px]">home</span>
+                    <span class="text-[9px] font-black tracking-wide">Home</span>
+                </a>
+                <a href="admission-info.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+                    <span class="material-icons-outlined text-[24px]">person_add</span>
+                    <span class="text-[9px] font-bold tracking-wide">Admissions</span>
+                </a>
+                <a href="student-login.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+                    <span class="material-icons-outlined text-[24px]">login</span>
+                    <span class="text-[9px] font-bold tracking-wide">Portal</span>
+                </a>
+                <a href="admin-login.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+                    <span class="material-icons-outlined text-[24px]">admin_panel_settings</span>
+                    <span class="text-[9px] font-bold tracking-wide">Admin</span>
+                </a>
             </div>
-          </div>
+        </nav>
 
-          <div class="flex items-center justify-between px-1">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary">
-              <span class="text-xs text-slate-500 dark:text-slate-400">Remember me</span>
-            </label>
-            <a href="#" class="text-xs font-bold text-primary dark:text-blue-400 hover:underline">Forgot password?</a>
-          </div>
-
-          <button type="submit" class="w-full py-4 bg-primary text-white rounded-2xl font-bold text-sm shadow-xl shadow-primary/20 hover:bg-blue-900 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4">
-            Sign In
-            <span class="material-icons-outlined text-sm">arrow_forward</span>
-          </button>
-        </form>
-
-        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            Don't have an account? 
-            <a href="#" class="font-bold text-primary dark:text-blue-400">Contact Administrator</a>
-          </p>
-        </div>
-      </div>
-
-      <!-- School Footer Info -->
-      <div class="text-center">
-        <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">PHRONESIS Academy</p>
-        <p class="text-[9px] text-slate-400 dark:text-slate-500 mt-1">Version 2.4.0 • © 2026 All Rights Reserved</p>
-      </div>
     </div>
   </body>
 </html>
