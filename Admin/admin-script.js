@@ -117,49 +117,8 @@ function toggleMobileMenu() {
 }
 
 // --- View Details Modal ---
-function openModal(regId) {
-    const modal = document.getElementById('details-modal');
-    const backdrop = document.getElementById('modal-backdrop');
-    const content = document.getElementById('modal-content');
-    
-    if (regId) {
-        document.getElementById('modal-reg-id').innerText = '#' + regId;
-    }
-
-    // Show modal container
-    modal.classList.remove('hidden');
-    
-    // Trigger animations (slight delay for smooth transition)
-    requestAnimationFrame(() => {
-        if(backdrop) {
-            backdrop.classList.remove('opacity-0');
-            backdrop.classList.add('opacity-100');
-        }
-        
-        content.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
-        content.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
-    });
-}
-
-function closeModal() {
-    const modal = document.getElementById('details-modal');
-    const backdrop = document.getElementById('modal-backdrop');
-    const content = document.getElementById('modal-content');
-    
-    // Reverse animations
-    if(backdrop) {
-        backdrop.classList.remove('opacity-100');
-        backdrop.classList.add('opacity-0');
-    }
-    
-    content.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
-    content.classList.add('opacity-0', 'translate-y-4', 'sm:scale-95');
-    
-    // Hide modal container after transition finishes (300ms)
-    setTimeout(() => {
-        modal.classList.add('hidden');
-    }, 300);
-}
+// The openModal and closeModal functions are defined locally in the respective HTML files
+// to properly handle specific data structures for each dashboard.
 
 // Dummy Delete Action inside Modal
 function deleteReg() {
