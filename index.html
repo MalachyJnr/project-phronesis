@@ -99,6 +99,43 @@
             const icon = document.getElementById('theme-icon');
             if(icon) icon.textContent = 'light_mode';
         }
+
+        // Hero Carousel Logic
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.carousel-dot');
+        let currentSlide = 0;
+        let slideInterval;
+
+        function showSlide(index) {
+          if (!slides.length) return;
+          slides.forEach(slide => slide.classList.replace('opacity-100', 'opacity-0'));
+          dots.forEach(dot => {
+            dot.classList.replace('bg-white', 'bg-white/40');
+            dot.classList.remove('w-6');
+          });
+          
+          slides[index].classList.replace('opacity-0', 'opacity-100');
+          dots[index].classList.replace('bg-white/40', 'bg-white');
+          dots[index].classList.add('w-6');
+          currentSlide = index;
+        }
+
+        function nextSlide() {
+          showSlide((currentSlide + 1) % slides.length);
+        }
+
+        if(slides.length > 0) {
+          showSlide(0);
+          slideInterval = setInterval(nextSlide, 5000);
+
+          dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+              clearInterval(slideInterval);
+              showSlide(index);
+              slideInterval = setInterval(nextSlide, 5000);
+            });
+          });
+        }
       });
     </script>
   </head>
@@ -109,8 +146,8 @@
         
         <!-- Decorative Blobs -->
         <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-            <div class="absolute top-[-5%] left-[-10%] w-72 h-72 bg-primary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-primary/20"></div>
-            <div class="absolute top-[10%] right-[-10%] w-72 h-72 bg-secondary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:bg-secondary/20"></div>
+            <div class="absolute top-[-5%] left-[-10%] w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-40 dark:bg-primary/10"></div>
+            <div class="absolute top-[10%] right-[-10%] w-72 h-72 bg-secondary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-40 dark:bg-secondary/10"></div>
         </div>
 
         <!-- Sticky Header -->
@@ -129,34 +166,54 @@
         <main class="flex-1 overflow-y-auto hide-scrollbar z-10 pb-28">
             
             <!-- Hero Section -->
-            <section class="relative px-5 pt-14 pb-12 text-center overflow-hidden">
-                <!-- Background Image & Overlay -->
-                <div class="absolute inset-0 z-0">
-                    <img src="assets/hero_bg.png" alt="School Campus" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-white/85 dark:bg-slate-900/85 backdrop-blur-[2px]"></div>
-                </div>
-                
-                <div class="relative z-10">
-                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/50 dark:bg-slate-800/50 text-primary dark:text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-6 animate-float backdrop-blur-md border border-slate-200/50 dark:border-slate-700/50 shadow-sm">
-                        <span class="material-icons-outlined text-[14px]">school</span>
-                        Excellence in Education
+            <section class="relative px-0 pt-0 pb-12 text-center overflow-hidden">
+                <div id="hero-carousel" class="relative w-full h-[85vh] max-h-[600px] overflow-hidden">
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide absolute inset-0 z-0 transition-opacity duration-1000 opacity-100">
+                        <img src="assets/hero_bg.png" alt="School Campus" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-slate-900/60 dark:bg-slate-900/70"></div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide absolute inset-0 z-0 transition-opacity duration-1000 opacity-0">
+                        <img src="assets/hero_bg_2.png" alt="Modern Campus" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-slate-900/60 dark:bg-slate-900/70"></div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide absolute inset-0 z-0 transition-opacity duration-1000 opacity-0">
+                        <img src="assets/hero_bg_3.png" alt="School Library" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-slate-900/60 dark:bg-slate-900/70"></div>
                     </div>
                     
-                    <h2 class="text-4xl font-black mb-4 leading-[1.1] tracking-tight text-slate-900 dark:text-white">
-                        Empowering <br> <span class="bg-gradient-text">Future Leaders</span>
-                    </h2>
+                    <!-- Content Overlay -->
+                    <div class="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 pt-16 mt-6">
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 dark:bg-slate-800/40 text-white text-[10px] font-bold uppercase tracking-widest mb-6 backdrop-blur-md border border-white/30 shadow-sm animate-float">
+                            <span class="material-icons-outlined text-[14px]">school</span>
+                            Excellence in Education
+                        </div>
+                        
+                        <h2 class="text-4xl sm:text-5xl font-black mb-4 leading-[1.1] tracking-tight text-white drop-shadow-lg">
+                            Empowering <br> <span class="text-secondary drop-shadow-md">Future Leaders</span>
+                        </h2>
+                        
+                        <p class="text-[14px] text-slate-100 font-medium leading-relaxed max-w-[320px] mx-auto mb-10 drop-shadow-md">
+                            Discover a vibrant learning community where academic excellence meets character development.
+                        </p>
+                        
+                        <div class="flex flex-col w-full gap-3 px-4 max-w-[340px]">
+                            <a href="student-login.html" class="w-full py-4 bg-primary text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary/30 hover:bg-blue-700 transition-all active:scale-[0.98]">
+                                Student Portal <span class="material-icons-outlined text-[18px]">arrow_forward</span>
+                            </a>
+                            <a href="admission-info.html" class="w-full py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl flex items-center justify-center border border-white/30 shadow-sm transition-all active:scale-[0.98]">
+                                Apply for Admission
+                            </a>
+                        </div>
+                    </div>
                     
-                    <p class="text-[13px] text-slate-700 dark:text-slate-300 font-medium leading-relaxed max-w-[300px] mx-auto mb-8">
-                        Discover a vibrant learning community where academic excellence meets character development.
-                    </p>
-                    
-                    <div class="flex flex-col gap-3 px-4">
-                        <a href="student-login.html" class="w-full py-4 bg-primary text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all active:scale-[0.98]">
-                            Student Portal <span class="material-icons-outlined text-[18px]">arrow_forward</span>
-                        </a>
-                        <a href="admission-info.html" class="w-full py-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-slate-900 dark:text-white font-bold rounded-2xl flex items-center justify-center border border-slate-200/50 dark:border-slate-700/50 shadow-sm transition-all active:scale-[0.98]">
-                            Apply for Admission
-                        </a>
+                    <!-- Carousel Indicators -->
+                    <div class="absolute bottom-6 left-0 right-0 z-20 flex justify-center gap-2">
+                        <button class="carousel-dot w-6 h-2 rounded-full bg-white transition-all shadow-sm" aria-label="Slide 1"></button>
+                        <button class="carousel-dot w-2 h-2 rounded-full bg-white/40 transition-all shadow-sm hover:bg-white/60" aria-label="Slide 2"></button>
+                        <button class="carousel-dot w-2 h-2 rounded-full bg-white/40 transition-all shadow-sm hover:bg-white/60" aria-label="Slide 3"></button>
                     </div>
                 </div>
             </section>
