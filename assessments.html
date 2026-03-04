@@ -78,15 +78,65 @@
     <script src="assets/navigation.js"></script>
   </head>
   <body
-    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen"
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen md:flex"
   >
-    <!-- Mobile-only container -->
-    <div id="page-container" class="max-w-[480px] mx-auto bg-background-light dark:bg-background-dark min-h-screen relative fade-in">
+    <!-- Desktop Sidebar -->
+    <aside class="hidden md:flex flex-col w-[260px] fixed inset-y-0 left-0 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 z-30 shadow-sm">
+        <!-- Logo -->
+        <div class="h-[72px] flex items-center px-6 border-b border-slate-100 dark:border-slate-800 shrink-0">
+          <img src="assets/school_logo.png" alt="PHRONESIS Logo" class="h-8 w-auto object-contain drop-shadow-sm" onerror="this.src='https://via.placeholder.com/40'">
+          <div class="ml-3">
+            <h1 class="text-sm font-bold text-primary dark:text-blue-400 uppercase tracking-wider leading-none">PHRONESIS</h1>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">Academic Year 23-24</p>
+          </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
+          <a href="home-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl font-medium transition-colors">
+            <span class="material-icons-outlined text-[20px]">home</span>
+            <span class="text-sm">Home</span>
+          </a>
+          <a href="results.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl font-medium transition-colors">
+            <span class="material-icons-outlined text-[20px]">fact_check</span>
+            <span class="text-sm">Results</span>
+          </a>
+          <a href="timetable.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl font-medium transition-colors">
+            <span class="material-icons-outlined text-[20px]">calendar_today</span>
+            <span class="text-sm">Timetable</span>
+          </a>
+          <a href="assessments.html" class="flex items-center gap-3 px-4 py-3 bg-secondary/10 text-secondary rounded-xl font-bold transition-colors">
+            <span class="material-icons-outlined text-[20px]">description</span>
+            <span class="text-sm">Assessments</span>
+          </a>
+          <a href="payments.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl font-medium transition-colors">
+            <span class="material-icons-outlined text-[20px]">payments</span>
+            <span class="text-sm">Payments</span>
+          </a>
+        </nav>
+        <!-- Profile / Bottom -->
+        <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between mt-auto">
+          <div class="flex items-center gap-3">
+             <div class="w-10 h-10 rounded-full flex flex-shrink-0 items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700">
+               <img src="https://ui-avatars.com/api/?name=John+Doe&background=f1f5f9&color=64748b" alt="User Profile" class="w-full h-full object-cover">
+             </div>
+             <div>
+               <h4 class="text-xs font-bold text-slate-900 dark:text-white">John Doe</h4>
+               <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">ID: 20230891</p>
+             </div>
+          </div>
+          <button onclick="logout()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800" title="Logout">
+            <span class="material-icons-outlined text-lg">logout</span>
+          </button>
+        </div>
+    </aside>
+
+    <!-- Main Container -->
+    <div id="page-container" class="max-w-[480px] md:max-w-none md:ml-[260px] md:flex-1 w-full mx-auto md:mx-0 bg-background-light dark:bg-background-dark min-h-screen relative fade-in pb-20 md:pb-0">
     
     <header
-      class="bg-background-light dark:bg-background-dark px-4 py-4 sticky top-0 z-20"
+      class="bg-background-light dark:bg-background-dark px-4 md:px-8 py-4 sticky top-0 z-20 md:flex md:items-center md:justify-between"
     >
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between md:hidden w-full">
         <div class="flex items-center gap-3">
           <img src="assets/school_logo.png" alt="PHRONESIS Logo" class="h-10 w-auto object-contain drop-shadow-sm" onerror="this.src='https://via.placeholder.com/40'">
           <div>
@@ -129,10 +179,29 @@
           </button>
         </div>
       </div>
+      
+      <!-- Desktop Header Content -->
+      <div class="hidden md:flex flex-1 items-center justify-between">
+        <h2 class="text-2xl font-bold dark:text-white tracking-tight">Assessments & Projects</h2>
+        <div class="flex items-center gap-5">
+          <button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="toggleTheme()" title="Toggle Theme">
+            <span class="material-icons-outlined text-[20px]" id="theme-icon-desktop">dark_mode</span>
+          </button>
+          <button class="relative w-10 h-10 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="toggleNotifications()" title="Notifications">
+            <span class="material-icons-outlined text-[20px]">notifications</span>
+            <span class="absolute top-2.5 right-2.5 bg-secondary text-white text-[0px] w-2 h-2 rounded-full border border-background-light dark:border-background-dark"></span>
+          </button>
+          <div class="h-6 border-l border-slate-200 dark:border-slate-700 mx-1"></div>
+          <a href="settings.html" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Settings">
+            <span class="material-icons-outlined text-[20px]">settings</span>
+          </a>
+        </div>
+      </div>
     </header>
 
-    <main class="p-4 space-y-6 pb-24">
-      <section>
+    <main class="p-4 md:px-8 md:py-6 space-y-6 md:space-y-8 pb-24 md:pb-8">
+      <!-- Mobile Welcome Area -->
+      <section class="md:hidden">
         <h2 class="text-2xl font-bold dark:text-white">Assessments</h2>
         <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Track your upcoming tests, assignments, and projects.
@@ -140,7 +209,9 @@
       </section>
 
       <!-- Filter Tabs -->
-      <div class="flex overflow-x-auto gap-2 pb-2 hide-scrollbar">
+      
+      <!-- Mobile Filter -->
+      <div class="md:hidden flex overflow-x-auto gap-2 pb-2 hide-scrollbar">
         <button
           onclick="filterAssessments('All', this)"
           class="px-4 py-2 bg-primary text-white rounded-full text-xs font-bold whitespace-nowrap transition-all"
@@ -167,29 +238,73 @@
         </button>
       </div>
 
+      <!-- Desktop Filter -->
+      <div class="hidden md:flex bg-slate-50 dark:bg-slate-900/50 rounded-lg p-1.5 gap-1 w-full max-w-[400px] border border-slate-100 dark:border-slate-800">
+         <button onclick="filterAssessments('All', this)" class="flex-1 py-1.5 bg-white dark:bg-slate-800 shadow-sm text-slate-900 dark:text-white rounded-md text-sm font-bold transition-all">All</button>
+         <button onclick="filterAssessments('Upcoming', this)" class="flex-1 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md text-sm font-medium transition-all">Upcoming</button>
+         <button onclick="filterAssessments('Completed', this)" class="flex-1 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md text-sm font-medium transition-all">Completed</button>
+         <button onclick="filterAssessments('Overdue', this)" class="flex-1 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md text-sm font-medium transition-all">Overdue</button>
+      </div>
+
       <!-- Summary Cards -->
-      <div class="grid grid-cols-3 gap-3">
-        <div class="bg-primary p-3 rounded-xl text-white shadow-lg">
-          <div class="text-2xl font-bold">3</div>
-          <p class="text-[10px] opacity-90 mt-1">Pending</p>
+      <div class="grid grid-cols-3 gap-3 md:gap-6">
+        <!-- Pending Card -->
+        <div class="group relative overflow-hidden bg-primary p-3 md:p-6 rounded-2xl text-white shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 md:h-32 lg:h-36 flex flex-col justify-center border border-white/10">
+          <div class="absolute -right-4 -bottom-4 opacity-[0.08] group-hover:scale-110 transition-transform duration-500 pointer-events-none">
+            <span class="material-icons-outlined text-7xl md:text-8xl">pending_actions</span>
+          </div>
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-1 md:mb-2">
+              <div class="text-2xl md:text-4xl lg:text-5xl font-extrabold drop-shadow-sm leading-none">3</div>
+              <div class="w-6 h-6 md:w-10 md:h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-inner">
+                 <span class="material-icons-outlined text-[12px] md:text-xl">hourglass_empty</span>
+              </div>
+            </div>
+            <p class="text-[10px] md:text-sm font-semibold opacity-90 tracking-wide mt-1">Pending</p>
+          </div>
         </div>
-        <div class="bg-gradient-to-br from-secondary to-yellow-600 p-3 rounded-xl text-white shadow-lg">
-          <div class="text-2xl font-bold">5</div>
-          <p class="text-[10px] opacity-90 mt-1">This Week</p>
+        
+        <!-- This Week Card -->
+        <div class="group relative overflow-hidden bg-gradient-to-br from-secondary to-yellow-600 p-3 md:p-6 rounded-2xl text-white shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 md:h-32 lg:h-36 flex flex-col justify-center border border-white/10">
+          <div class="absolute -right-4 -bottom-4 opacity-[0.08] group-hover:scale-110 transition-transform duration-500 pointer-events-none">
+            <span class="material-icons-outlined text-7xl md:text-8xl">date_range</span>
+          </div>
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-1 md:mb-2">
+              <div class="text-2xl md:text-4xl lg:text-5xl font-extrabold drop-shadow-sm leading-none">5</div>
+              <div class="w-6 h-6 md:w-10 md:h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-inner">
+                 <span class="material-icons-outlined text-[12px] md:text-xl">today</span>
+              </div>
+            </div>
+            <p class="text-[10px] md:text-sm font-semibold opacity-90 tracking-wide mt-1">This Week</p>
+          </div>
         </div>
-        <div class="bg-secondary p-3 rounded-xl text-white shadow-lg">
-          <div class="text-2xl font-bold">12</div>
-          <p class="text-[10px] opacity-90 mt-1">Completed</p>
+
+        <!-- Completed Card -->
+        <div class="group relative overflow-hidden bg-secondary p-3 md:p-6 rounded-2xl text-white shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 md:h-32 lg:h-36 flex flex-col justify-center border border-white/10">
+          <div class="absolute -right-4 -bottom-4 opacity-[0.08] group-hover:scale-110 transition-transform duration-500 pointer-events-none">
+            <span class="material-icons-outlined text-7xl md:text-8xl">task_alt</span>
+          </div>
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-1 md:mb-2">
+              <div class="text-2xl md:text-4xl lg:text-5xl font-extrabold drop-shadow-sm leading-none">12</div>
+              <div class="w-6 h-6 md:w-10 md:h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-inner">
+                 <span class="material-icons-outlined text-[12px] md:text-xl">check_circle</span>
+              </div>
+            </div>
+            <p class="text-[10px] md:text-sm font-semibold opacity-90 tracking-wide mt-1">Completed</p>
+          </div>
         </div>
       </div>
 
       <!-- Upcoming Assessments -->
-      <section class="assessment-section space-y-3">
-        <h3 class="text-lg font-bold dark:text-white flex items-center gap-2">
+      <section class="assessment-section space-y-3 md:space-y-4">
+        <h3 class="text-lg md:text-xl font-bold dark:text-white flex items-center gap-2 mb-2 md:mb-4">
           <span class="material-icons-outlined text-primary">priority_high</span>
           Due Soon
         </h3>
         
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
         <!-- Mathematics Test - URGENT -->
         <div
           class="assessment-card bg-white dark:bg-slate-800 p-4 rounded-xl border-l-4 border-primary shadow-lg cursor-pointer transition-transform active:scale-[0.98]"
@@ -310,15 +425,17 @@
             </div>
           </div>
         </div>
+        </div> <!-- end Upcoming Grid -->
       </section>
 
       <!-- Completed Assessments -->
-      <section class="assessment-section space-y-3">
-        <h3 class="text-lg font-bold dark:text-white flex items-center gap-2">
+      <section class="assessment-section space-y-3 md:space-y-4">
+        <h3 class="text-lg md:text-xl font-bold dark:text-white flex items-center gap-2 mb-2 md:mb-4">
           <span class="material-icons-outlined text-secondary">check_circle</span>
           Recently Completed
         </h3>
         
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
         <!-- English Essay - Completed -->
         <div
           class="assessment-card bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm opacity-75 cursor-pointer transition-transform active:scale-[0.98]"
@@ -371,11 +488,12 @@
             <span class="text-slate-600 dark:text-slate-400">Completed: Feb 3, 2026</span>
           </div>
         </div>
+        </div> <!-- end Completed Grid -->
       </section>
     </main>
 
     <nav
-      class="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white/80 dark:bg-slate-900/80 glass-card border-t border-slate-100 dark:border-slate-800 bottom-nav-safe z-30"
+      class="md:hidden fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white/80 dark:bg-slate-900/80 glass-card border-t border-slate-100 dark:border-slate-800 bottom-nav-safe z-30"
     >
       <div class="flex justify-around items-center py-3">
         <a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="home-dashboard.html">

@@ -7,11 +7,15 @@ function toggleTheme() {
   if (newTheme === 'dark') {
     html.classList.add('dark');
     const icon = document.getElementById('theme-icon');
+    const iconDesktop = document.getElementById('theme-icon-desktop');
     if (icon) icon.textContent = 'light_mode';
+    if (iconDesktop) iconDesktop.textContent = 'light_mode';
   } else {
     html.classList.remove('dark');
     const icon = document.getElementById('theme-icon');
+    const iconDesktop = document.getElementById('theme-icon-desktop');
     if (icon) icon.textContent = 'dark_mode';
+    if (iconDesktop) iconDesktop.textContent = 'dark_mode';
   }
   
   // Save preference to localStorage
@@ -26,10 +30,14 @@ document.addEventListener('DOMContentLoaded', function() {
   if (savedTheme === 'dark') {
     html.classList.add('dark');
     const icon = document.getElementById('theme-icon');
+    const iconDesktop = document.getElementById('theme-icon-desktop');
     if (icon) icon.textContent = 'light_mode';
+    if (iconDesktop) iconDesktop.textContent = 'light_mode';
   } else {
     html.classList.remove('dark');
     const icon = document.getElementById('theme-icon');
+    const iconDesktop = document.getElementById('theme-icon-desktop');
     if (icon) icon.textContent = 'dark_mode';
+    if (iconDesktop) iconDesktop.textContent = 'dark_mode';
   }
 });

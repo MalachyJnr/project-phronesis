@@ -78,15 +78,65 @@
     <script src="assets/navigation.js"></script>
   </head>
   <body
-    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen"
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen md:flex"
   >
-    <!-- Mobile-only container -->
-    <div id="page-container" class="max-w-[480px] mx-auto bg-background-light dark:bg-background-dark min-h-screen relative fade-in">
+    <!-- Desktop Sidebar -->
+    <aside class="hidden md:flex flex-col w-[260px] fixed inset-y-0 left-0 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 z-30 shadow-sm">
+        <!-- Logo -->
+        <div class="h-[72px] flex items-center px-6 border-b border-slate-100 dark:border-slate-800 shrink-0">
+          <img src="assets/school_logo.png" alt="PHRONESIS Logo" class="h-8 w-auto object-contain drop-shadow-sm" onerror="this.src='https://via.placeholder.com/40'">
+          <div class="ml-3">
+            <h1 class="text-sm font-bold text-primary dark:text-blue-400 uppercase tracking-wider leading-none">PHRONESIS</h1>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">Academic Year 23-24</p>
+          </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
+          <a href="home-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl font-medium transition-colors">
+            <span class="material-icons-outlined text-[20px]">home</span>
+            <span class="text-sm">Home</span>
+          </a>
+          <a href="results.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl font-medium transition-colors">
+            <span class="material-icons-outlined text-[20px]">fact_check</span>
+            <span class="text-sm">Results</span>
+          </a>
+          <a href="timetable.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl font-medium transition-colors">
+            <span class="material-icons-outlined text-[20px]">calendar_today</span>
+            <span class="text-sm">Timetable</span>
+          </a>
+          <a href="assessments.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl font-medium transition-colors">
+            <span class="material-icons-outlined text-[20px]">description</span>
+            <span class="text-sm">Assessments</span>
+          </a>
+          <a href="payments.html" class="flex items-center gap-3 px-4 py-3 bg-secondary/10 text-secondary rounded-xl font-bold transition-colors">
+            <span class="material-icons-outlined text-[20px]">payments</span>
+            <span class="text-sm">Payments</span>
+          </a>
+        </nav>
+        <!-- Profile / Bottom -->
+        <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between mt-auto">
+          <div class="flex items-center gap-3">
+             <div class="w-10 h-10 rounded-full flex flex-shrink-0 items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700">
+               <img src="https://ui-avatars.com/api/?name=John+Doe&background=f1f5f9&color=64748b" alt="User Profile" class="w-full h-full object-cover">
+             </div>
+             <div>
+               <h4 class="text-xs font-bold text-slate-900 dark:text-white">John Doe</h4>
+               <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">ID: 20230891</p>
+             </div>
+          </div>
+          <button onclick="logout()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800" title="Logout">
+            <span class="material-icons-outlined text-lg">logout</span>
+          </button>
+        </div>
+    </aside>
+
+    <!-- Main Container -->
+    <div id="page-container" class="max-w-[480px] md:max-w-none md:ml-[260px] md:flex-1 w-full mx-auto md:mx-0 bg-background-light dark:bg-background-dark min-h-screen relative fade-in pb-20 md:pb-0">
     
     <header
-      class="bg-background-light dark:bg-background-dark px-4 py-4 sticky top-0 z-20"
+      class="bg-background-light dark:bg-background-dark px-4 md:px-8 py-4 sticky top-0 z-20 md:flex md:items-center md:justify-between"
     >
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between md:hidden w-full">
         <div class="flex items-center gap-3">
           <img src="assets/school_logo.png" alt="PHRONESIS Logo" class="h-10 w-auto object-contain drop-shadow-sm" onerror="this.src='https://via.placeholder.com/40'">
           <div>
@@ -129,58 +179,100 @@
           </button>
         </div>
       </div>
+      
+      <!-- Desktop Header Content -->
+      <div class="hidden md:flex flex-1 items-center justify-between">
+        <h2 class="text-2xl font-bold dark:text-white tracking-tight">Payment & Billing</h2>
+        <div class="flex items-center gap-5">
+          <button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="toggleTheme()" title="Toggle Theme">
+            <span class="material-icons-outlined text-[20px]" id="theme-icon-desktop">dark_mode</span>
+          </button>
+          <button class="relative w-10 h-10 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="toggleNotifications()" title="Notifications">
+            <span class="material-icons-outlined text-[20px]">notifications</span>
+            <span class="absolute top-2.5 right-2.5 bg-secondary text-white text-[0px] w-2 h-2 rounded-full border border-background-light dark:border-background-dark"></span>
+          </button>
+          <div class="h-6 border-l border-slate-200 dark:border-slate-700 mx-1"></div>
+          <a href="settings.html" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Settings">
+            <span class="material-icons-outlined text-[20px]">settings</span>
+          </a>
+        </div>
+      </div>
     </header>
 
-    <main class="p-4 space-y-6 pb-24">
-      <section>
+    <main class="p-4 md:px-8 md:py-6 space-y-6 md:space-y-8 pb-24 md:pb-8 max-w-7xl mx-auto">
+      
+      <!-- Mobile Welcome Area -->
+      <section class="md:hidden">
         <h2 class="text-2xl font-bold dark:text-white">Payment & Billing</h2>
         <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
           View your payment history and current balance.
         </p>
       </section>
 
-      <!-- Payment Status Card -->
-      <div class="bg-primary p-5 rounded-2xl text-white shadow-lg">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <p class="text-xs opacity-90 mb-1">Current Status</p>
-            <h3 class="text-2xl font-bold">Up-to-Date</h3>
-            <p class="text-xs opacity-75 mt-1">All payments cleared</p>
+      <!-- Desktop Top Section Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-1 h-full">
+            <!-- Payment Status Card injected -->
+            <div class="bg-primary p-5 md:p-8 rounded-2xl text-white shadow-lg border border-white/10 h-full flex flex-col justify-between items-start lg:min-h-[220px] relative overflow-hidden group">
+              <div class="absolute -right-6 -bottom-6 opacity-10 pointer-events-none group-hover:scale-110 transition-transform duration-700 origin-bottom-right">
+                <span class="material-icons-outlined text-[150px]">verified_user</span>
+              </div>
+              
+              <div class="flex items-start justify-between w-full mb-4 relative z-10">
+                <div>
+                  <p class="text-xs md:text-sm font-semibold opacity-90 mb-1 tracking-wide uppercase">Current Status</p>
+                  <h3 class="text-2xl md:text-4xl font-extrabold drop-shadow-sm text-white">Up-to-Date</h3>
+                  <p class="text-xs md:text-sm opacity-90 mt-1 md:mt-2">All payments cleared</p>
+                </div>
+                <div class="w-12 h-12 md:w-16 md:h-16 bg-white/20 backdrop-blur-sm shadow-inner rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="material-icons-outlined text-3xl md:text-4xl text-white">verified</span>
+                </div>
+              </div>
+              <div class="bg-black/20 backdrop-blur-md rounded-xl p-4 md:p-5 mt-4 w-full relative z-10 border border-white/10">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs md:text-sm font-medium tracking-wide">Outstanding Balance</span>
+                  <span class="text-lg md:text-3xl font-bold">₦0.00</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-            <span class="material-icons-outlined text-4xl">verified</span>
+          
+          <div class="lg:col-span-2 h-full">
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-3 gap-3 md:gap-6 h-full">
+              <div class="bg-white dark:bg-slate-800 p-3 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm md:shadow-md hover:shadow-lg transition-all flex flex-col justify-center items-center h-full group text-center relative overflow-hidden">
+                <div class="absolute -left-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:-rotate-12 transition-transform duration-500">
+                  <span class="material-icons-outlined text-7xl md:text-8xl">history</span>
+                </div>
+                <div class="text-xl md:text-4xl font-extrabold text-primary dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">3</div>
+                <p class="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 md:mt-2">Terms Paid</p>
+              </div>
+              <div class="bg-white dark:bg-slate-800 p-3 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm md:shadow-md hover:shadow-lg transition-all flex flex-col justify-center items-center h-full group text-center relative overflow-hidden">
+                <div class="absolute -left-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:rotate-12 transition-transform duration-500">
+                  <span class="material-icons-outlined text-7xl md:text-8xl">bolt</span>
+                </div>
+                <div class="text-xl md:text-4xl font-extrabold text-primary dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">100%</div>
+                <p class="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 md:mt-2">On Time</p>
+              </div>
+              <div class="bg-white dark:bg-slate-800 p-3 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm md:shadow-md hover:shadow-lg transition-all flex flex-col justify-center items-center h-full group text-center relative overflow-hidden">
+                 <div class="absolute -left-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-500">
+                  <span class="material-icons-outlined text-7xl md:text-8xl">money_off</span>
+                </div>
+                <div class="text-xl md:text-4xl font-extrabold text-secondary hover:text-yellow-600 transition-colors duration-300">₦0</div>
+                <p class="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 md:mt-2">Pending Fees</p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="bg-white/10 rounded-xl p-3 mt-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs">Outstanding Balance</span>
-            <span class="text-lg font-bold">₦0.00</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Stats -->
-      <div class="grid grid-cols-3 gap-3">
-        <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700 text-center">
-          <div class="text-xl font-bold text-primary dark:text-blue-400">3</div>
-          <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Terms Paid</p>
-        </div>
-        <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700 text-center">
-          <div class="text-xl font-bold text-primary dark:text-blue-400">100%</div>
-          <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">On Time</p>
-        </div>
-        <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700 text-center">
-          <div class="text-xl font-bold text-secondary">₦0</div>
-          <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Pending</p>
-        </div>
       </div>
 
       <!-- Payment History -->
-      <section class="space-y-3">
-        <h3 class="text-lg font-bold dark:text-white flex items-center gap-2">
-          <span class="material-icons-outlined text-primary dark:text-blue-400">history</span>
+      <section class="space-y-3 md:space-y-6 pt-2 md:pt-4">
+        <h3 class="text-lg md:text-2xl font-bold dark:text-white flex items-center gap-2">
+          <span class="material-icons-outlined text-primary dark:text-blue-400 md:text-3xl">history</span>
           Payment History
         </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
         
         <!-- Term 1 Payment -->
         <div
@@ -286,20 +378,24 @@
             </div>
           </div>
         </div>
+
+        </div> <!-- End History Grid -->
       </section>
 
       <!-- Download Receipt Button -->
-      <button
-        onclick="downloadReceipt()"
-        class="w-full py-3 bg-primary dark:bg-blue-600 text-white rounded-xl text-sm font-bold transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2"
-      >
-        <span class="material-icons-outlined text-lg">download</span>
-        Download Payment Receipt
-      </button>
+      <div class="pt-4 md:pt-6 flex justify-center md:justify-start">
+        <button
+          onclick="downloadReceipt()"
+          class="w-full md:w-auto md:px-8 py-3 bg-primary hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all hover:shadow-lg active:scale-[0.98] shadow-md flex items-center justify-center gap-2"
+        >
+          <span class="material-icons-outlined text-lg">download</span>
+          Download Payment Receipt
+        </button>
+      </div>
     </main>
 
     <nav
-      class="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white/80 dark:bg-slate-900/80 glass-card border-t border-slate-100 dark:border-slate-800 bottom-nav-safe z-30"
+      class="md:hidden fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white/80 dark:bg-slate-900/80 glass-card border-t border-slate-100 dark:border-slate-800 bottom-nav-safe z-30"
     >
       <div class="flex justify-around items-center py-3">
         <a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="home-dashboard.html">
