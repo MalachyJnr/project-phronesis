@@ -278,13 +278,13 @@ function switchTerm(termNumber, element) {
     // Update button styles
     const buttons = element.parentElement.querySelectorAll('button');
     buttons.forEach(btn => {
-        btn.classList.remove('bg-primary', 'text-white');
+        btn.classList.remove('bg-secondary', 'text-white');
         btn.classList.add('bg-white', 'dark:bg-slate-800', 'border', 'border-slate-100', 'dark:border-slate-700', 'text-slate-500', 'dark:text-slate-400', 'font-medium');
         btn.classList.remove('font-bold');
     });
 
     element.classList.remove('bg-white', 'dark:bg-slate-800', 'border', 'border-slate-100', 'dark:border-slate-700', 'text-slate-500', 'dark:text-slate-400', 'font-medium');
-    element.classList.add('bg-primary', 'text-white', 'font-bold');
+    element.classList.add('bg-secondary', 'text-white', 'font-bold');
 
     // In a real app, this would trigger a data fetch/filter
     console.log(`Switching to Term ${termNumber}`);
@@ -378,13 +378,13 @@ function switchDay(day, element) {
     // Update button styles
     const buttons = element.parentElement.querySelectorAll('button');
     buttons.forEach(btn => {
-        btn.classList.remove('bg-primary', 'text-white');
+        btn.classList.remove('bg-secondary', 'text-white');
         btn.classList.add('bg-white', 'dark:bg-slate-800', 'border', 'border-slate-100', 'dark:border-slate-700', 'text-slate-500', 'dark:text-slate-400', 'font-medium');
         btn.classList.remove('font-bold');
     });
 
     element.classList.remove('bg-white', 'dark:bg-slate-800', 'border', 'border-slate-100', 'dark:border-slate-700', 'text-slate-500', 'dark:text-slate-400', 'font-medium');
-    element.classList.add('bg-primary', 'text-white', 'font-bold');
+    element.classList.add('bg-secondary', 'text-white', 'font-bold');
 
     // Update Day Info Card
     const dayLabel = document.getElementById('current-day-label');
@@ -403,7 +403,7 @@ function switchDay(day, element) {
     }
 
     // Class counts for mock UI
-    const counts = { 'Monday': 5, 'Tuesday': 4, 'Wednesday': 5, 'Thursday': 4, 'Friday': 3 };
+    const counts = { 'Monday': 5, 'Tuesday': 5, 'Wednesday': 5, 'Thursday': 5, 'Friday': 5 };
     if (classCount) classCount.textContent = `${counts[day] || 0} classes scheduled`;
 }
 
@@ -412,12 +412,12 @@ function filterAssessments(category, element) {
     // Update button styles
     const buttons = element.parentElement.querySelectorAll('button');
     buttons.forEach(btn => {
-        btn.classList.remove('bg-primary', 'text-white', 'font-bold');
+        btn.classList.remove('bg-secondary', 'text-white', 'font-bold');
         btn.classList.add('bg-white', 'dark:bg-slate-800', 'border', 'border-slate-100', 'dark:border-slate-700', 'text-slate-500', 'dark:text-slate-400', 'font-medium');
     });
 
     element.classList.remove('bg-white', 'dark:bg-slate-800', 'border', 'border-slate-100', 'dark:border-slate-700', 'text-slate-500', 'dark:text-slate-400', 'font-medium');
-    element.classList.add('bg-primary', 'text-white', 'font-bold');
+    element.classList.add('bg-secondary', 'text-white', 'font-bold');
 
     // Filter items
     const sections = document.querySelectorAll('section.assessment-section');
@@ -689,16 +689,25 @@ function updateActiveNav(url) {
     navLinks.forEach(link => {
         const href = link.getAttribute('href');
         if (href && url.endsWith(href)) {
-            // Mobile Nav (text/icons)
-            link.classList.remove('text-slate-400', 'dark:text-slate-500');
-            link.classList.add('text-primary', 'dark:text-blue-400');
+            // Mobile Nav & Desktop Nav
+            link.classList.remove('text-slate-400', 'dark:text-slate-500', 'hover:bg-slate-50', 'dark:hover:bg-slate-800/50', 'hover:text-slate-700', 'dark:hover:text-slate-200');
+            link.classList.add('text-secondary', 'dark:text-yellow-400');
             
+            if (link.classList.contains('px-4')) {
+                link.classList.remove('font-medium');
+                link.classList.add('bg-secondary/10', 'font-bold');
+            }
             // Find parent label if exists
             const label = link.querySelector('span:not(.material-icons-outlined)');
             if (label) label.classList.add('font-black');
         } else {
+            // Inactive
             link.classList.add('text-slate-400', 'dark:text-slate-500');
-            link.classList.remove('text-primary', 'dark:text-blue-400', 'font-bold');
+            link.classList.remove('text-secondary', 'dark:text-yellow-400', 'font-bold', 'bg-secondary/10');
+            
+            if (link.classList.contains('px-4')) {
+                link.classList.add('hover:bg-slate-50', 'dark:hover:bg-slate-800/50', 'hover:text-slate-700', 'dark:hover:text-slate-200', 'font-medium');
+            }
             
             const label = link.querySelector('span:not(.material-icons-outlined)');
             if (label) label.classList.remove('font-black');

@@ -34,9 +34,12 @@
     <style>
       body {
         font-family: "Inter", sans-serif;
+      }
+      /* Form Pane Gradients scoped to right container */
+      .form-pane {
         background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
       }
-      .dark body {
+      .dark .form-pane {
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       }
       .glass-card {
@@ -96,11 +99,103 @@
       }
     </script>
   </head>
-  <body class="min-h-[100dvh] flex items-center justify-center p-4 overflow-hidden">
-    <div class="max-w-md w-full space-y-4 relative">
-      <!-- Decorative background elements -->
-      <div class="absolute -top-24 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
-      <div class="absolute -bottom-24 -right-20 w-64 h-64 bg-secondary/10 rounded-full blur-3xl"></div>
+  <body class="min-h-screen flex flex-col bg-background-light dark:bg-background-dark overflow-x-hidden font-display">
+
+    <!-- Responsive Sticky Header -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
+            <!-- Mobile Logo Zone & Back -->
+            <div class="flex items-center gap-3 w-auto md:w-1/4">
+                <a href="index.html" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <span class="material-icons-outlined text-[18px] text-slate-600 dark:text-slate-400">arrow_back</span>
+                </a>
+                <a href="index.html" class="hidden md:flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <img src="assets/school_logo.png" alt="Logo" class="h-10 w-auto object-contain drop-shadow-sm" onerror="this.src='https://via.placeholder.com/40'">
+                </a>
+                <h1 class="text-base md:text-lg font-black tracking-tight dark:text-white uppercase mt-0.5 md:ml-3">Phronesis</h1>
+            </div>
+            
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center justify-center gap-8 flex-1">
+                <a href="index.html" class="group relative py-1 text-sm font-medium text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors">
+                    Home
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary dark:bg-blue-400 transform scale-x-0 origin-right transition-transform duration-300 ease-out group-hover:scale-x-100 group-hover:origin-left rounded-full"></span>
+                </a>
+                <a href="admission-info.html" class="group relative py-1 text-sm font-medium text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors">
+                    Admissions
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary dark:bg-blue-400 transform scale-x-0 origin-right transition-transform duration-300 ease-out group-hover:scale-x-100 group-hover:origin-left rounded-full"></span>
+                </a>
+                <a href="#" class="group relative py-1 text-sm font-bold text-primary dark:text-blue-400">
+                    Student Portal
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary dark:bg-blue-400 rounded-full"></span>
+                </a>
+                <a href="admin-login.html" class="group relative py-1 text-sm font-medium text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors">
+                    Administration
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary dark:bg-blue-400 transform scale-x-0 origin-right transition-transform duration-300 ease-out group-hover:scale-x-100 group-hover:origin-left rounded-full"></span>
+                </a>
+            </nav>
+
+            <!-- Actions Zone -->
+            <div class="flex items-center justify-end gap-4 w-auto md:w-1/4">
+                <button onclick="toggleTheme()" class="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <span id="theme-icon" class="material-icons-outlined text-[18px] md:text-[20px] text-slate-600 dark:text-slate-400">dark_mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex items-center justify-center p-4 md:p-8 lg:p-12 z-10 w-full relative">
+      
+      <!-- Constrained Card Wrapper -->
+      <div class="w-full max-w-6xl bg-white dark:bg-slate-800 rounded-[32px] overflow-hidden shadow-2xl flex flex-col lg:flex-row min-h-[600px] border border-slate-200 dark:border-slate-700 relative z-20">
+
+        <!-- Left Pane: Image & Welcome Text (Desktop Only) -->
+        <div class="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 overflow-hidden bg-slate-900 border-r border-slate-700/50">
+      <!-- Background Image -->
+      <div class="absolute inset-0 z-0">
+        <img src="assets/hero_bg.png" alt="Campus View" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-slate-900/60 dark:bg-slate-900/70"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-slate-900/30"></div>
+      </div>
+      
+      <!-- Top Section -->
+      <div class="relative z-10">
+        <div class="flex items-center gap-3">
+          <img src="assets/school_logo.png" alt="Phronesis Logo" class="h-10 w-auto object-contain drop-shadow-lg">
+          <h2 class="text-xl font-black tracking-tight text-white uppercase mt-0.5 shadow-sm">Phronesis Academy</h2>
+        </div>
+      </div>
+
+      <!-- Center Text Section -->
+      <div class="relative z-10 mb-20 max-w-lg">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md border border-white/30 shadow-sm animate-float">
+          <span class="material-icons-outlined text-base">school</span>
+          Student Portal
+        </div>
+        <h1 class="text-5xl xl:text-6xl font-black mb-6 leading-[1.1] tracking-tight text-white drop-shadow-lg">
+          Unlock Your <br> <span class="text-secondary drop-shadow-md">Future</span>
+        </h1>
+        <p class="text-lg text-slate-200 font-medium leading-relaxed drop-shadow-md">
+          Access your courses, check your timetable, and stay connected with the Phronesis community.
+        </p>
+      </div>
+      
+      <!-- Footer Text -->
+      <div class="relative z-10">
+         <p class="text-sm text-slate-300/80 font-medium font-mono">
+            &copy; 2026 Phronesis Academy. Empowering Minds.
+         </p>
+      </div>
+    </div>
+
+    <!-- Right Pane: Login Form Area (Constrained inside Card) -->
+    <div class="w-full lg:w-1/2 form-pane relative flex items-center justify-center py-10 px-4 md:px-12 min-h-[500px] z-30">
+        
+      <div class="max-w-[420px] w-full space-y-4 relative">
+        <!-- Decorative background elements -->
+        <div class="absolute -top-24 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-20 w-64 h-64 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
 
       <!-- Loading State -->
       <div id="loading-state" class="hidden flex-col items-center justify-center space-y-6 py-12">
@@ -178,7 +273,31 @@
           <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">PHRONESIS Academy</p>
           <p class="text-[9px] text-slate-400 dark:text-slate-500 mt-1">Version 2.4.0 • © 2026 All Rights Reserved</p>
         </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
+
+    <!-- Mobile Navigation (hidden on desktop) -->
+    <nav class="md:hidden fixed bottom-0 inset-x-0 mx-auto max-w-[480px] bg-white/95 dark:bg-slate-900/95 glass-card border-t border-slate-200/50 dark:border-slate-800 pb-safe z-50">
+        <div class="flex justify-around items-center py-3 px-2">
+            <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+                <span class="material-icons-outlined text-[24px]">home</span>
+                <span class="text-[9px] font-bold tracking-wide">Home</span>
+            </a>
+            <a href="admission-info.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+                <span class="material-icons-outlined text-[24px]">person_add</span>
+                <span class="text-[9px] font-bold tracking-wide">Admissions</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 text-primary dark:text-blue-400 w-16">
+                <span class="material-icons-outlined text-[24px]">login</span>
+                <span class="text-[9px] font-black tracking-wide">Portal</span>
+            </a>
+            <a href="admin-login.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+                <span class="material-icons-outlined text-[24px]">admin_panel_settings</span>
+                <span class="text-[9px] font-bold tracking-wide">Admin</span>
+            </a>
+        </div>
+    </nav>
   </body>
 </html>
