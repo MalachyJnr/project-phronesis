@@ -78,24 +78,26 @@
       function handleLogin(e) {
         e.preventDefault();
         
-        const loginCard = document.getElementById('login-card');
-        const loadingState = document.getElementById('loading-state');
+        const submitBtn = e.target.querySelector('button[type="submit"]');
         
-        // Hide login card with a fade effect
-        loginCard.style.opacity = '0';
-        loginCard.style.transform = 'scale(0.95)';
-        loginCard.style.transition = 'all 0.4s ease';
+        // Disable button to prevent multiple clicks
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+        submitBtn.classList.remove('hover:bg-blue-900', 'active:scale-[0.98]');
         
+        // Change button content to show spinner
+        submitBtn.innerHTML = `
+          <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Logging in...
+        `;
+        
+        // Redirect after loading delay
         setTimeout(() => {
-          loginCard.classList.add('hidden');
-          loadingState.classList.remove('hidden');
-          loadingState.classList.add('flex');
-          
-          // Redirect after loading phase
-          setTimeout(() => {
-            window.location.href = 'home-dashboard.html';
-          }, 2500);
-        }, 400);
+          window.location.href = 'home-dashboard.html';
+        }, 2500);
       }
     </script>
   </head>
@@ -194,16 +196,7 @@
         <div class="absolute -top-24 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-20 w-64 h-64 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <!-- Loading State -->
-      <div id="loading-state" class="hidden flex-col items-center justify-center space-y-6 py-12">
-        <div class="w-32 h-32 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-2xl pulse-animation">
-          <img src="assets/school_logo.png" alt="Logo" class="w-20 h-20 object-contain">
-        </div>
-        <div class="text-center space-y-2">
-          <p class="text-lg font-bold text-primary dark:text-blue-400">Authenticating...</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide italic">Preparing your dashboard</p>
-        </div>
-      </div>
+
 
       <!-- Login Card -->
       <div id="login-card" class="glass-card p-8 rounded-[32px] relative z-10 text-center transition-all duration-500">
