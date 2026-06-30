@@ -87,39 +87,223 @@ function toggleTimetableMenu(event, subjectName) {
     }
 }
 
-// Modal Management
+// ─────────────────────────────────────────────────────────────────────────────
+// cleanErrorMessage is now defined globally in toast.js
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Modal Focus Trap
+// ─────────────────────────────────────────────────────────────────────────────
+let _modalFocusTrapHandler = null;
+let _modalPreviousFocus    = null;
+
+function _activateFocusTrap(modalCard) {
+    _modalPreviousFocus = document.activeElement;
+
+    // Attempt to focus the first focusable element in the modal
+    const focusable = modalCard.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length) focusable[0].focus();
+
+    _modalFocusTrapHandler = (e) => {
+        if (e.key !== 'Tab') return;
+        const all = Array.from(modalCard.querySelectorAll(
+            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        ));
+        if (!all.length) return;
+        const first = all[0];
+        const last  = all[all.length - 1];
+        if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+            e.preventDefault();
+            (e.shiftKey ? last : first).focus();
+        }
+    };
+    document.addEventListener('keydown', _modalFocusTrapHandler);
+}
+
+function _deactivateFocusTrap() {
+    if (_modalFocusTrapHandler) {
+        document.removeEventListener('keydown', _modalFocusTrapHandler);
+        _modalFocusTrapHandler = null;
+    }
+    if (_modalPreviousFocus && typeof _modalPreviousFocus.focus === 'function') {
+        _modalPreviousFocus.focus();
+        _modalPreviousFocus = null;
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Core Modal Open / Close
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Show the global modal with a standard content header (title + close button).
+ * @param {string} title       - Header title text
+ * @param {string} contentHtml - HTML string for the modal body
+ */
 function showModal(title, contentHtml) {
-    const modal = document.getElementById('global-modal');
-    const overlay = document.getElementById('menu-overlay');
-    const modalTitle = modal.querySelector('#modal-title');
-    const modalContent = modal.querySelector('#modal-body');
-    const modalContainer = modal.querySelector('.bg-white');
+    const modal          = document.getElementById('global-modal');
+    const backdrop       = document.getElementById('modal-backdrop');
+    const modalCard      = document.getElementById('modal-card');
+    const modalHeader    = document.getElementById('modal-header');
+    const feedbackHeader = document.getElementById('feedback-modal-header');
+    const modalTitle     = document.getElementById('modal-title');
+    const modalBody      = document.getElementById('modal-body');
 
-    modalTitle.textContent = title;
-    modalContent.innerHTML = contentHtml;
+    // Configure for standard (content-driven) mode
+    if (modalHeader)    modalHeader.classList.remove('hidden');
+    if (feedbackHeader) feedbackHeader.classList.add('hidden');
 
+    modalTitle.textContent  = title;
+    modalBody.innerHTML     = contentHtml;
+
+    // Show the modal
+    _openModalBase(modal, backdrop, modalCard);
+}
+
+/**
+ * Show a styled feedback modal (success | error | warning | info).
+ * @param {{ type: 'success'|'error'|'warning'|'info', title: string, message: string, action?: { label: string, handler: Function } }} opts
+ */
+function showFeedbackModal(opts) {
+    const { type = 'info', title, message, action } = opts;
+
+    const VARIANTS = {
+        success: {
+            icon:        'check_circle',
+            iconColor:   'text-emerald-600 dark:text-emerald-400',
+            circleBg:    'bg-emerald-50 dark:bg-emerald-900/30',
+            accentBg:    'bg-emerald-500',
+            btnBg:       'bg-emerald-600 hover:bg-emerald-700',
+        },
+        error: {
+            icon:        'error',
+            iconColor:   'text-rose-600 dark:text-rose-400',
+            circleBg:    'bg-rose-50 dark:bg-rose-900/30',
+            accentBg:    'bg-rose-500',
+            btnBg:       'bg-rose-600 hover:bg-rose-700',
+        },
+        warning: {
+            icon:        'warning',
+            iconColor:   'text-amber-600 dark:text-amber-400',
+            circleBg:    'bg-amber-50 dark:bg-amber-900/30',
+            accentBg:    'bg-amber-500',
+            btnBg:       'bg-amber-600 hover:bg-amber-700',
+        },
+        info: {
+            icon:        'info',
+            iconColor:   'text-blue-600 dark:text-blue-400',
+            circleBg:    'bg-blue-50 dark:bg-blue-900/30',
+            accentBg:    'bg-blue-500',
+            btnBg:       'bg-primary hover:bg-blue-700',
+        },
+    };
+
+    const v = VARIANTS[type] || VARIANTS.info;
+
+    const modal          = document.getElementById('global-modal');
+    const backdrop       = document.getElementById('modal-backdrop');
+    const modalCard      = document.getElementById('modal-card');
+    const modalHeader    = document.getElementById('modal-header');
+    const feedbackHeader = document.getElementById('feedback-modal-header');
+    const accentBar      = document.getElementById('feedback-accent-bar');
+    const iconCircle     = document.getElementById('feedback-icon-circle');
+    const iconEl         = document.getElementById('feedback-icon');
+    const feedbackTitle  = document.getElementById('feedback-modal-title');
+    const modalBody      = document.getElementById('modal-body');
+
+    // Configure for feedback mode
+    if (modalHeader) modalHeader.classList.add('hidden');
+    feedbackHeader.classList.remove('hidden');
+
+    // Apply variant styles
+    accentBar.className   = `absolute top-0 left-0 right-0 h-1 rounded-t-3xl ${v.accentBg}`;
+    iconCircle.className  = `w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${v.circleBg}`;
+    iconEl.className      = `material-icons-outlined text-3xl ${v.iconColor}`;
+    iconEl.textContent    = v.icon;
+    feedbackTitle.textContent = title || _defaultTitle(type);
+    modal.setAttribute('aria-labelledby', 'feedback-modal-title');
+
+    const safeMessage = cleanErrorMessage(message || '');
+    const actionBtnHtml = action
+        ? `<button onclick="(${action.handler.toString()})(); closeModal();" class="w-full py-3 ${v.btnBg} text-white rounded-xl text-sm font-bold transition-all shadow-lg mt-1 active:scale-[0.98]">` +
+          `${action.label}</button>`
+        : '';
+
+    modalBody.innerHTML = `
+        <div class="text-center space-y-5 pb-1">
+            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">${safeMessage}</p>
+            <div class="space-y-2">
+                ${actionBtnHtml}
+                <button onclick="closeModal()" class="w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-semibold transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-[0.98]">
+                    ${action ? 'Cancel' : 'Got it'}
+                </button>
+            </div>
+        </div>
+    `;
+
+    _openModalBase(modal, backdrop, modalCard);
+}
+
+function _defaultTitle(type) {
+    const titles = { success: 'Success!', error: 'Something went wrong', warning: 'Heads up!', info: 'Information' };
+    return titles[type] || 'Notice';
+}
+
+function _openModalBase(modal, backdrop, modalCard) {
+    // Show the overlay
+    if (backdrop) {
+        backdrop.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            backdrop.style.opacity = '1';
+        });
+    }
+
+    // Show modal container as flex
     modal.classList.remove('hidden');
-    overlay.classList.remove('hidden');
-    overlay.classList.add('animate-fadeIn');
-    modalContainer.classList.add('animate-scaleIn');
+    modal.style.display = 'flex';
+
+    // Trigger card entry animation
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            modalCard.style.opacity  = '1';
+            modalCard.style.transform = 'scale(1)';
+        });
+    });
+
     document.body.style.overflow = 'hidden';
+    _activateFocusTrap(modalCard);
 }
 
 function closeModal() {
-    const modal = document.getElementById('global-modal');
-    const overlay = document.getElementById('menu-overlay');
-    const modalContainer = modal.querySelector('.bg-white');
-    
-    modal.classList.add('hidden');
-    if (modalContainer) modalContainer.classList.remove('animate-scaleIn');
+    const modal     = document.getElementById('global-modal');
+    const backdrop  = document.getElementById('modal-backdrop');
+    const modalCard = document.getElementById('modal-card');
 
-    if (document.getElementById('notification-panel').classList.contains('translate-x-full') && 
-        document.getElementById('profile-dropdown').classList.contains('hidden') &&
-        (!document.getElementById('timetable-action-menu') || document.getElementById('timetable-action-menu').classList.contains('hidden'))) {
-        overlay.classList.add('hidden');
-        overlay.classList.remove('animate-fadeIn');
-        document.body.style.overflow = '';
+    // Animate the card out
+    if (modalCard) {
+        modalCard.style.opacity   = '0';
+        modalCard.style.transform = 'scale(0.95)';
     }
+    if (backdrop) {
+        backdrop.style.opacity = '0';
+    }
+
+    setTimeout(() => {
+        if (modal)   { modal.classList.add('hidden'); modal.style.display = ''; }
+        if (backdrop) backdrop.classList.add('hidden');
+
+        // Only restore scroll if no other menus are open
+        const panelOpen = document.getElementById('notification-panel') &&
+            !document.getElementById('notification-panel').classList.contains('translate-x-full');
+        const dropdownOpen = document.getElementById('profile-dropdown') &&
+            !document.getElementById('profile-dropdown').classList.contains('hidden');
+        if (!panelOpen && !dropdownOpen) {
+            document.body.style.overflow = '';
+        }
+
+        _deactivateFocusTrap();
+    }, 250);
 }
 
 // Timetable Actions
@@ -183,10 +367,10 @@ function showAddNote(subject) {
 function saveNote(subject) {
     const note = document.getElementById('subject-note').value;
     if (note.trim()) {
-        alert(`Note saved for ${subject}!`);
         closeModal();
+        showToast(`Note saved for ${subject}!`, 'success');
     } else {
-        alert('Please enter a note');
+        showToast('Please enter a note before saving.', 'warning');
     }
 }
 
@@ -222,28 +406,26 @@ function showCourseMaterials(subject) {
 }
 
 function closeAllMenus() {
-    const panel = document.getElementById('notification-panel');
-    const dropdown = document.getElementById('profile-dropdown');
-    const timetableMenu = document.getElementById('timetable-action-menu');
-    const modal = document.getElementById('global-modal');
-    const overlay = document.getElementById('menu-overlay');
+    const panel        = document.getElementById('notification-panel');
+    const dropdown     = document.getElementById('profile-dropdown');
+    const timetableMenu= document.getElementById('timetable-action-menu');
+    const modal        = document.getElementById('global-modal');
+    const backdrop     = document.getElementById('modal-backdrop');
+    const modalCard    = document.getElementById('modal-card');
+    const overlay      = document.getElementById('menu-overlay');
 
-    if (panel) panel.classList.add('translate-x-full');
+    if (panel)    panel.classList.add('translate-x-full');
     if (dropdown) dropdown.classList.add('hidden');
     if (timetableMenu) {
         timetableMenu.classList.add('hidden');
         timetableMenu.classList.remove('animate-scaleIn');
     }
-    if (modal) {
-        modal.classList.add('hidden');
-        const modalContainer = modal.querySelector('.bg-white');
-        if (modalContainer) modalContainer.classList.remove('animate-scaleIn');
-    }
-    if (overlay) {
-        overlay.classList.add('hidden');
-        overlay.classList.remove('animate-fadeIn');
-    }
+    if (modal)   { modal.classList.add('hidden'); modal.style.display = ''; }
+    if (backdrop) { backdrop.classList.add('hidden'); backdrop.style.opacity = '0'; }
+    if (modalCard) { modalCard.style.opacity = '0'; modalCard.style.transform = 'scale(0.95)'; }
+    if (overlay)  { overlay.classList.add('hidden'); overlay.classList.remove('animate-fadeIn'); }
     document.body.style.overflow = '';
+    _deactivateFocusTrap();
 }
 
 // Close menus on Escape key
@@ -270,7 +452,7 @@ function logout() {
 
 function confirmLogout() {
     localStorage.removeItem('isAdmin');
-    window.location.href = 'student-login.html';
+    window.location.href = '/student/logout';
 }
 
 // Results Page Functions
@@ -403,7 +585,7 @@ function switchDay(day, element) {
     }
 
     // Class counts for mock UI
-    const counts = { 'Monday': 5, 'Tuesday': 5, 'Wednesday': 5, 'Thursday': 5, 'Friday': 5 };
+    const counts = typeof dynamicClassCounts !== 'undefined' ? dynamicClassCounts : { 'Monday': 5, 'Tuesday': 5, 'Wednesday': 5, 'Thursday': 5, 'Friday': 5 };
     if (classCount) classCount.textContent = `${counts[day] || 0} classes scheduled`;
 }
 
@@ -448,18 +630,7 @@ function filterAssessments(category, element) {
 }
 
 function showAssessmentDetails(title, subject, type, date, info) {
-    const modal = document.getElementById('global-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalBody = document.getElementById('modal-body');
-
-    modalTitle.textContent = title;
-    
-    let typeColor = 'blue';
-    if (type === 'Upcoming') typeColor = 'secondary';
-    if (type === 'Completed') typeColor = 'slate';
-    if (type === 'Overdue' || title.includes('Mid-Term')) typeColor = 'primary';
-
-    modalBody.innerHTML = `
+    showModal(title, `
         <div class="space-y-4">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
@@ -498,21 +669,12 @@ function showAssessmentDetails(title, subject, type, date, info) {
                 Close Details
             </button>
         </div>
-    `;
-
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    `);
 }
 
 // Payment Page Functions
 function showReceiptDetails(term, year, amount, date, method, id) {
-    const modal = document.getElementById('global-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalBody = document.getElementById('modal-body');
-
-    modalTitle.textContent = 'Transaction Receipt';
-    
-    modalBody.innerHTML = `
+    showModal('Transaction Receipt', `
         <div class="space-y-6">
             <div class="text-center pb-4 border-b border-dashed border-slate-200 dark:border-slate-700">
                 <div class="w-16 h-16 bg-primary/10 text-primary dark:text-blue-400 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -532,7 +694,7 @@ function showReceiptDetails(term, year, amount, date, method, id) {
                     <span class="font-mono text-slate-700 dark:text-slate-300">${id}</span>
                 </div>
                 <div class="flex justify-between items-center text-xs">
-                    <span class="text-slate-500 dark:text-slate-400">Date & Time</span>
+                    <span class="text-slate-500 dark:text-slate-400">Date &amp; Time</span>
                     <span class="font-semibold text-slate-700 dark:text-slate-300">${date}</span>
                 </div>
                 <div class="flex justify-between items-center text-xs">
@@ -557,10 +719,7 @@ function showReceiptDetails(term, year, amount, date, method, id) {
                 </button>
             </div>
         </div>
-    `;
-
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    `);
 }
 
 function downloadReceipt() {
@@ -680,7 +839,15 @@ async function navigateToPage(url) {
         }
     } catch (error) {
         console.error('Seamless navigation failed:', error);
-        window.location.href = url;
+        showFeedbackModal({
+            type: 'error',
+            title: 'Navigation Failed',
+            message: cleanErrorMessage(error && error.message ? error.message : String(error)),
+            action: {
+                label: 'Retry',
+                handler: () => { window.location.href = url; }
+            }
+        });
     }
 }
 

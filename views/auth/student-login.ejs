@@ -68,62 +68,76 @@
       }
     </style>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        if (savedTheme === 'dark') {
-          document.documentElement.classList.add('dark');
-        }
-      });
+      // Apply saved theme immediately to prevent flash
+      (function () {
+        const saved = localStorage.getItem('theme') || 'light';
+        if (saved === 'dark') document.documentElement.classList.add('dark');
+      })();
+
+      function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        const icon = document.getElementById('theme-icon');
+        if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+      }
 
       function handleLogin(e) {
         e.preventDefault();
-        
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        
-        // Disable button to prevent multiple clicks
+
+        const form = e.target;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const admissionInput = form.querySelector('input[name="admissionNumber"]');
+        const passwordInput  = form.querySelector('input[name="password"]');
+
+        // Client-side validation before submission
+        if (!admissionInput.value.trim() || !passwordInput.value.trim()) {
+          showToast('Please fill in your Student ID and password.', 'warning');
+          return;
+        }
+
+        // Disable button and show loading state
         submitBtn.disabled = true;
         submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
         submitBtn.classList.remove('hover:bg-blue-900', 'active:scale-[0.98]');
-        
-        // Change button content to show spinner
         submitBtn.innerHTML = `
           <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Logging in...
+          Signing in...
         `;
-        
-        // Redirect after loading delay
-        setTimeout(() => {
-          window.location.href = 'home-dashboard.html';
-        }, 2500);
+
+        // Submit the form after a short UI delay
+        setTimeout(() => { form.submit(); }, 800);
       }
     </script>
+    <!-- Toast notification system -->
+    <script src="/js/toast.js"></script>
   </head>
   <body class="min-h-screen flex flex-col bg-background-light dark:bg-background-dark overflow-x-hidden font-display">
 
     <!-- Responsive Sticky Header -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300 lg:hidden">
         <div class="max-w-7xl mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
             <!-- Mobile Logo Zone & Back -->
             <div class="flex items-center gap-3 w-auto md:w-1/4">
-                <a href="index.html" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <a href="/" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                     <span class="material-icons-outlined text-[18px] text-slate-600 dark:text-slate-400">arrow_back</span>
                 </a>
-                <a href="index.html" class="hidden md:flex items-center gap-3 hover:opacity-80 transition-opacity">
-                    <img src="assets/school_logo.png" alt="Logo" class="h-10 w-auto object-contain drop-shadow-sm" onerror="this.src='https://via.placeholder.com/40'">
+                <a href="/" class="hidden md:flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <img src="../images/school_logo.png" alt="Logo" class="h-10 w-auto object-contain drop-shadow-sm" onerror="this.src='https://via.placeholder.com/40'">
                 </a>
                 <h1 class="text-base md:text-lg font-black tracking-tight dark:text-white uppercase mt-0.5 md:ml-3">Phronesis</h1>
             </div>
             
             <!-- Desktop Navigation Links -->
             <nav class="hidden md:flex items-center justify-center gap-8 flex-1">
-                <a href="index.html" class="group relative py-1 text-sm font-medium text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors">
+                <a href="/" class="group relative py-1 text-sm font-medium text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors">
                     Home
                     <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary dark:bg-blue-400 transform scale-x-0 origin-right transition-transform duration-300 ease-out group-hover:scale-x-100 group-hover:origin-left rounded-full"></span>
                 </a>
-                <a href="admission-info.html" class="group relative py-1 text-sm font-medium text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors">
+                <a href="/admission-info" class="group relative py-1 text-sm font-medium text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors">
                     Admissions
                     <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary dark:bg-blue-400 transform scale-x-0 origin-right transition-transform duration-300 ease-out group-hover:scale-x-100 group-hover:origin-left rounded-full"></span>
                 </a>
@@ -144,24 +158,24 @@
     </header>
 
     <!-- Main Content Wrapper -->
-    <main class="flex-1 flex items-center justify-center p-4 md:p-8 lg:p-12 z-10 w-full relative">
+    <main class="flex-1 flex items-center lg:items-stretch justify-center p-4 md:p-8 lg:p-0 z-10 w-full relative">
       
       <!-- Constrained Card Wrapper -->
-      <div class="w-full max-w-6xl bg-white dark:bg-slate-800 rounded-[32px] overflow-hidden shadow-2xl flex flex-col lg:flex-row min-h-[600px] border border-slate-200 dark:border-slate-700 relative z-20">
+      <div class="w-full max-w-6xl lg:max-w-none bg-white dark:bg-slate-800 rounded-[32px] lg:rounded-none overflow-hidden shadow-2xl lg:shadow-none flex flex-col lg:flex-row min-h-[600px] lg:min-h-screen border border-slate-200 lg:border-none dark:border-slate-700 relative z-20">
 
         <!-- Left Pane: Image & Welcome Text (Desktop Only) -->
         <div class="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 overflow-hidden bg-slate-900 border-r border-slate-700/50">
       <!-- Background Image -->
       <div class="absolute inset-0 z-0">
-        <img src="assets/hero_bg.png" alt="Campus View" class="w-full h-full object-cover">
+        <img src="../images/hero_bg.png" alt="Campus View" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-slate-900/60 dark:bg-slate-900/70"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-slate-900/30"></div>
       </div>
-      
+
       <!-- Top Section -->
       <div class="relative z-10">
         <div class="flex items-center gap-3">
-          <img src="assets/school_logo.png" alt="Phronesis Logo" class="h-10 w-auto object-contain drop-shadow-lg">
+          <img src="../images/school_logo.png" alt="Phronesis Logo" class="h-10 w-auto object-contain drop-shadow-lg">
           <h2 class="text-xl font-black tracking-tight text-white uppercase mt-0.5 shadow-sm">Phronesis Academy</h2>
         </div>
       </div>
@@ -203,7 +217,7 @@
         <!-- Logo -->
         <div class="mb-4 float-animation">
           <div class="w-20 h-20 bg-white rounded-full mx-auto p-2 flex items-center justify-center">
-            <img src="assets/school_logo.png" alt="Logo" class="w-full h-full object-contain">
+            <img src="../images/school_logo.png" alt="Logo" class="w-full h-full object-contain">
           </div>
         </div>
 
@@ -212,12 +226,12 @@
           <p class="text-sm text-slate-500 dark:text-slate-400">Sign in to your student portal</p>
         </div>
 
-        <form class="space-y-5" onsubmit="handleLogin(event)">
+        <form class="space-y-5" onsubmit="handleLogin(event)" action="/login/student" method="post" novalidate>
           <div class="space-y-2 text-left">
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Student ID / Email</label>
             <div class="relative group">
               <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-lg">person</span>
-              <input type="text" required placeholder="PS-2024-0891" class="w-full pl-12 pr-4 py-4 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:text-white text-sm">
+              <input type="text" required name="admissionNumber" placeholder="PS-2024-0891" class="w-full pl-12 pr-4 py-4 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:text-white text-sm">
             </div>
           </div>
 
@@ -225,7 +239,7 @@
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Password</label>
             <div class="relative group">
               <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-lg">lock</span>
-              <input type="password" required placeholder="••••••••" class="w-full pl-12 pr-4 py-4 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:text-white text-sm">
+              <input type="password" required name="password" placeholder="••••••••" class="w-full pl-12 pr-4 py-4 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:text-white text-sm">
             </div>
           </div>
 
@@ -254,12 +268,12 @@
 
       <!-- School Footer Info -->
       <div class="text-center space-y-4">
-        <a href="index.html" class="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors">
+        <a href="/" class="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors">
           <span class="material-icons-outlined text-[14px]">home</span> Back to Home
         </a>
         <div>
           <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">PHRONESIS Academy</p>
-          <p class="text-[9px] text-slate-400 dark:text-slate-500 mt-1">Version 2.4.0 • © 2026 All Rights Reserved</p>
+          <p class="text-[9px] text-slate-400 dark:text-slate-500 mt-1">Version 2.4.0 • © <%= new Date().getFullYear() %>  All Rights Reserved</p>
         </div>
           </div>
         </div>
@@ -269,11 +283,11 @@
     <!-- Mobile Navigation (hidden on desktop) -->
     <nav class="md:hidden fixed bottom-0 inset-x-0 mx-auto max-w-[480px] bg-white/95 dark:bg-slate-900/95 glass-card border-t border-slate-200/50 dark:border-slate-800 pb-safe z-50">
         <div class="flex justify-around items-center py-3 px-2">
-            <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+            <a href="/" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
                 <span class="material-icons-outlined text-[24px]">home</span>
                 <span class="text-[9px] font-bold tracking-wide">Home</span>
             </a>
-            <a href="admission-info.html" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
+            <a href="/admission-info" class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors w-16">
                 <span class="material-icons-outlined text-[24px]">person_add</span>
                 <span class="text-[9px] font-bold tracking-wide">Admissions</span>
             </a>

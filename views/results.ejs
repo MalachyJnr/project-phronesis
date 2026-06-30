@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+<%- include('partials/head', { title: 'Results - PHRONESIS' }) %>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen md:flex">
+<%- include('partials/sidebar', { activePage: 'results' }) %>
+
+    <!-- Main Container -->
+    <div id="page-container" class="max-w-[480px] md:max-w-none md:ml-[260px] md:flex-1 w-full mx-auto md:mx-0 bg-background-light dark:bg-background-dark min-h-screen relative fade-in pb-20 md:pb-0">
+    
+<%- include('partials/header', { headerTitle: 'Academic Results' }) %>
+
+<main class="p-4 md:px-8 md:py-6 space-y-6 md:space-y-8 pb-24 md:pb-8">
+
+      <!-- Mobile Welcome Area -->
+      <section class="md:hidden">
+        <h2 class="text-2xl font-bold dark:text-white">Academic Results</h2>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+          View your grades and performance across all subjects.
+        </p>
+      </section>
+
+      <!-- Term Selector -->
+      <!-- Mobile Tabs -->
+      <div class="md:hidden flex overflow-x-auto gap-2 pb-2 hide-scrollbar">
+        <button
+          onclick="switchTerm(1, this)"
+          class="px-4 py-2 bg-secondary text-white font-bold rounded-full text-xs transition-all tracking-wide shadow-sm"
+        >
+          Term 1
+        </button>
+        <button
+          onclick="switchTerm(2, this)"
+          class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+        >
+          Term 2
+        </button>
+        <button
+          onclick="switchTerm(3, this)"
+          class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+        >
+          Term 3
+        </button>
+      </div>
+      
+      <!-- Desktop Tabs -->
+      <div class="hidden md:flex bg-slate-50 dark:bg-slate-900/50 rounded-lg p-1.5 gap-1 w-fit border border-slate-100 dark:border-slate-800">
+         <button onclick="switchTerm(1, this)" class="px-6 py-2 bg-white dark:bg-slate-800 shadow-sm text-slate-900 dark:text-white rounded-md text-sm font-bold transition-all">Term 1</button>
+         <button onclick="switchTerm(2, this)" class="px-6 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md text-sm font-medium transition-all">Term 2</button>
+         <button onclick="switchTerm(3, this)" class="px-6 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md text-sm font-medium transition-all">Term 3</button>
+      </div>
+
+      <!-- Overall Performance -->
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div
+          class="bg-gradient-to-br from-[#3B82F6] to-blue-700 p-5 md:p-6 rounded-2xl text-white shadow-lg shadow-blue-500/10 md:h-40 flex flex-col justify-between"
+        >
+          <div class="flex items-center gap-2 mb-3 md:mb-0">
+            <div class="p-1.5 bg-white/20 rounded-lg">
+              <span class="material-icons-outlined text-[18px]">star_rate</span>
+            </div>
+            <span class="text-xs md:text-sm font-medium opacity-90">Overall GPA</span>
+          </div>
+          <div>
+            <div class="text-3xl md:text-5xl font-bold tracking-tight mb-1">3.8</div>
+            <p class="text-[11px] md:text-sm md:font-light opacity-80 leading-tight">Out of 4.0</p>
+          </div>
+        </div>
+        <div
+          class="bg-gradient-to-br from-[#FBBF24] to-amber-600 p-5 md:p-6 rounded-2xl text-white shadow-lg shadow-amber-500/10 md:h-40 flex flex-col justify-between"
+        >
+          <div class="flex items-center gap-2 mb-3 md:mb-0">
+            <div class="p-1.5 bg-white/20 rounded-lg">
+              <span class="material-icons-outlined text-[18px]">emoji_events</span>
+            </div>
+            <span class="text-xs md:text-sm font-medium opacity-90">Class Rank</span>
+          </div>
+          <div>
+            <div class="text-3xl md:text-5xl font-bold tracking-tight mb-1">5th</div>
+            <p class="text-[11px] md:text-sm md:font-light opacity-80 leading-tight">Out of 120</p>
+          </div>
+        </div>
+        
+        <div class="hidden lg:flex col-span-2 bg-[#252E3E] dark:bg-slate-800 p-6 rounded-2xl border border-slate-700/50 flex flex-col justify-center relative overflow-hidden h-40">
+           <div class="relative z-10 flex flex-col justify-between h-full">
+               <div>
+                 <h3 class="text-white text-lg font-bold mb-1">Full Report Available</h3>
+                 <p class="text-slate-400 text-sm">Download your official academic transcript.</p>
+               </div>
+             <button onclick="downloadReport()" class="px-5 py-2.5 bg-primary hover:bg-blue-600 text-white rounded-lg text-xs font-bold transition-colors w-fit shadow-lg shadow-blue-500/20">Download PDF</button>
+           </div>
+           <span class="material-icons-outlined absolute -right-4 -bottom-4 text-8xl text-slate-700/50 z-0 select-none pointer-events-none transform -rotate-12">description</span>
+        </div>
+      </div>
+
+      <!-- Subject Results -->
+      <section class="space-y-3 md:space-y-4">
+        <div class="flex items-center justify-between pb-2 md:pb-4 border-b border-slate-100 dark:border-slate-700">
+            <h3 class="text-lg font-bold dark:text-white">Subject Breakdown</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
+        
+        <!-- Mathematics -->
+        <div
+          onclick="showSubjectResults('Mathematics', 'A', '92%', 'Mr. Thompson')"
+          class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm active:scale-[0.98] transition-transform cursor-pointer"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center">
+                <span class="material-icons-outlined text-xl">calculate</span>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold">Mathematics</h4>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Mr. Thompson</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="text-right">
+                <div class="text-2xl font-bold text-primary dark:text-blue-400">A</div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Excellent</p>
+              </div>
+              <div class="relative w-12 h-12">
+                <svg class="w-full h-full transform -rotate-90">
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" class="text-slate-100 dark:text-slate-700" />
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" stroke-dasharray="125.6" stroke-dashoffset="10" class="text-primary dark:text-blue-400" />
+                </svg>
+                <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-700 dark:text-slate-200">92%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- English -->
+        <div
+          onclick="showSubjectResults('English Language', 'A-', '88%', 'Mrs. Johnson')"
+          class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm active:scale-[0.98] transition-transform cursor-pointer"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center">
+                <span class="material-icons-outlined text-xl">menu_book</span>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold">English Language</h4>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Mrs. Johnson</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="text-right">
+                <div class="text-2xl font-bold text-primary dark:text-blue-400">A-</div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Very Good</p>
+              </div>
+              <div class="relative w-12 h-12">
+                <svg class="w-full h-full transform -rotate-90">
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" class="text-slate-100 dark:text-slate-700" />
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" stroke-dasharray="125.6" stroke-dashoffset="15" class="text-primary dark:text-blue-400" />
+                </svg>
+                <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-700 dark:text-slate-200">88%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Biology -->
+        <div
+          onclick="showSubjectResults('Biology', 'B+', '85%', 'Mrs. Phronesis')"
+          class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm active:scale-[0.98] transition-transform cursor-pointer"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center">
+                <span class="material-icons-outlined text-xl">biotech</span>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold">Biology</h4>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Mrs. Phronesis</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="text-right">
+                <div class="text-2xl font-bold text-primary dark:text-blue-400">B+</div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Good</p>
+              </div>
+              <div class="relative w-12 h-12">
+                <svg class="w-full h-full transform -rotate-90">
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" class="text-slate-100 dark:text-slate-700" />
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" stroke-dasharray="125.6" stroke-dashoffset="19" class="text-primary dark:text-blue-400" />
+                </svg>
+                <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-700 dark:text-slate-200">85%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chemistry -->
+        <div
+          onclick="showSubjectResults('Chemistry', 'A', '90%', 'Dr. Williams')"
+          class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm active:scale-[0.98] transition-transform cursor-pointer"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center">
+                <span class="material-icons-outlined text-xl">science</span>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold">Chemistry</h4>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Dr. Williams</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="text-right">
+                <div class="text-2xl font-bold text-primary dark:text-blue-400">A</div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Excellent</p>
+              </div>
+              <div class="relative w-12 h-12">
+                <svg class="w-full h-full transform -rotate-90">
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" class="text-slate-100 dark:text-slate-700" />
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" stroke-dasharray="125.6" stroke-dashoffset="12.6" class="text-primary dark:text-blue-400" />
+                </svg>
+                <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-700 dark:text-slate-200">90%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Physics -->
+        <div
+          onclick="showSubjectResults('Physics', 'B', '82%', 'Mr. Anderson')"
+          class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm active:scale-[0.98] transition-transform cursor-pointer"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center">
+                <span class="material-icons-outlined text-xl">bolt</span>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold">Physics</h4>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Mr. Anderson</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="text-right">
+                <div class="text-2xl font-bold text-primary dark:text-blue-400">B</div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Above Avg</p>
+              </div>
+              <div class="relative w-12 h-12">
+                <svg class="w-full h-full transform -rotate-90">
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" class="text-slate-100 dark:text-slate-700" />
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" stroke-dasharray="125.6" stroke-dashoffset="22.6" class="text-primary dark:text-blue-400" />
+                </svg>
+                <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-700 dark:text-slate-200">82%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        </div> <!-- End of grid -->
+      </section>
+
+      <button
+        onclick="downloadReport()"
+        class="w-full lg:hidden py-3 bg-primary dark:bg-blue-600 text-white rounded-xl text-sm font-bold transition-all active:scale-[0.98] shadow-lg"
+      >
+        Download Full Report Card
+      </button>
+    
+    </main>
+
+<%- include('partials/bottom-nav', { activePage: 'results' }) %>
+<%- include('partials/modals') %>
+
+    </div>
+  </body>
+</html>
