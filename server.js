@@ -7,13 +7,12 @@ const port = process.env.PORT || 3000;
 const authRoute = require("./routes/authRoute");
 const studentRoute = require("./routes/studentRoute");
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
 app.set("view engine", "ejs");
-app.set("views", "views"); 
+app.set("views", "views");
 
 app.get("/", (req, res) => {
   res.render("index");
@@ -45,7 +44,8 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).render("error", {
     statusCode: err.status || 500,
     title: "Something Went Wrong",
-    message: "An unexpected server error occurred. Our team has been notified. Please try again or contact your administrator.",
+    message:
+      "An unexpected server error occurred. Our team has been notified. Please try again or contact your administrator.",
     backUrl: req.headers.referer || null,
     backLabel: "Go Back",
   });

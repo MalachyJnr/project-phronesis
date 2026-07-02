@@ -9,6 +9,7 @@ router.use("/student", requireAuth, verifyRole("student"));
 router.route("/student/dashboard").get(studentController.getStudentDashboard);
 
 router.get("/student/results", studentController.getStudentResults);
+router.get("/student/results/print", studentController.printStudentResults);
 router.get("/student/timetable", studentController.getStudentTimetable);
 router.get("/student/assessments", studentController.getStudentAssessments);
 router.get("/student/payments", studentController.getStudentPayments);
