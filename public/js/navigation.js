@@ -456,24 +456,42 @@ function confirmLogout() {
 }
 
 // Results Page Functions
-function switchTerm(termNumber, element) {
-    // Update button styles
-    const buttons = element.parentElement.querySelectorAll('button');
-    buttons.forEach(btn => {
-        btn.classList.remove('bg-secondary', 'text-white');
-        btn.classList.add('bg-white', 'dark:bg-slate-800', 'border', 'border-slate-100', 'dark:border-slate-700', 'text-slate-500', 'dark:text-slate-400', 'font-medium');
-        btn.classList.remove('font-bold');
-    });
-
-    element.classList.remove('bg-white', 'dark:bg-slate-800', 'border', 'border-slate-100', 'dark:border-slate-700', 'text-slate-500', 'dark:text-slate-400', 'font-medium');
-    element.classList.add('bg-secondary', 'text-white', 'font-bold');
-
-    // In a real app, this would trigger a data fetch/filter
-    console.log(`Switching to Term ${termNumber}`);
+function changeSession(sessionId) {
+    const sessionSelect = document.getElementById('session-select');
+    const termId = sessionSelect ? sessionSelect.getAttribute('data-selected-term') : '';
+    if (typeof navigateToPage === 'function') {
+        navigateToPage(`/student/results?session=${sessionId}&term=${termId}`);
+    } else {
+        window.location.href = `/student/results?session=${sessionId}&term=${termId}`;
+    }
 }
 
-function showSubjectResults(subject, grade, percentage, teacher) {
-    closeAllMenus();
+function changeTerm(termId) {
+    const sessionSelect = document.getElementById('session-select');
+    const sessionId = sessionSelect ? sessionSelect.getAttribute('data-selected-session') : '';
+    if (typeof navigateToPage === 'function') {
+        navigateToPage(`/student/results?session=${sessionId}&term=${termId}`);
+    } else {
+        window.location.href = `/student/results?session=${sessionId}&term=${termId}`;
+    }
+}
+
+function triggerReportDownload() {
+    const sessionSelect = document.getElementById('session-select');
+    const sessionId = sessionSelect ? sessionSelect.getAttribute('data-selected-session') : '';
+    const termId = sessionSelect ? sessionSelect.getAttribute('data-selected-term') : '';
+    window.open(`/student/results/print?session=${sessionId}&term=${termId}`, '_blank');
+}
+
+function showSubjectResults(subject, grade, percentage, teacher, caScore, midTermScore, examScore, remarks) {
+    if (typeof closeAllMenus === 'function') {
+        closeAllMenus();
+    }
+    const displayCa = caScore !== undefined ? caScore : '28/30';
+    const displayMid = midTermScore !== undefined ? midTermScore : '18/20';
+    const displayExam = examScore !== undefined ? examScore : '46/50';
+    const displayRemarks = remarks !== undefined ? remarks : `John has shown exceptional understanding of ${subject} concepts this term. His participation in class discussions is commendable.`;
+    
     const content = `
         <div class="space-y-6">
             <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700">
@@ -492,15 +510,15 @@ function showSubjectResults(subject, grade, percentage, teacher) {
                 <div class="space-y-2">
                     <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-50 dark:border-slate-800">
                         <span class="text-xs font-semibold">Continuous Assessment</span>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">28/30</span>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">${displayCa}</span>
                     </div>
                     <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-50 dark:border-slate-800">
                         <span class="text-xs font-semibold">Mid-Term Exam</span>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">18/20</span>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">${displayMid}</span>
                     </div>
                     <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-50 dark:border-slate-800">
                         <span class="text-xs font-semibold">Final Examination</span>
-                        <span class="text-xs font-bold text-primary dark:text-blue-400">46/50</span>
+                        <span class="text-xs font-bold text-primary dark:text-blue-400">${displayExam}</span>
                     </div>
                 </div>
             </div>
@@ -508,7 +526,7 @@ function showSubjectResults(subject, grade, percentage, teacher) {
             <div class="p-4 bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl border border-blue-100/50 dark:border-blue-800/20">
                 <p class="text-[10px] text-blue-600 dark:text-blue-400 uppercase font-bold tracking-wider mb-2">Teacher Remark</p>
                 <p class="text-xs italic text-slate-600 dark:text-slate-300 leading-relaxed">
-                    "John has shown exceptional understanding of ${subject} concepts this term. His participation in class discussions is commendable."
+                    "${displayRemarks || 'No remarks provided.'}"
                 </p>
                 <div class="flex items-center gap-2 mt-3 pt-3 border-t border-blue-100 dark:border-blue-800/50">
                     <div class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
