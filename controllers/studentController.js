@@ -17,6 +17,16 @@ const formatTime = (timeStr) => {
     };
 };
 
+// Helper to get duration in minutes between 'HH:MM:SS' time strings
+const getDurationMinutes = (startTime, endTime) => {
+    if (!startTime || !endTime) return null;
+    const sParts = startTime.split(":");
+    const eParts = endTime.split(":");
+    const sMin = parseInt(sParts[0], 10) * 60 + parseInt(sParts[1], 10);
+    const eMin = parseInt(eParts[0], 10) * 60 + parseInt(eParts[1], 10);
+    return eMin - sMin;
+};
+
 const getStudentLogin = (req, res) => {
     res.render("auth/student-login");
 };
@@ -37,10 +47,6 @@ const renderStudentView = async (req, res, viewName, pageTitle) => {
 
         if (viewName === "home-dashboard" || viewName === "timetable") {
             const dbEntries = await timetableModel.getTimetableByClassId(student.class_id);
-            const defaultBreaks = [
-                { start_time: '10:30:00', time: '10:30', period: '', subject: 'Short Break', room: '', teacher: '', color: 'break' },
-                { start_time: '12:30:00', time: '12:30', period: '', subject: 'Lunch Break', room: '', teacher: '', color: 'break' }
-            ];
 
             const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
             days.forEach(day => {
@@ -48,20 +54,21 @@ const renderStudentView = async (req, res, viewName, pageTitle) => {
                     .filter(entry => entry.day === day)
                     .map(entry => {
                         const formatted = formatTime(entry.start_time);
+                        const isBreak = entry.subject_name && entry.subject_name.toLowerCase().includes("break");
                         return {
-                            start_time: entry.start_time,
+                            start_time: entry.start_time,   
                             time: formatted.time,
-                            period: formatted.period,
+                            period: isBreak ? "" : formatted.period,   
                             subject: entry.subject_name || "",
                             room: entry.room || "",
                             teacher: entry.teacher_name || "",
-                            color: "primary"
+                            color: isBreak ? "break" : "primary",
+                            duration: getDurationMinutes(entry.start_time, entry.end_time)
                         };
                     });
 
-                const combined = [...dayDbEntries, ...defaultBreaks];
-                combined.sort((a, b) => a.start_time.localeCompare(b.start_time));
-                timetableDataGrouped[day] = combined;
+                dayDbEntries.sort((a, b) => a.start_time.localeCompare(b.start_time));
+                timetableDataGrouped[day] = dayDbEntries;
             });
         }
 

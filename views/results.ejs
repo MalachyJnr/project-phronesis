@@ -139,7 +139,7 @@
              else if (sub.subject_name.toLowerCase().includes('physics')) icon = 'bolt';
           %>
           <div
-            onclick="showSubjectResults('<%= sub.subject_name %>', '<%= sub.grade %>', '<%= Number(sub.total_score).toFixed(0) %>%', '<%= sub.teacher_name || 'N/A' %>', '<%= Number(sub.ca_score).toFixed(0) %>/30', '<%= Number(sub.mid_term_score).toFixed(0) %>/20', '<%= Number(sub.exam_score).toFixed(0) %>/50', `<%= sub.subject_remarks || '' %>`)"
+            onclick="showSubjectResults('<%= sub.subject_name %>', '<%= sub.grade %>', '<%= Number(sub.total_score).toFixed(0) %>%', '<%= sub.teacher_name || "N/A" %>', '<%= Number(sub.ca_score).toFixed(0) %>/30', '<%= Number(sub.mid_term_score).toFixed(0) %>/20', '<%= Number(sub.exam_score).toFixed(0) %>/50', `<%= sub.subject_remarks || '' %>`)"
             class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm active:scale-[0.98] transition-transform cursor-pointer hover:border-primary/50 dark:hover:border-blue-400/50"
           >
             <div class="flex items-center justify-between mb-3">
