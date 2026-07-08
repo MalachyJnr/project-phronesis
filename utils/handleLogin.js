@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 /**
  * Handles login for any user role.
  * On error, redirects back to the login page with an ?error= query param
- * so the client-side toast system can display it — no JSON error dumps.
+ * so the client-side toast system can display it.
  */
 async function handleLogin(identifier, password, role, model, idField, res) {
   const loginPage = `/login/${role.toLowerCase()}`;

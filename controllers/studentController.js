@@ -1,6 +1,7 @@
 const studentModel = require("../models/student");
 const timetableModel = require("../models/timetable");
 const resultsModel = require("../models/results");
+const upload = require("../middlewares/multer");
 
 // Helper to format database 'HH:MM:SS' time into { time: 'H:MM', period: 'AM/PM' }
 const formatTime = (timeStr) => {
@@ -240,6 +241,63 @@ const getStudentProfile = (req, res) => {
     renderStudentView(req, res, "profile", "Profile");
 };
 
+// Handle student profile image upload
+const uploadSingle = upload.single("profile_pic");
+
+const uploadProfilePic = (req, res) => {
+    uploadSingle(req, res, async (err) => {
+        if (err) {
+            let message = "An error occurred during file upload.";
+            if (err.code === "LIMIT_FILE_SIZE") {
+                message = "File is too large. Maximum size allowed is 5MB.";
+            } else if (err.code === "INVALID_FILE_TYPE") {
+                message = err.message;
+            }
+            return res.status(400).json({ success: false, message });
+        }
+
+        // Check if file is provided
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: "No file was selected." });
+        }
+
+        try {
+            const studentId = req.user.id;
+            const newFilename = req.file.filename;
+
+            // Fetch the current student record to check if there is an existing profile picture to delete
+            const getStudent = await studentModel.getStudentById(studentId);
+            const student = getStudent[0];
+            const oldProfilePic = student ? student.profile_pic : null;
+
+            // Update student profile pic filename in database
+            await studentModel.updateStudentProfilePic(studentId, newFilename);
+
+            // Clean up the old profile picture from filesystem (if it exists)
+            if (oldProfilePic) {
+                const fs = require("fs");
+                const path = require("path");
+                const oldPath = path.join(__dirname, "../public/uploads", oldProfilePic);
+                
+                fs.unlink(oldPath, (unlinkErr) => {
+                    if (unlinkErr && unlinkErr.code !== 'ENOENT') {
+                        console.error("[studentController] Failed to delete old profile picture:", unlinkErr);
+                    }
+                });
+            }
+
+            return res.json({
+                success: true,
+                message: "Profile picture updated successfully.",
+                filePath: `/uploads/${newFilename}`
+            });
+        } catch (dbErr) {
+            console.error("[studentController] Database error updating profile pic:", dbErr);
+            return res.status(500).json({ success: false, message: "Failed to save profile picture in the database." });
+        }
+    });
+};
+
 module.exports = {
     getStudentLogin,
     getStudentDashboard,
@@ -249,5 +307,6 @@ module.exports = {
     getStudentAssessments,
     getStudentPayments,
     getStudentSettings,
-    getStudentProfile
+    getStudentProfile,
+    uploadProfilePic
 };

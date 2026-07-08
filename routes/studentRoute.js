@@ -15,6 +15,7 @@ router.get("/student/assessments", studentController.getStudentAssessments);
 router.get("/student/payments", studentController.getStudentPayments);
 router.get("/student/settings", studentController.getStudentSettings);
 router.get("/student/profile", studentController.getStudentProfile);
+router.post("/student/profile/upload-pic", studentController.uploadProfilePic);
 
 module.exports = router;
 

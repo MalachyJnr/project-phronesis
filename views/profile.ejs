@@ -20,12 +20,25 @@
           <!-- Profile Hero -->
           <section class="text-center space-y-4 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 h-24 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-blue-900/30 dark:to-slate-800"></div>
-            <div class="relative inline-block mt-4">
-              <div class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center border-4 border-white dark:border-slate-900 overflow-hidden mx-auto shadow-md">
-                <span class="material-icons-outlined text-5xl md:text-6xl text-slate-400">person</span>
+            <div class="relative inline-block mt-4 group">
+              <div class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center border-4 border-white dark:border-slate-900 overflow-hidden mx-auto shadow-md relative">
+                <img 
+                  id="profile-avatar" 
+                  src="<%= user.profile_pic && user.profile_pic !== 'NULL' ? '/uploads/' + user.profile_pic : '/images/default-avatar.svg' %>" 
+                  alt="Profile Picture" 
+                  class="w-full h-full object-cover transition-opacity duration-300"
+                >
+                <div id="upload-spinner" class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+                  <div class="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                </div>
               </div>
-              <button class="absolute bottom-1 right-1 p-2 bg-primary text-white rounded-full border-2 border-white dark:border-slate-900 hover:scale-110 shadow-lg transition-transform">
-                <span class="material-icons-outlined text-xs md:text-sm">edit</span>
+              <input type="file" id="profile-pic-input" accept="image/jpeg,image/jpg,image/png,image/webp" class="hidden">
+              <button 
+                id="edit-pic-btn" 
+                class="absolute bottom-1 right-1 p-2 bg-primary text-white rounded-full border-2 border-white dark:border-slate-900 hover:scale-110 shadow-lg transition-transform"
+                title="Change Profile Picture"
+              >
+                <span class="material-icons-outlined text-xs md:text-sm">camera_alt</span>
               </button>
             </div>
             <div class="relative z-10 pt-2 pb-2">

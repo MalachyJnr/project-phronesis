@@ -904,3 +904,99 @@ function updateActiveNav(url) {
 window.addEventListener('popstate', () => {
     window.location.reload(); 
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Delegated Student Profile Image Upload Handlers
+// ─────────────────────────────────────────────────────────────────────────────
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('#edit-pic-btn');
+  if (btn) {
+    const fileInput = document.getElementById('profile-pic-input');
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+});
+
+document.addEventListener('change', async (e) => {
+  if (e.target && e.target.id === 'profile-pic-input') {
+    const fileInput = e.target;
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const avatarImg = document.getElementById('profile-avatar');
+    const spinner = document.getElementById('upload-spinner');
+
+    // Basic client-side validation
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      if (window.showToast) {
+        window.showToast('Invalid file type. Please select a JPG, JPEG, PNG, or WebP image.', 'error');
+      } else {
+        alert('Invalid file type. Only JPG, JPEG, PNG, and WebP are allowed.');
+      }
+      fileInput.value = '';
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      if (window.showToast) {
+        window.showToast('File is too large. Maximum size allowed is 5MB.', 'error');
+      } else {
+        alert('File is too large. Maximum size is 5MB.');
+      }
+      fileInput.value = '';
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('profile_pic', file);
+
+    try {
+      // Show loading spinner and fade avatar
+      if (spinner) spinner.classList.remove('opacity-0', 'pointer-events-none');
+      if (avatarImg) avatarImg.classList.add('opacity-50');
+
+      const response = await fetch('/student/profile/upload-pic', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        // Cache bust the newly loaded picture path
+        const cacheBuster = '?t=' + new Date().getTime();
+        const newSrc = result.filePath + cacheBuster;
+        
+        if (avatarImg) avatarImg.src = newSrc;
+        
+        // Synchronize layout-level elements (e.g. desktop sidebar profile pic)
+        const sidebarAvatar = document.querySelector('aside img[alt="User Profile"]');
+        if (sidebarAvatar) {
+          sidebarAvatar.src = newSrc;
+        }
+
+        if (window.showToast) {
+          window.showToast(result.message, 'success');
+        }
+      } else {
+        throw new Error(result.message || 'Failed to upload profile picture.');
+      }
+    } catch (error) {
+      console.error('[profileUpload]', error);
+      if (window.showToast) {
+        window.showToast(error.message, 'error');
+      } else {
+        alert(error.message);
+      }
+    } finally {
+      // Hide loading spinner and reset avatar styling
+      if (spinner) spinner.classList.add('opacity-0', 'pointer-events-none');
+      if (avatarImg) avatarImg.classList.remove('opacity-50');
+      fileInput.value = '';
+    }
+  }
+});
+

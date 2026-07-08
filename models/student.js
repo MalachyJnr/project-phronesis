@@ -82,4 +82,24 @@ async function getStudentByAdmissionNumber(admissionNumber) {
   }
 }
 
-module.exports = { addStudent, getStudentByAdmissionNumber, getStudentById };
+// Update student profile picture
+function updateStudentProfilePic(studentId, profilePic) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `UPDATE students SET profile_pic = ? WHERE student_id = ?`,
+      [profilePic, studentId],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      },
+    );
+  });
+}
+
+module.exports = { 
+  addStudent, 
+  getStudentByAdmissionNumber, 
+  getStudentById,
+  updateStudentProfilePic
+};
+

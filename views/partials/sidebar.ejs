@@ -30,7 +30,7 @@
         <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between mt-auto">
           <div class="flex items-center gap-3">
              <div class="w-10 h-10 rounded-full flex flex-shrink-0 items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700">
-               <img src="https://ui-avatars.com/api/?name=<%= typeof user !== 'undefined' && user ? user.first_name + '+' + user.last_name : 'John+Doe' %>&background=f1f5f9&color=64748b" alt="User Profile" class="w-full h-full object-cover">
+               <img src="<%= typeof user !== 'undefined' && user && user.profile_pic && user.profile_pic !== 'NULL' ? '/uploads/' + user.profile_pic : '/images/default-avatar.svg' %>" alt="User Profile" class="w-full h-full object-cover">
              </div>
              <div>
                <h4 class="text-xs font-bold text-slate-900 dark:text-white">
