@@ -1346,40 +1346,216 @@ function openChangePasswordModal() {
     const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
     const content = `
-        <form action="/student/change-password" method="POST" class="space-y-4 text-left">
+        <form id="change-password-form" action="/student/change-password" method="POST" class="space-y-4 text-left" novalidate>
             <input type="hidden" name="_csrf" value="${csrfToken}">
+            
+            <!-- Current Password -->
             <div>
                 <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 pl-1">Current Password</label>
                 <div class="relative group">
                     <span class="material-icons-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base">lock</span>
-                    <input type="password" name="currentPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-all">
+                    <input type="password" id="currentPassword" name="currentPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-all">
                 </div>
             </div>
+
+            <!-- New Password -->
             <div>
                 <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 pl-1">New Password</label>
                 <div class="relative group">
                     <span class="material-icons-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base">vpn_key</span>
-                    <input type="password" name="newPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-all">
+                    <input type="password" id="newPassword" name="newPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-all">
                 </div>
-                <p class="text-[10px] text-slate-400 mt-1 pl-1">Min. 8 chars, 1 uppercase, 1 lowercase & 1 number.</p>
+                
+                <!-- Password Security Requirements Checklist -->
+                <div id="password-requirements" class="mt-2.5 p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 space-y-1.5 text-[11px]">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-bold text-[10px] uppercase tracking-wider text-slate-400">Password Requirements</span>
+                        <span id="password-strength-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700/80 text-slate-500 dark:text-slate-400 transition-all">Incomplete</span>
+                    </div>
+                    
+                    <div id="req-length" class="flex items-center gap-2 text-slate-400 dark:text-slate-500 transition-colors duration-200">
+                        <span class="material-icons-outlined text-sm status-icon text-slate-400 dark:text-slate-500">cancel</span>
+                        <span class="status-label">At least 8 characters long</span>
+                    </div>
+                    <div id="req-uppercase" class="flex items-center gap-2 text-slate-400 dark:text-slate-500 transition-colors duration-200">
+                        <span class="material-icons-outlined text-sm status-icon text-slate-400 dark:text-slate-500">cancel</span>
+                        <span class="status-label">At least one uppercase letter (A-Z)</span>
+                    </div>
+                    <div id="req-lowercase" class="flex items-center gap-2 text-slate-400 dark:text-slate-500 transition-colors duration-200">
+                        <span class="material-icons-outlined text-sm status-icon text-slate-400 dark:text-slate-500">cancel</span>
+                        <span class="status-label">At least one lowercase letter (a-z)</span>
+                    </div>
+                    <div id="req-number" class="flex items-center gap-2 text-slate-400 dark:text-slate-500 transition-colors duration-200">
+                        <span class="material-icons-outlined text-sm status-icon text-slate-400 dark:text-slate-500">cancel</span>
+                        <span class="status-label">At least one number (0-9)</span>
+                    </div>
+                </div>
             </div>
+
+            <!-- Confirm New Password -->
             <div>
                 <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 pl-1">Confirm New Password</label>
                 <div class="relative group">
                     <span class="material-icons-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base">check_circle_outline</span>
-                    <input type="password" name="confirmPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-all">
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-all">
+                </div>
+                <div id="req-match-container" class="mt-2 hidden">
+                    <div id="req-match" class="flex items-center gap-1.5 text-[11px] font-medium transition-colors pl-1">
+                        <span class="material-icons-outlined text-sm status-icon">cancel</span>
+                        <span class="status-text">Passwords do not match</span>
+                    </div>
                 </div>
             </div>
+
+            <!-- Inline Validation Alert (Fallback / Submit Block message) -->
+            <div id="password-validation-alert" class="hidden p-3 rounded-xl text-xs font-medium text-amber-800 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-200 border border-amber-200 dark:border-amber-800/50 flex items-start gap-2">
+                <span class="material-icons-outlined text-base shrink-0 text-amber-600 dark:text-amber-400 mt-0.5">warning</span>
+                <span id="password-validation-alert-text">Please satisfy all password security criteria before updating.</span>
+            </div>
+
             <div class="pt-3 flex gap-3">
                 <button type="button" onclick="closeModal()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold transition-colors">
                     Cancel
                 </button>
-                <button type="submit" class="flex-1 py-3 bg-primary hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-colors shadow-lg shadow-primary/20">
+                <button type="submit" id="submit-change-password" disabled class="flex-1 py-3 bg-primary hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary disabled:shadow-none">
                     Update Password
                 </button>
             </div>
         </form>
     `;
     showModal('Change Password', content, 'max-w-md');
+
+    // Attach real-time evaluation logic once elements are rendered in DOM
+    setTimeout(() => {
+        const currentInput = document.getElementById('currentPassword');
+        const newInput = document.getElementById('newPassword');
+        const confirmInput = document.getElementById('confirmPassword');
+        const form = document.getElementById('change-password-form');
+        const submitBtn = document.getElementById('submit-change-password');
+        const alertBox = document.getElementById('password-validation-alert');
+        const alertText = document.getElementById('password-validation-alert-text');
+
+        const reqLength = document.getElementById('req-length');
+        const reqUpper = document.getElementById('req-uppercase');
+        const reqLower = document.getElementById('req-lowercase');
+        const reqNumber = document.getElementById('req-number');
+        const reqMatchContainer = document.getElementById('req-match-container');
+        const reqMatch = document.getElementById('req-match');
+        const strengthBadge = document.getElementById('password-strength-badge');
+
+        if (!newInput || !confirmInput || !submitBtn) return;
+
+        function setRequirementState(element, isMet) {
+            if (!element) return;
+            const icon = element.querySelector('.status-icon');
+            if (isMet) {
+                element.className = 'flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-medium transition-colors duration-200';
+                if (icon) {
+                    icon.textContent = 'check_circle';
+                    icon.className = 'material-icons-outlined text-sm status-icon text-emerald-500 dark:text-emerald-400';
+                }
+            } else {
+                element.className = 'flex items-center gap-2 text-slate-400 dark:text-slate-500 transition-colors duration-200';
+                if (icon) {
+                    icon.textContent = 'cancel';
+                    icon.className = 'material-icons-outlined text-sm status-icon text-slate-400 dark:text-slate-500';
+                }
+            }
+        }
+
+        function validateForm() {
+            const val = newInput.value;
+            const confirmVal = confirmInput.value;
+            const currentVal = currentInput ? currentInput.value : '';
+
+            // 1. Evaluate complexity criteria according to backend passwordRegex
+            const hasLength = val.length >= 8;
+            const hasUpper = /[A-Z]/.test(val);
+            const hasLower = /[a-z]/.test(val);
+            const hasNumber = /\d/.test(val);
+
+            setRequirementState(reqLength, hasLength);
+            setRequirementState(reqUpper, hasUpper);
+            setRequirementState(reqLower, hasLower);
+            setRequirementState(reqNumber, hasNumber);
+
+            const metCount = [hasLength, hasUpper, hasLower, hasNumber].filter(Boolean).length;
+
+            // Update password strength badge
+            if (strengthBadge) {
+                if (metCount === 4) {
+                    strengthBadge.textContent = 'Strong';
+                    strengthBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300';
+                } else if (metCount >= 2) {
+                    strengthBadge.textContent = 'Fair';
+                    strengthBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300';
+                } else {
+                    strengthBadge.textContent = 'Incomplete';
+                    strengthBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700/80 text-slate-500 dark:text-slate-400';
+                }
+            }
+
+            // 2. Evaluate confirm password matching
+            let isMatch = false;
+            if (confirmVal.length > 0) {
+                if (reqMatchContainer) reqMatchContainer.classList.remove('hidden');
+                const icon = reqMatch ? reqMatch.querySelector('.status-icon') : null;
+                const text = reqMatch ? reqMatch.querySelector('.status-text') : null;
+
+                if (val === confirmVal) {
+                    isMatch = true;
+                    if (reqMatch) reqMatch.className = 'flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 pl-1';
+                    if (icon) icon.textContent = 'check_circle';
+                    if (text) text.textContent = 'Passwords match';
+                } else {
+                    isMatch = false;
+                    if (reqMatch) reqMatch.className = 'flex items-center gap-1.5 text-[11px] font-medium text-red-600 dark:text-red-400 pl-1';
+                    if (icon) icon.textContent = 'cancel';
+                    if (text) text.textContent = 'Passwords do not match';
+                }
+            } else {
+                if (reqMatchContainer) reqMatchContainer.classList.add('hidden');
+            }
+
+            const allComplexityMet = hasLength && hasUpper && hasLower && hasNumber;
+            const currentFilled = currentVal.trim().length > 0;
+            const isFormValid = allComplexityMet && isMatch && currentFilled;
+
+            if (isFormValid) {
+                submitBtn.removeAttribute('disabled');
+                if (alertBox) alertBox.classList.add('hidden');
+            } else {
+                submitBtn.setAttribute('disabled', 'disabled');
+            }
+
+            return { isFormValid, allComplexityMet, isMatch, currentFilled };
+        }
+
+        newInput.addEventListener('input', validateForm);
+        confirmInput.addEventListener('input', validateForm);
+        if (currentInput) currentInput.addEventListener('input', validateForm);
+
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const { isFormValid, allComplexityMet, isMatch, currentFilled } = validateForm();
+                if (!isFormValid) {
+                    e.preventDefault();
+                    if (alertBox && alertText) {
+                        if (!currentFilled) {
+                            alertText.textContent = 'Please enter your current password.';
+                        } else if (!allComplexityMet) {
+                            alertText.textContent = 'Please meet all password requirements before updating.';
+                        } else if (!isMatch) {
+                            alertText.textContent = 'New password and confirmation password do not match.';
+                        }
+                        alertBox.classList.remove('hidden');
+                    }
+                }
+            });
+        }
+
+        // Initial validation run
+        validateForm();
+    }, 50);
 }
 
