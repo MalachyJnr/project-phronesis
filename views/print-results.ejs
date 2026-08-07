@@ -1,252 +1,281 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Report Card - <%= user.first_name %> <%= user.last_name %> - PHRONESIS</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
-      rel="stylesheet"
-    />
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#4169E1",
-              secondary: "#D4AF37",
-            },
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
-            },
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Report Card - <%= user.first_name %>
+      <%= user.last_name %> - PHRONESIS SUNESIS ACADEMY</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#4169E1",
+            secondary: "#D4AF37",
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
           },
         },
-      };
-    </script>
-    <style>
+      },
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: #ffffff;
+      color: #0f172a;
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+
       body {
-        font-family: "Inter", sans-serif;
         background-color: #ffffff;
-        color: #0f172a;
+        color: #000000;
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
       }
-      @media print {
-        .no-print {
-          display: none !important;
-        }
-        body {
-          background-color: #ffffff;
-          color: #000000;
-          font-size: 12px;
-          margin: 0;
-          padding: 0;
-        }
-        .print-card {
-          border: none !important;
-          box-shadow: none !important;
-          padding: 0 !important;
-          margin: 0 !important;
-        }
-        .page-break {
-          page-break-before: always;
-        }
+
+      .print-card {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
-    </style>
-  </head>
-  <body class="bg-slate-50 min-h-screen pb-12">
-    
-    <!-- Action Header (Hidden in Print) -->
-    <header class="no-print bg-slate-900 text-white py-4 px-6 mb-8 shadow-md flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="material-icons-outlined text-secondary">emoji_events</span>
-        <div>
-          <h1 class="text-sm font-bold tracking-wider uppercase">PHRONESIS SECONDARY PORTAL</h1>
-          <p class="text-xs text-slate-400">Official Academic Report Card</p>
-        </div>
+
+      .page-break {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen pb-12">
+
+  <!-- Action Header (Hidden in Print) -->
+  <header class="no-print bg-slate-900 text-white py-4 px-6 mb-8 shadow-md flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="material-icons-outlined text-secondary">emoji_events</span>
+      <div>
+        <h1 class="text-sm font-bold tracking-wider uppercase">PHRONESIS SUNESIS ACADEMY</h1>
+        <p class="text-xs text-slate-400">Official Academic Report Card</p>
       </div>
-      <div class="flex items-center gap-3">
-        <button 
-          onclick="window.print()" 
-          class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded-lg text-xs font-bold transition-all shadow-sm"
-        >
-          <span class="material-icons-outlined text-sm">print</span>
-          Print Report Card
-        </button>
-        <button 
-          onclick="window.close()" 
-          class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all"
-        >
-          Close Tab
-        </button>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="window.print()"
+        class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded-lg text-xs font-bold transition-all shadow-sm">
+        <span class="material-icons-outlined text-sm">print</span>
+        Print Report Card
+      </button>
+      <button onclick="window.close()"
+        class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all">
+        Close Tab
+      </button>
+    </div>
+  </header>
+
+  <!-- Report Card Document -->
+  <main class="max-w-4xl mx-auto bg-white p-8 md:p-12 border border-slate-200 rounded-2xl shadow-sm print-card">
+
+    <!-- School Letterhead Header -->
+    <section class="text-center pb-6 border-b-2 border-slate-800 relative">
+      <div class="flex flex-col items-center justify-center">
+        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 uppercase">
+          PHRONESIS SUNESIS ACADEMY
+        </h2>
+        <p class="text-xs md:text-sm font-semibold text-slate-600 uppercase tracking-widest mt-1">
+          Motto: Knowledge, Wisdom, and Excellence
+        </p>
+        <p class="text-xs text-slate-500 mt-0.5">
+          Admin Office: 12 Academy Road, Phronesis City • Phone: +1 234 567 890 • email: portal@phronesis.edu
+        </p>
       </div>
-    </header>
+      <div class="mt-4 py-1.5 px-4 bg-slate-100 rounded-lg inline-block">
+        <h3 class="text-xs font-extrabold tracking-widest text-slate-800 uppercase">
+          Official Academic Performance Report
+        </h3>
+      </div>
+    </section>
 
-    <!-- Report Card Document -->
-    <main class="max-w-4xl mx-auto bg-white p-8 md:p-12 border border-slate-200 rounded-2xl shadow-sm print-card">
-      
-      <!-- School Letterhead Header -->
-      <section class="text-center pb-6 border-b-2 border-slate-800 relative">
-        <div class="flex flex-col items-center justify-center">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 uppercase">
-            PHRONESIS SECONDARY SCHOOL
-          </h2>
-          <p class="text-xs md:text-sm font-semibold text-slate-600 uppercase tracking-widest mt-1">
-            Motto: Knowledge, Wisdom, and Excellence
-          </p>
-          <p class="text-xs text-slate-500 mt-0.5">
-            Admin Office: 12 Academy Road, Phronesis City • Phone: +1 234 567 890 • email: portal@phronesis.edu
-          </p>
-        </div>
-        <div class="mt-4 py-1.5 px-4 bg-slate-100 rounded-lg inline-block">
-          <h3 class="text-xs font-extrabold tracking-widest text-slate-800 uppercase">
-            Official Academic Performance Report
-          </h3>
-        </div>
-      </section>
+    <!-- Student & Class Metadata Grid -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-6 py-6 border-b border-slate-200 text-sm">
+      <div>
+        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Student Name</p>
+        <p class="font-bold text-slate-900 mt-0.5">
+          <%= user.first_name %>
+            <%= user.middle_name ? user.middle_name + ' ' : '' %>
+              <%= user.last_name %>
+        </p>
+      </div>
+      <div>
+        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Admission Number</p>
+        <p class="font-bold text-slate-900 mt-0.5">
+          <%= user.admission_number %>
+        </p>
+      </div>
+      <div>
+        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Class / Grade</p>
+        <p class="font-bold text-slate-900 mt-0.5">
+          <%= summary ? summary.class_name : user.class_name %>
+        </p>
+      </div>
+      <div>
+        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Gender</p>
+        <p class="font-bold text-slate-900 mt-0.5">
+          <%= user.gender %>
+        </p>
+      </div>
+      <div>
+        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Academic Session</p>
+        <p class="font-bold text-slate-900 mt-0.5">
+          <%= summary ? summary.session_name : 'N/A' %>
+        </p>
+      </div>
+      <div>
+        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Academic Term</p>
+        <p class="font-bold text-slate-900 mt-0.5">
+          <%= summary ? summary.term_name : 'N/A' %>
+        </p>
+      </div>
+      <div>
+        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Date of Birth</p>
+        <p class="font-bold text-slate-900 mt-0.5">
+          <%= user.date_of_birth %>
+        </p>
+      </div>
+      <div>
+        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Status</p>
+        <p class="font-bold text-emerald-600 mt-0.5 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+        </p>
+      </div>
+    </section>
 
-      <!-- Student & Class Metadata Grid -->
-      <section class="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-6 py-6 border-b border-slate-200 text-sm">
-        <div>
-          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Student Name</p>
-          <p class="font-bold text-slate-900 mt-0.5">
-            <%= user.first_name %> <%= user.middle_name ? user.middle_name + ' ' : '' %><%= user.last_name %>
-          </p>
-        </div>
-        <div>
-          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Admission Number</p>
-          <p class="font-bold text-slate-900 mt-0.5"><%= user.admission_number %></p>
-        </div>
-        <div>
-          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Class / Grade</p>
-          <p class="font-bold text-slate-900 mt-0.5">
-            <%= summary ? summary.class_name : user.class_name %>
-          </p>
-        </div>
-        <div>
-          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Gender</p>
-          <p class="font-bold text-slate-900 mt-0.5"><%= user.gender %></p>
-        </div>
-        <div>
-          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Academic Session</p>
-          <p class="font-bold text-slate-900 mt-0.5">
-            <%= summary ? summary.session_name : 'N/A' %>
-          </p>
-        </div>
-        <div>
-          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Academic Term</p>
-          <p class="font-bold text-slate-900 mt-0.5">
-            <%= summary ? summary.term_name : 'N/A' %>
-          </p>
-        </div>
-        <div>
-          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Date of Birth</p>
-          <p class="font-bold text-slate-900 mt-0.5"><%= user.date_of_birth %></p>
-        </div>
-        <div>
-          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Status</p>
-          <p class="font-bold text-emerald-600 mt-0.5 flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
-          </p>
-        </div>
-      </section>
-
-      <% if (summary) { %>
-        <!-- overall statistics summary -->
-        <section class="py-6 border-b border-slate-200">
-          <h4 class="text-xs uppercase font-extrabold tracking-wider text-slate-400 mb-4">
-            Performance Summary Statistics
-          </h4>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
-              <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total Score</p>
-              <p class="text-2xl font-extrabold text-slate-900 mt-1"><%= Number(summary.total_score).toFixed(0) %></p>
-            </div>
-            <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
-              <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Term Average</p>
-              <p class="text-2xl font-extrabold text-slate-900 mt-1"><%= Number(summary.average_score).toFixed(2) %>%</p>
-            </div>
-            <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
-              <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Term GPA / CGPA</p>
-              <p class="text-2xl font-extrabold text-primary mt-1">
-                <%= Number(summary.gpa).toFixed(2) %> <span class="text-xs text-slate-400 font-medium">/ <%= Number(summary.cgpa).toFixed(2) %></span>
-              </p>
-            </div>
-            <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
-              <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Class Position / Rank</p>
-              <p class="text-2xl font-extrabold text-amber-600 mt-1">
-                <%= summary.class_position %><%= [ 'st', 'nd', 'rd' ][(summary.class_position % 10 - 1)] || 'th' %>
-                <span class="text-xs text-slate-400 font-medium">of <%= summary.total_students %></span>
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Detailed Subjects Results Table -->
-        <section class="py-6">
-          <h4 class="text-xs uppercase font-extrabold tracking-wider text-slate-400 mb-4">
-            Subject breakdown and grades
-          </h4>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="bg-slate-100 border-b border-slate-300">
-                  <th class="py-3 px-4 font-bold text-slate-700 uppercase">Subject</th>
-                  <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">CA (30)</th>
-                  <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">Mid (20)</th>
-                  <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">Exam (50)</th>
-                  <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">Total (100)</th>
-                  <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">Grade</th>
-                  <th class="py-3 px-4 font-bold text-slate-700 uppercase">Subject Teacher</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-200">
-                <% subjectResults.forEach((sub, idx) => { %>
-                  <tr class="<%= idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50' %>">
-                    <td class="py-3 px-4 font-semibold text-slate-900"><%= sub.subject_name %></td>
-                    <td class="py-3 px-3 text-center text-slate-600"><%= Number(sub.ca_score).toFixed(0) %></td>
-                    <td class="py-3 px-3 text-center text-slate-600"><%= Number(sub.mid_term_score).toFixed(0) %></td>
-                    <td class="py-3 px-3 text-center text-slate-600"><%= Number(sub.exam_score).toFixed(0) %></td>
-                    <td class="py-3 px-3 text-center font-bold text-slate-900"><%= Number(sub.total_score).toFixed(0) %></td>
-                    <td class="py-3 px-3 text-center font-extrabold text-primary"><%= sub.grade %></td>
-                    <td class="py-3 px-4 text-slate-600"><%= sub.teacher_name || 'N/A' %></td>
-                  </tr>
-                  <!-- Optional Subject Specific Remark row underneath (for premium detailed output) -->
-                  <% if (sub.subject_remarks) { %>
-                    <tr class="<%= idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50' %>">
-                      <td colspan="7" class="py-1.5 px-6 text-[10px] text-slate-500 italic border-t-0">
-                        <strong>Remark:</strong> "<%= sub.subject_remarks %>"
-                      </td>
-                    </tr>
-                  <% } %>
-                <% }) %>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- Final Signoff & Remarks Section -->
-        <section class="mt-8 pt-6 border-t border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl">
-            <h5 class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Class Teacher Remark</h5>
-            <p class="text-xs italic text-slate-700 leading-relaxed">
-              <%= summary.remarks %>
+    <% if (summary) { %>
+      <!-- overall statistics summary -->
+      <section class="py-6 border-b border-slate-200">
+        <h4 class="text-xs uppercase font-extrabold tracking-wider text-slate-400 mb-4">
+          Performance Summary Statistics
+        </h4>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
+            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total Score</p>
+            <p class="text-2xl font-extrabold text-slate-900 mt-1">
+              <%= Number(summary.total_score).toFixed(0) %>
             </p>
           </div>
-          <div class="flex flex-col justify-between h-full pt-4">
-            <div class="flex justify-between items-end border-b border-dashed border-slate-400 pb-2">
-              <span class="text-xs font-bold text-slate-600">Principal Signature:</span>
-              <span class="text-xs italic font-serif text-slate-800 font-bold px-4 border-slate-300">Dr. M. A. Phronesis</span>
-            </div>
-            <div class="flex justify-between items-end border-b border-dashed border-slate-400 pb-2 mt-4">
-              <span class="text-xs font-bold text-slate-600">Date Issued:</span>
-              <span class="text-xs text-slate-800"><%= new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
-            </div>
+          <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
+            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Term Average</p>
+            <p class="text-2xl font-extrabold text-slate-900 mt-1">
+              <%= Number(summary.average_score).toFixed(2) %>%
+            </p>
           </div>
-        </section>
+          <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
+            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Term GPA / CGPA</p>
+            <p class="text-2xl font-extrabold text-primary mt-1">
+              <%= Number(summary.gpa).toFixed(2) %> <span class="text-xs text-slate-400 font-medium">/ <%=
+                    Number(summary.cgpa).toFixed(2) %></span>
+            </p>
+          </div>
+          <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
+            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Class Position / Rank</p>
+            <p class="text-2xl font-extrabold text-amber-600 mt-1">
+              <%= summary.class_position %>
+                <%= [ 'st' , 'nd' , 'rd' ][(summary.class_position % 10 - 1)] || 'th' %>
+                  <span class="text-xs text-slate-400 font-medium">of <%= summary.total_students %></span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Detailed Subjects Results Table -->
+      <section class="py-6">
+        <h4 class="text-xs uppercase font-extrabold tracking-wider text-slate-400 mb-4">
+          Subject breakdown and grades
+        </h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-100 border-b border-slate-300">
+                <th class="py-3 px-4 font-bold text-slate-700 uppercase">Subject</th>
+                <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">CA (30)</th>
+                <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">Mid (20)</th>
+                <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">Exam (50)</th>
+                <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">Total (100)</th>
+                <th class="py-3 px-3 font-bold text-slate-700 uppercase text-center">Grade</th>
+                <th class="py-3 px-4 font-bold text-slate-700 uppercase">Subject Teacher</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <% subjectResults.forEach((sub, idx)=> { %>
+                <tr class="<%= idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50' %>">
+                  <td class="py-3 px-4 font-semibold text-slate-900">
+                    <%= sub.subject_name %>
+                  </td>
+                  <td class="py-3 px-3 text-center text-slate-600">
+                    <%= Number(sub.ca_score).toFixed(0) %>
+                  </td>
+                  <td class="py-3 px-3 text-center text-slate-600">
+                    <%= Number(sub.mid_term_score).toFixed(0) %>
+                  </td>
+                  <td class="py-3 px-3 text-center text-slate-600">
+                    <%= Number(sub.exam_score).toFixed(0) %>
+                  </td>
+                  <td class="py-3 px-3 text-center font-bold text-slate-900">
+                    <%= Number(sub.total_score).toFixed(0) %>
+                  </td>
+                  <td class="py-3 px-3 text-center font-extrabold text-primary">
+                    <%= sub.grade %>
+                  </td>
+                  <td class="py-3 px-4 text-slate-600">
+                    <%= sub.teacher_name || 'N/A' %>
+                  </td>
+                </tr>
+                <!-- Optional Subject Specific Remark row underneath (for premium detailed output) -->
+                <% if (sub.subject_remarks) { %>
+                  <tr class="<%= idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50' %>">
+                    <td colspan="7" class="py-1.5 px-6 text-[10px] text-slate-500 italic border-t-0">
+                      <strong>Remark:</strong> "<%= sub.subject_remarks %>"
+                    </td>
+                  </tr>
+                  <% } %>
+                    <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Final Signoff & Remarks Section -->
+      <section class="mt-8 pt-6 border-t border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl">
+          <h5 class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Class Teacher Remark</h5>
+          <p class="text-xs italic text-slate-700 leading-relaxed">
+            <%= summary.remarks %>
+          </p>
+        </div>
+        <div class="flex flex-col justify-between h-full pt-4">
+          <div class="flex justify-between items-end border-b border-dashed border-slate-400 pb-2">
+            <span class="text-xs font-bold text-slate-600">Principal Signature:</span>
+            <span class="text-xs italic font-serif text-slate-800 font-bold px-4 border-slate-300">Dr. M. A.
+              Phronesis</span>
+          </div>
+          <div class="flex justify-between items-end border-b border-dashed border-slate-400 pb-2 mt-4">
+            <span class="text-xs font-bold text-slate-600">Date Issued:</span>
+            <span class="text-xs text-slate-800">
+              <%= new Date().toLocaleDateString(undefined, { year: 'numeric' , month: 'long' , day: 'numeric' }) %>
+            </span>
+          </div>
+        </div>
+      </section>
       <% } else { %>
         <div class="text-center py-20">
           <span class="material-icons-outlined text-6xl text-slate-300 mb-4">warning</span>
@@ -255,18 +284,19 @@
             We could not find any result breakdown records for this student.
           </p>
         </div>
-      <% } %>
+        <% } %>
 
-    </main>
+  </main>
 
-    <!-- Auto Print Trigger -->
-    <script>
-      window.onload = function() {
-        // Delay slightly to allow any fonts/assets to fully render
-        setTimeout(() => {
-          window.print();
-        }, 500);
-      };
-    </script>
-  </body>
+  <!-- Auto Print Trigger -->
+  <script>
+    window.onclick = function () {
+      // Delay slightly to allow any fonts/assets to fully render
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    };
+  </script>
+</body>
+
 </html>

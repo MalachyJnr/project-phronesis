@@ -27,13 +27,34 @@
           <span class="material-icons-outlined text-slate-300 md:text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
         </a>
 
+        <% if (typeof user !== 'undefined' && user && user.is_default_password) { %>
+          <!-- Security Reminder Banner -->
+          <div id="default-password-banner" class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 p-4 md:p-5 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-800/50 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                <span class="material-icons-outlined text-xl">warning</span>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider">Security Notice</h4>
+                <p class="text-xs text-amber-800 dark:text-amber-300 mt-1 leading-relaxed">
+                  Your account is still using the default password assigned by the administrator (<strong><%= typeof defaultStudentPassword !== 'undefined' ? defaultStudentPassword : 'Password123' %></strong>). For the security of your account, it is strongly recommended that you change your password as soon as possible.
+                </p>
+              </div>
+            </div>
+            <button onclick="openChangePasswordModal()" class="w-full md:w-auto px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold whitespace-nowrap transition-colors shadow-sm flex items-center justify-center gap-1.5 shrink-0">
+              <span class="material-icons-outlined text-sm">lock_reset</span>
+              Change Password
+            </button>
+          </div>
+        <% } %>
+
         <!-- Settings Categories -->
         <div class="space-y-6 md:space-y-0 md:grid md:grid-cols-2 md:grid-flow-row md:gap-x-8 md:gap-y-8">
           <!-- Account & Security -->
           <section class="space-y-3">
             <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">Account & Security</h3>
             <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden shadow-sm">
-              <button class="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <button onclick="openChangePasswordModal()" class="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                 <div class="flex items-center gap-3">
                   <span class="material-icons-outlined text-slate-400">lock</span>
                   <span class="text-xs font-semibold">Change Password</span>
@@ -100,13 +121,24 @@
                 </div>
               </button>
               <div class="h-[1px] bg-slate-100 dark:bg-slate-700 mx-4"></div>
-              <button class="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <button onclick="showThemeModal()" class="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                 <div class="flex items-center gap-3">
                   <span class="material-icons-outlined text-slate-400">palette</span>
                   <span class="text-xs font-semibold">Theme Mode</span>
                 </div>
                 <div class="flex items-center gap-1">
-                  <span class="text-[10px] text-slate-500 font-bold uppercase">System</span>
+                  <span id="current-theme-label" class="text-[10px] text-slate-500 font-bold uppercase">System</span>
+                  <span class="material-icons-outlined text-slate-300 text-sm">chevron_right</span>
+                </div>
+              </button>
+              <div class="h-[1px] bg-slate-100 dark:bg-slate-700 mx-4"></div>
+              <button onclick="showFontSizeModal()" class="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <div class="flex items-center gap-3">
+                  <span class="material-icons-outlined text-slate-400">format_size</span>
+                  <span class="text-xs font-semibold">Font Size</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span id="current-font-size-label" class="text-[10px] text-slate-500 font-bold uppercase">Medium</span>
                   <span class="material-icons-outlined text-slate-300 text-sm">chevron_right</span>
                 </div>
               </button>
@@ -117,15 +149,15 @@
           <section class="space-y-3">
             <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">Support</h3>
             <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden shadow-sm">
-              <button class="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <button onclick="showHelpCenterModal()" class="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                 <div class="flex items-center gap-3">
                   <span class="material-icons-outlined text-slate-400">help_outline</span>
                   <span class="text-xs font-semibold">Help Center</span>
                 </div>
-                <span class="material-icons-outlined text-slate-300 text-sm">open_in_new</span>
+                <span class="material-icons-outlined text-slate-300 text-sm">chevron_right</span>
               </button>
               <div class="h-[1px] bg-slate-100 dark:bg-slate-700 mx-4"></div>
-              <button class="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <button onclick="showAboutPhronesisModal()" class="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                 <div class="flex items-center gap-3">
                   <span class="material-icons-outlined text-slate-400">info</span>
                   <span class="text-xs font-semibold">About PHRONESIS</span>

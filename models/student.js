@@ -13,11 +13,13 @@ async function addStudent(
   profilePic,
 ) {
   try {
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const rawPassword = password || process.env.DEFAULT_STUDENT_PASSWORD || "Password123";
+    const hashedPassword = await bcrypt.hash(rawPassword, 12);
+    const isDefaultPassword = rawPassword === (process.env.DEFAULT_STUDENT_PASSWORD || "Password123") ? 1 : 0;
 
     return new Promise((resolve, reject) => {
       connection.query(
-        `INSERT INTO students(admission_number, first_name, middle_name, last_name, password, gender, date_of_birth, class_id, profile_pic) VALUES(?,?,?,?,?,?,?,?,?)`,
+        `INSERT INTO students(admission_number, first_name, middle_name, last_name, password, gender, date_of_birth, class_id, profile_pic, is_default_password) VALUES(?,?,?,?,?,?,?,?,?,?)`,
         [
           admissionNumber,
           firstName,
@@ -28,6 +30,7 @@ async function addStudent(
           dateOfBirth,
           classId,
           profilePic,
+          isDefaultPassword,
         ],
         (err, student) => {
           if (err) return reject(err);
@@ -40,9 +43,7 @@ async function addStudent(
   }
 }
 
-// addStudent('PS003', 'John', 'Doe', 'Lyn', '123', 'Male', '15/03/2004', 1, 'NULL')
-
-//Get student By ID
+// Get student By ID with class details
 function getStudentById(studentId) {
   return new Promise((resolve, reject) => {
     connection.query(
@@ -64,7 +65,7 @@ function getStudentById(studentId) {
   });
 }
 
-//Get student by admission number
+// Get student by admission number
 async function getStudentByAdmissionNumber(admissionNumber) {
   try {
     return new Promise((resolve, reject) => {
@@ -96,10 +97,44 @@ function updateStudentProfilePic(studentId, profilePic) {
   });
 }
 
-module.exports = { 
-  addStudent, 
-  getStudentByAdmissionNumber, 
-  getStudentById,
-  updateStudentProfilePic
-};
+// Update student password and set is_default_password to 0
+function updateStudentPassword(studentId, newHashedPassword) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `UPDATE students SET password = ?, is_default_password = 0 WHERE student_id = ?`,
+      [newHashedPassword, studentId],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      },
+    );
+  });
+}
 
+// Get student attendance metrics
+function getStudentAttendance(studentId) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `
+      SELECT * FROM attendance
+      WHERE student_id = ?
+      ORDER BY session_id DESC, term_id DESC
+      LIMIT 1
+      `,
+      [studentId],
+      (err, results) => {
+        if (err) return reject(err);
+        resolve(results.length > 0 ? results[0] : { percentage: 90.0, remarks: 'Good attendance!' });
+      }
+    );
+  });
+}
+
+module.exports = {
+  addStudent,
+  getStudentByAdmissionNumber,
+  getStudentById,
+  updateStudentProfilePic,
+  updateStudentPassword,
+  getStudentAttendance
+};

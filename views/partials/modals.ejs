@@ -64,21 +64,13 @@
 
     <!-- Timetable Action Menu -->
     <div id="timetable-action-menu" class="fixed w-48 bg-white dark:bg-slate-900 shadow-2xl rounded-2xl border border-slate-100 dark:border-slate-800 z-50 hidden overflow-hidden">
-      <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-        <p id="menu-subject-name" class="text-[10px] font-bold text-primary dark:text-blue-400 uppercase tracking-wider"></p>
+      <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+        <p id="menu-subject-name" class="text-[10px] font-bold text-primary dark:text-blue-400 uppercase tracking-wider truncate"></p>
       </div>
-      <div class="p-2 text-slate-900 dark:text-slate-100">
-        <button class="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" onclick="showSubjectDetails(document.getElementById('menu-subject-name').textContent)">
-          <span class="material-icons-outlined text-sm text-slate-400">info</span>
+      <div class="p-1.5 text-slate-900 dark:text-slate-100">
+        <button class="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors group" onclick="showSubjectDetails(document.getElementById('menu-subject-name').textContent)">
+          <span class="material-icons-outlined text-base text-slate-400 group-hover:text-primary dark:group-hover:text-blue-400 transition-colors">info</span>
           View Class Details
-        </button>
-        <button class="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" onclick="showAddNote(document.getElementById('menu-subject-name').textContent)">
-          <span class="material-icons-outlined text-sm text-slate-400">edit_note</span>
-          Add Private Note
-        </button>
-        <button class="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" onclick="showCourseMaterials(document.getElementById('menu-subject-name').textContent)">
-          <span class="material-icons-outlined text-sm text-slate-400">link</span>
-          Course Materials
         </button>
       </div>
     </div>

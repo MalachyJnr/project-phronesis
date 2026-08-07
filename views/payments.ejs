@@ -13,7 +13,6 @@
 
 <main class="p-4 md:px-8 md:py-6 space-y-6 md:space-y-8 pb-24 md:pb-8 max-w-7xl mx-auto">
 
-      
       <!-- Mobile Welcome Area -->
       <section class="md:hidden">
         <h2 class="text-2xl font-bold dark:text-white">Payment & Billing</h2>
@@ -34,8 +33,12 @@
               <div class="flex items-start justify-between w-full mb-4 relative z-10">
                 <div>
                   <p class="text-xs md:text-sm font-semibold opacity-90 mb-1 tracking-wide uppercase">Current Status</p>
-                  <h3 class="text-2xl md:text-4xl font-extrabold drop-shadow-sm text-white">Up-to-Date</h3>
-                  <p class="text-xs md:text-sm opacity-90 mt-1 md:mt-2">All payments cleared</p>
+                  <h3 class="text-2xl md:text-4xl font-extrabold drop-shadow-sm text-white">
+                    <%= typeof paymentSummary !== 'undefined' ? paymentSummary.status : 'Up-to-Date' %>
+                  </h3>
+                  <p class="text-xs md:text-sm opacity-90 mt-1 md:mt-2">
+                    <%= typeof paymentSummary !== 'undefined' && paymentSummary.outstandingBalance > 0 ? 'Pending payments due' : 'All payments cleared' %>
+                  </p>
                 </div>
                 <div class="w-12 h-12 md:w-16 md:h-16 bg-white/20 backdrop-blur-sm shadow-inner rounded-full flex items-center justify-center flex-shrink-0">
                   <span class="material-icons-outlined text-3xl md:text-4xl text-white">verified</span>
@@ -44,7 +47,9 @@
               <div class="bg-black/20 backdrop-blur-md rounded-xl p-4 md:p-5 mt-4 w-full relative z-10 border border-white/10">
                 <div class="flex items-center justify-between">
                   <span class="text-xs md:text-sm font-medium tracking-wide">Outstanding Balance</span>
-                  <span class="text-lg md:text-3xl font-bold">₦0.00</span>
+                  <span class="text-lg md:text-3xl font-bold">
+                    ₦<%= typeof paymentSummary !== 'undefined' ? paymentSummary.outstandingBalance.toLocaleString() : '0.00' %>
+                  </span>
                 </div>
               </div>
             </div>
@@ -57,21 +62,27 @@
                 <div class="absolute -left-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:-rotate-12 transition-transform duration-500">
                   <span class="material-icons-outlined text-7xl md:text-8xl">history</span>
                 </div>
-                <div class="text-xl md:text-4xl font-extrabold text-primary dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">3</div>
+                <div class="text-xl md:text-4xl font-extrabold text-primary dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                  <%= typeof paymentSummary !== 'undefined' ? paymentSummary.termsPaidCount : 0 %>
+                </div>
                 <p class="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 md:mt-2">Terms Paid</p>
               </div>
               <div class="bg-white dark:bg-slate-800 p-3 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm md:shadow-md hover:shadow-lg transition-all flex flex-col justify-center items-center h-full group text-center relative overflow-hidden">
                 <div class="absolute -left-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:rotate-12 transition-transform duration-500">
                   <span class="material-icons-outlined text-7xl md:text-8xl">bolt</span>
                 </div>
-                <div class="text-xl md:text-4xl font-extrabold text-primary dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">100%</div>
+                <div class="text-xl md:text-4xl font-extrabold text-primary dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                  <%= typeof paymentSummary !== 'undefined' ? paymentSummary.onTimePercentage : 100 %>%
+                </div>
                 <p class="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 md:mt-2">On Time</p>
               </div>
               <div class="bg-white dark:bg-slate-800 p-3 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm md:shadow-md hover:shadow-lg transition-all flex flex-col justify-center items-center h-full group text-center relative overflow-hidden">
                  <div class="absolute -left-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-500">
                   <span class="material-icons-outlined text-7xl md:text-8xl">money_off</span>
                 </div>
-                <div class="text-xl md:text-4xl font-extrabold text-secondary hover:text-yellow-600 transition-colors duration-300">₦0</div>
+                <div class="text-xl md:text-4xl font-extrabold text-secondary hover:text-yellow-600 transition-colors duration-300">
+                  ₦<%= typeof paymentSummary !== 'undefined' ? paymentSummary.pendingFees.toLocaleString() : '0' %>
+                </div>
                 <p class="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 md:mt-2">Pending Fees</p>
               </div>
             </div>
@@ -86,113 +97,52 @@
         </h3>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
-        
-        <!-- Term 1 Payment -->
-        <div
-          class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm cursor-pointer hover:border-primary/30 dark:hover:border-blue-400/30 transition-all active:scale-[0.98]"
-          onclick="showReceiptDetails('Term 1 Fees', '2025/2026', '150,000.00', 'Jan 15, 2026 • 10:45 AM', 'Bank Transfer', 'TRX-98234561')"
-        >
-          <div class="flex items-start justify-between mb-3">
-            <div class="flex items-start gap-3">
-              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center text-primary">
-                <span class="material-icons-outlined text-xl">check_circle</span>
+          <% if (typeof payments !== 'undefined' && payments.length > 0) { %>
+            <% payments.forEach(function(item) { %>
+              <% 
+                const paymentDateStr = item.payment_date ? new Date(item.payment_date).toLocaleDateString() : 'N/A';
+                const formattedAmount = parseFloat(item.amount_paid).toLocaleString();
+              %>
+              <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm cursor-pointer hover:border-primary/30 dark:hover:border-blue-400/30 transition-all active:scale-[0.98]"
+                onclick="showReceiptDetails('<%= item.title.replace(/'/g, "\\'") %>', '<%= item.session_name.replace(/'/g, "\\'") %>', '<%= formattedAmount %>', '<%= paymentDateStr %>', '<%= item.payment_method.replace(/'/g, "\\'") %>', '<%= item.transaction_ref.replace(/'/g, "\\'") %>')"
+              >
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center text-primary">
+                      <span class="material-icons-outlined text-xl">check_circle</span>
+                    </div>
+                    <div>
+                      <h4 class="text-sm font-bold"><%= item.title %></h4>
+                      <p class="text-[10px] text-slate-500 dark:text-slate-400"><%= item.session_name %> • <%= item.term_name %></p>
+                    </div>
+                  </div>
+                  <span class="px-2 py-1 <%= item.status === 'Paid' ? 'bg-primary/10 text-primary dark:text-blue-400' : 'bg-yellow-500/10 text-yellow-500' %> text-[9px] font-bold rounded-full uppercase">
+                    <%= item.status %>
+                  </span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500 dark:text-slate-400">Amount Paid</span>
+                    <span class="font-bold">₦<%= formattedAmount %></span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500 dark:text-slate-400">Payment Date</span>
+                    <span class="font-semibold"><%= paymentDateStr %></span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500 dark:text-slate-400">Method</span>
+                    <span class="font-semibold"><%= item.payment_method %></span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h4 class="text-sm font-bold">Term 1 Fees</h4>
-                <p class="text-[10px] text-slate-500 dark:text-slate-400">2025/2026 Academic Year</p>
-              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="col-span-full py-8 text-center text-slate-400">
+              No payment history recorded.
             </div>
-            <span class="px-2 py-1 bg-primary/10 text-primary dark:text-blue-400 text-[9px] font-bold rounded-full">
-              PAID
-            </span>
-          </div>
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400">Amount</span>
-              <span class="font-bold">₦150,000.00</span>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400">Payment Date</span>
-              <span class="font-semibold">Jan 15, 2026</span>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400">Method</span>
-              <span class="font-semibold">Bank Transfer</span>
-            </div>
-          </div>
+          <% } %>
         </div>
-
-        <!-- Term 2 Payment -->
-        <div
-          class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm cursor-pointer hover:border-primary/30 dark:hover:border-blue-400/30 transition-all active:scale-[0.98]"
-          onclick="showReceiptDetails('Term 2 Fees', '2024/2025', '145,000.00', 'Sep 20, 2025 • 09:15 AM', 'Online Payment', 'TRX-10293847')"
-        >
-          <div class="flex items-start justify-between mb-3">
-            <div class="flex items-start gap-3">
-              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center">
-                <span class="material-icons-outlined text-xl">check_circle</span>
-              </div>
-              <div>
-                <h4 class="text-sm font-bold">Term 2 Fees</h4>
-                <p class="text-[10px] text-slate-500 dark:text-slate-400">2024/2025 Academic Year</p>
-              </div>
-            </div>
-            <span class="px-2 py-1 bg-primary/10 text-primary dark:text-blue-400 text-[9px] font-bold rounded-full">
-              PAID
-            </span>
-          </div>
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400">Amount</span>
-              <span class="font-bold">₦145,000.00</span>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400">Payment Date</span>
-              <span class="font-semibold">Sep 20, 2025</span>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400">Method</span>
-              <span class="font-semibold">Online Payment</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Term 1 Previous Year -->
-        <div
-          class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm cursor-pointer hover:border-primary/30 dark:hover:border-blue-400/30 transition-all active:scale-[0.98]"
-          onclick="showReceiptDetails('Term 1 Fees', '2024/2025', '140,000.00', 'Jan 10, 2025 • 02:30 PM', 'Cash', 'TRX-55443322')"
-        >
-          <div class="flex items-start justify-between mb-3">
-            <div class="flex items-start gap-3">
-              <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center">
-                <span class="material-icons-outlined text-xl">check_circle</span>
-              </div>
-              <div>
-                <h4 class="text-sm font-bold">Term 1 Fees</h4>
-                <p class="text-[10px] text-slate-500 dark:text-slate-400">2024/2025 Academic Year</p>
-              </div>
-            </div>
-            <span class="px-2 py-1 bg-primary/10 text-primary dark:text-blue-400 text-[9px] font-bold rounded-full">
-              PAID
-            </span>
-          </div>
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400">Amount</span>
-              <span class="font-bold">₦140,000.00</span>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400">Payment Date</span>
-              <span class="font-semibold">Jan 10, 2025</span>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400">Method</span>
-              <span class="font-semibold">Cash</span>
-            </div>
-          </div>
-        </div>
-
-        </div> <!-- End History Grid -->
       </section>
 
       <!-- Download Receipt Button -->

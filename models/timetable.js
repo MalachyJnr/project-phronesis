@@ -86,9 +86,46 @@ function deleteTimetableEntry(id) {
   });
 }
 
+/**
+ * Retrieve specific subject details (teacher name, rooms, days, times, syllabus) 
+ * for a specific class.
+ * @param {number} classId
+ * @param {string} subjectName
+ * @returns {Promise<Array>}
+ */
+function getSubjectDetails(classId, subjectName) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `
+      SELECT 
+        timetables.room,
+        timetables.day,
+        timetables.start_time,
+        timetables.end_time,
+        subjects.subject_name,
+        subjects.syllabus,
+        teachers.name AS teacher_name
+      FROM timetables
+      JOIN subjects
+        ON timetables.subject_id = subjects.subject_id
+      LEFT JOIN teachers
+        ON timetables.teacher_id = teachers.teacher_id
+      WHERE timetables.class_id = ? AND subjects.subject_name = ?
+      ORDER BY timetables.day, timetables.start_time
+      `,
+      [classId, subjectName],
+      (err, results) => {
+        if (err) return reject(err);
+        resolve(results);
+      }
+    );
+  });
+}
+
 module.exports = {
   getTimetableByClassId,
   addTimetableEntry,
   updateTimetableEntry,
-  deleteTimetableEntry
+  deleteTimetableEntry,
+  getSubjectDetails
 };

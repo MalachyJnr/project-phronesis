@@ -30,7 +30,7 @@ connection.connect((err) => {
 
   connection.query(sql, (err, results) => {
     if (err) {
-      console.error('Error executing SQL script:', err);
+      console.error('Error executing SQL script:', err.message);
       connection.end();
       process.exit(1);
     }

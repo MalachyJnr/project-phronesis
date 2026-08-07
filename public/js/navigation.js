@@ -141,7 +141,7 @@ function _deactivateFocusTrap() {
  * @param {string} title       - Header title text
  * @param {string} contentHtml - HTML string for the modal body
  */
-function showModal(title, contentHtml) {
+function showModal(title, contentHtml, maxWidthClass) {
     const modal          = document.getElementById('global-modal');
     const backdrop       = document.getElementById('modal-backdrop');
     const modalCard      = document.getElementById('modal-card');
@@ -153,6 +153,10 @@ function showModal(title, contentHtml) {
     // Configure for standard (content-driven) mode
     if (modalHeader)    modalHeader.classList.remove('hidden');
     if (feedbackHeader) feedbackHeader.classList.add('hidden');
+
+    if (modalCard) {
+        modalCard.className = `bg-white dark:bg-slate-900 w-full ${maxWidthClass || 'max-w-sm'} rounded-3xl shadow-2xl overflow-hidden relative pointer-events-auto transition-all duration-300 opacity-0 scale-95`;
+    }
 
     modalTitle.textContent  = title;
     modalBody.innerHTML     = contentHtml;
@@ -292,6 +296,9 @@ function closeModal() {
     setTimeout(() => {
         if (modal)   { modal.classList.add('hidden'); modal.style.display = ''; }
         if (backdrop) backdrop.classList.add('hidden');
+        if (modalCard) {
+            modalCard.className = 'bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden relative pointer-events-auto transition-all duration-300 opacity-0 scale-95';
+        }
 
         // Only restore scroll if no other menus are open
         const panelOpen = document.getElementById('notification-panel') &&
@@ -309,47 +316,73 @@ function closeModal() {
 // Timetable Actions
 function showSubjectDetails(subject) {
     closeAllMenus();
-    const details = {
-        'Mathematics': { teacher: 'Mr. Thompson', room: 'Room 204', syllabus: 'Algebra & Calculus', time: '8:00 AM - 9:30 AM' },
-        'Biology': { teacher: 'Mrs. Phronesis', room: 'Lab 1', syllabus: 'Cell Structure & Genetics', time: '11:00 AM - 12:30 PM' },
-        'English': { teacher: 'Ms. Sunesis', room: 'Room 102', syllabus: 'Creative Writing', time: '1:00 PM - 2:00 PM' },
-        'English Language': { teacher: 'Mrs. Johnson', room: 'Room 105', syllabus: 'Grammar & Literature', time: '9:30 AM - 10:30 AM' },
-        'Chemistry': { teacher: 'Dr. Williams', room: 'Lab 2', syllabus: 'Chemical Reactions', time: '1:15 PM - 2:15 PM' },
-        'Physics': { teacher: 'Mr. Anderson', room: 'Room 301', syllabus: 'Quantum Mechanics', time: '2:30 PM - 3:30 PM' }
-    };
-
-    const data = details[subject] || { teacher: 'TBD', room: 'TBD', syllabus: 'TBD', time: 'TBD' };
     
-    const content = `
-        <div class="space-y-4">
-            <div class="flex items-center gap-3 p-3 bg-primary/5 dark:bg-primary/10 rounded-xl">
-                <span class="material-icons-outlined text-primary">person</span>
-                <div>
-                    <p class="text-[10px] text-slate-500 uppercase">Teacher</p>
-                    <p class="text-sm font-bold">${data.teacher}</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 p-3 bg-secondary/10 rounded-xl">
-                <span class="material-icons-outlined text-secondary">place</span>
-                <div>
-                    <p class="text-[10px] text-slate-500 uppercase">Location</p>
-                    <p class="text-sm font-bold">${data.room}</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                <span class="material-icons-outlined text-slate-500">schedule</span>
-                <div>
-                    <p class="text-[10px] text-slate-500 uppercase">Schedule</p>
-                    <p class="text-sm font-bold">${data.time}</p>
-                </div>
-            </div>
-            <div class="p-3 border border-slate-100 dark:border-slate-800 rounded-xl">
-                <p class="text-[10px] text-slate-500 uppercase mb-1">Topics</p>
-                <p class="text-sm">${data.syllabus}</p>
-            </div>
+    // Display a loader or template while fetching
+    const loadingContent = `
+        <div class="flex flex-col items-center justify-center py-8 space-y-3">
+            <div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-xs text-slate-400">Fetching details from database...</p>
         </div>
     `;
-    showModal(`${subject} Details`, content);
+    showModal(`${subject} Details`, loadingContent);
+
+    fetch(`/student/api/subject-details?subject=${encodeURIComponent(subject)}`)
+        .then(response => {
+            if (!response.ok) throw new Error("Network response was not ok");
+            return response.json();
+        })
+        .then(res => {
+            if (!res.success) throw new Error(res.message || "Failed to fetch details");
+            
+            const data = res.data;
+            const content = `
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 p-3 bg-primary/5 dark:bg-primary/10 rounded-xl">
+                        <span class="material-icons-outlined text-primary">person</span>
+                        <div>
+                            <p class="text-[10px] text-slate-500 uppercase">Teacher</p>
+                            <p class="text-sm font-bold">${data.teacher}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-secondary/10 rounded-xl">
+                        <span class="material-icons-outlined text-secondary">place</span>
+                        <div>
+                            <p class="text-[10px] text-slate-500 uppercase">Location</p>
+                            <p class="text-sm font-bold">${data.room}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                        <span class="material-icons-outlined text-slate-500 mt-0.5">schedule</span>
+                        <div>
+                            <p class="text-[10px] text-slate-500 uppercase">Schedule</p>
+                            <p class="text-sm font-bold leading-relaxed">${data.time}</p>
+                        </div>
+                    </div>
+                    <div class="p-3 border border-slate-100 dark:border-slate-800 rounded-xl">
+                        <p class="text-[10px] text-slate-500 uppercase mb-1">Topics</p>
+                        <p class="text-sm">${data.syllabus}</p>
+                    </div>
+                </div>
+            `;
+            // Update the modal with the dynamic content
+            const modalBody = document.getElementById('modal-body');
+            if (modalBody) {
+                modalBody.innerHTML = content;
+            }
+        })
+        .catch(err => {
+            console.error("Error loading subject details:", err);
+            const errorContent = `
+                <div class="p-4 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 rounded-xl text-center space-y-2">
+                    <span class="material-icons-outlined text-2xl">error_outline</span>
+                    <p class="text-xs">Failed to retrieve class details. Please try again.</p>
+                </div>
+            `;
+            const modalBody = document.getElementById('modal-body');
+            if (modalBody) {
+                modalBody.innerHTML = errorContent;
+            }
+        });
 }
 
 function showAddNote(subject) {
@@ -958,8 +991,14 @@ document.addEventListener('change', async (e) => {
       if (spinner) spinner.classList.remove('opacity-0', 'pointer-events-none');
       if (avatarImg) avatarImg.classList.add('opacity-50');
 
+      const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
+
       const response = await fetch('/student/profile/upload-pic', {
         method: 'POST',
+        headers: {
+          'CSRF-Token': csrfToken
+        },
         body: formData
       });
 
@@ -999,4 +1038,348 @@ document.addEventListener('change', async (e) => {
     }
   }
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Settings Page Support Modals
+// ─────────────────────────────────────────────────────────────────────────────
+function showHelpCenterModal() {
+    closeAllMenus();
+    const content = `
+        <div class="space-y-5">
+            <!-- Header Icon & Badge -->
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 bg-primary/10 dark:bg-primary/20 text-primary dark:text-blue-400 rounded-2xl flex items-center justify-center mx-auto shadow-sm">
+                    <span class="material-icons-outlined text-3xl">account_balance</span>
+                </div>
+                <h4 class="text-base font-bold text-slate-900 dark:text-white">Administrative Office Support</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
+                    For all official assistance, student inquiries, technical support, or fee-related matters, please visit the School Administrative Office in person.
+                </p>
+            </div>
+
+            <!-- Details Cards -->
+            <div class="space-y-2.5">
+                <div class="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700/60">
+                    <div class="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-primary dark:text-blue-400 shrink-0">
+                        <span class="material-icons-outlined text-lg">location_on</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Office Location</p>
+                        <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">Ground Floor, Admin Building (Room 102)</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700/60">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                        <span class="material-icons-outlined text-lg">schedule</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Office Hours</p>
+                        <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">Monday – Friday: 8:00 AM – 4:00 PM</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700/60">
+                    <div class="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+                        <span class="material-icons-outlined text-lg">contact_phone</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Direct Contact</p>
+                        <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">+234 (0) 800 123 4567 • info@phronesis.edu</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Note Banner -->
+            <div class="p-3 bg-blue-50/60 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/40 rounded-xl flex items-start gap-2.5">
+                <span class="material-icons-outlined text-primary dark:text-blue-400 text-sm mt-0.5 shrink-0">info</span>
+                <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
+                    <span class="font-bold text-slate-800 dark:text-white">Note:</span> Please present your official Student ID card when visiting the administrative office for verification.
+                </p>
+            </div>
+
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="w-full py-3 bg-primary hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                Understood
+            </button>
+        </div>
+    `;
+    showModal('Help & Support Center', content, 'max-w-md');
+}
+
+function showAboutPhronesisModal() {
+    closeAllMenus();
+    const content = `
+        <div class="space-y-5 max-h-[75vh] overflow-y-auto pr-1">
+            <!-- Hero Header -->
+            <div class="text-center pb-4 border-b border-slate-100 dark:border-slate-800">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-blue-600 p-0.5 mx-auto mb-3 shadow-md">
+                    <div class="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center">
+                        <img src="/images/school_logo.png" alt="Phronesis Sunesis Logo" class="h-10 w-auto object-contain" onerror="this.src='https://via.placeholder.com/40'">
+                    </div>
+                </div>
+                <h4 class="text-base font-black text-slate-900 dark:text-white tracking-wide uppercase">PHRONESIS SUNESIS ACADEMY</h4>
+                <p class="text-[11px] font-semibold text-primary dark:text-blue-400 tracking-wider uppercase mt-0.5">Knowledge • Wisdom • Excellence</p>
+                <div class="inline-block px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-[10px] font-bold text-slate-500 mt-2">
+                    Established 2012
+                </div>
+            </div>
+
+            <!-- History Section -->
+            <div class="space-y-1.5">
+                <h5 class="text-xs font-bold uppercase tracking-wider text-slate-400">Our History</h5>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Founded in 2012, Phronesis Sunesis Academy is a premier educational institution built on a foundation of intellectual rigor, moral integrity, and holistic student development. Over the past decade, we have nurtured thousands of scholars into leaders who excel academically and socially across various disciplines.
+                </p>
+            </div>
+
+            <!-- Mission & Vision -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="p-3.5 bg-primary/5 dark:bg-blue-900/15 border border-primary/10 dark:border-blue-800/30 rounded-xl space-y-1">
+                    <div class="flex items-center gap-1.5 text-primary dark:text-blue-400">
+                        <span class="material-icons-outlined text-base">flag</span>
+                        <h6 class="text-xs font-bold uppercase tracking-wide">Our Mission</h6>
+                    </div>
+                    <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                        To empower students through transformative education, critical thinking, and character building in a supportive learning environment.
+                    </p>
+                </div>
+
+                <div class="p-3.5 bg-secondary/10 dark:bg-amber-900/15 border border-secondary/20 dark:border-amber-800/30 rounded-xl space-y-1">
+                    <div class="flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
+                        <span class="material-icons-outlined text-base">visibility</span>
+                        <h6 class="text-xs font-bold uppercase tracking-wide">Our Vision</h6>
+                    </div>
+                    <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                        To be a beacon of educational excellence and innovation, producing compassionate leaders prepared for a globalized world.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Core Values -->
+            <div class="space-y-2">
+                <h5 class="text-xs font-bold uppercase tracking-wider text-slate-400">Core Values</h5>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700/60 flex items-center gap-2">
+                        <span class="material-icons-outlined text-primary text-sm">stars</span>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800 dark:text-slate-200">Excellence</p>
+                            <p class="text-[9px] text-slate-400">High standards</p>
+                        </div>
+                    </div>
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700/60 flex items-center gap-2">
+                        <span class="material-icons-outlined text-emerald-500 text-sm">psychology</span>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800 dark:text-slate-200">Wisdom</p>
+                            <p class="text-[9px] text-slate-400">Sound judgment</p>
+                        </div>
+                    </div>
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700/60 flex items-center gap-2">
+                        <span class="material-icons-outlined text-amber-500 text-sm">verified</span>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800 dark:text-slate-200">Integrity</p>
+                            <p class="text-[9px] text-slate-400">Honesty & ethics</p>
+                        </div>
+                    </div>
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700/60 flex items-center gap-2">
+                        <span class="material-icons-outlined text-purple-500 text-sm">lightbulb</span>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800 dark:text-slate-200">Innovation</p>
+                            <p class="text-[9px] text-slate-400">Creative growth</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all active:scale-[0.98] mt-2">
+                Close Information
+            </button>
+        </div>
+    `;
+    showModal('About Phronesis Sunesis Academy', content, 'max-w-lg');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Theme & Font Size Preferences Modals
+// ─────────────────────────────────────────────────────────────────────────────
+function showThemeModal() {
+    closeAllMenus();
+    const currentMode = localStorage.getItem('appTheme') || 'system';
+
+    const content = `
+        <div class="space-y-4">
+            <p class="text-xs text-slate-500 dark:text-slate-400">Choose how Phronesis Sunesis Academy looks on your device.</p>
+
+            <div class="space-y-2">
+                <!-- Light Mode -->
+                <button onclick="selectThemeOption('light')" class="w-full flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border ${currentMode === 'light' ? 'border-primary dark:border-blue-400 ring-2 ring-primary/20' : 'border-slate-100 dark:border-slate-700/60'} hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-900/30 text-amber-500 flex items-center justify-center shrink-0">
+                            <span class="material-icons-outlined text-lg">light_mode</span>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-900 dark:text-white">Light Mode</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Clean, bright interface</p>
+                        </div>
+                    </div>
+                    ${currentMode === 'light' ? '<span class="material-icons-outlined text-primary dark:text-blue-400 text-lg">check_circle</span>' : '<span class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600"></span>'}
+                </button>
+
+                <!-- Dark Mode -->
+                <button onclick="selectThemeOption('dark')" class="w-full flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border ${currentMode === 'dark' ? 'border-primary dark:border-blue-400 ring-2 ring-primary/20' : 'border-slate-100 dark:border-slate-700/60'} hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 flex items-center justify-center shrink-0">
+                            <span class="material-icons-outlined text-lg">dark_mode</span>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-900 dark:text-white">Dark Mode</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Dark slate aesthetic, gentle on the eyes</p>
+                        </div>
+                    </div>
+                    ${currentMode === 'dark' ? '<span class="material-icons-outlined text-primary dark:text-blue-400 text-lg">check_circle</span>' : '<span class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600"></span>'}
+                </button>
+
+                <!-- System Default -->
+                <button onclick="selectThemeOption('system')" class="w-full flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border ${currentMode === 'system' ? 'border-primary dark:border-blue-400 ring-2 ring-primary/20' : 'border-slate-100 dark:border-slate-700/60'} hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-400 flex items-center justify-center shrink-0">
+                            <span class="material-icons-outlined text-lg">settings_suggest</span>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-900 dark:text-white">System Default</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Match system settings automatically</p>
+                        </div>
+                    </div>
+                    ${currentMode === 'system' ? '<span class="material-icons-outlined text-primary dark:text-blue-400 text-lg">check_circle</span>' : '<span class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600"></span>'}
+                </button>
+            </div>
+
+            <button onclick="closeModal()" class="w-full py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all mt-2">
+                Cancel
+            </button>
+        </div>
+    `;
+    showModal('Theme Preference', content, 'max-w-md');
+}
+
+function selectThemeOption(mode) {
+    applyAppTheme(mode);
+    closeModal();
+    if (window.showToast) {
+        const names = { light: 'Light Mode', dark: 'Dark Mode', system: 'System Default' };
+        showToast(`Theme set to ${names[mode] || mode}`, 'success');
+    }
+}
+
+function showFontSizeModal() {
+    closeAllMenus();
+    const currentSize = localStorage.getItem('appFontSize') || 'medium';
+
+    const content = `
+        <div class="space-y-4">
+            <p class="text-xs text-slate-500 dark:text-slate-400">Adjust the typography size across all screens in the application.</p>
+
+            <div class="space-y-2">
+                <!-- Small -->
+                <button onclick="selectFontSizeOption('small')" class="w-full flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border ${currentSize === 'small' ? 'border-primary dark:border-blue-400 ring-2 ring-primary/20' : 'border-slate-100 dark:border-slate-700/60'} hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-xs text-slate-700 dark:text-slate-200 shrink-0">
+                            A-
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-900 dark:text-white">Small</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Compact typography view</p>
+                        </div>
+                    </div>
+                    ${currentSize === 'small' ? '<span class="material-icons-outlined text-primary dark:text-blue-400 text-lg">check_circle</span>' : '<span class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600"></span>'}
+                </button>
+
+                <!-- Medium (Default) -->
+                <button onclick="selectFontSizeOption('medium')" class="w-full flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border ${currentSize === 'medium' ? 'border-primary dark:border-blue-400 ring-2 ring-primary/20' : 'border-slate-100 dark:border-slate-700/60'} hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0">
+                            A
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-900 dark:text-white">Medium (Default)</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Standard balanced typography</p>
+                        </div>
+                    </div>
+                    ${currentSize === 'medium' ? '<span class="material-icons-outlined text-primary dark:text-blue-400 text-lg">check_circle</span>' : '<span class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600"></span>'}
+                </button>
+
+                <!-- Large -->
+                <button onclick="selectFontSizeOption('large')" class="w-full flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border ${currentSize === 'large' ? 'border-primary dark:border-blue-400 ring-2 ring-primary/20' : 'border-slate-100 dark:border-slate-700/60'} hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-base shrink-0">
+                            A+
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-900 dark:text-white">Large</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Enlarged, high-legibility typography</p>
+                        </div>
+                    </div>
+                    ${currentSize === 'large' ? '<span class="material-icons-outlined text-primary dark:text-blue-400 text-lg">check_circle</span>' : '<span class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600"></span>'}
+                </button>
+            </div>
+
+            <button onclick="closeModal()" class="w-full py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all mt-2">
+                Cancel
+            </button>
+        </div>
+    `;
+    showModal('Font Size Preference', content, 'max-w-md');
+}
+
+function selectFontSizeOption(size) {
+    applyAppFontSize(size);
+    closeModal();
+    if (window.showToast) {
+        const names = { small: 'Small', medium: 'Medium (Default)', large: 'Large' };
+        showToast(`Font size set to ${names[size] || size}`, 'success');
+    }
+}
+
+function openChangePasswordModal() {
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
+
+    const content = `
+        <form action="/student/change-password" method="POST" class="space-y-4 text-left">
+            <input type="hidden" name="_csrf" value="${csrfToken}">
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 pl-1">Current Password</label>
+                <div class="relative group">
+                    <span class="material-icons-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base">lock</span>
+                    <input type="password" name="currentPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-all">
+                </div>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 pl-1">New Password</label>
+                <div class="relative group">
+                    <span class="material-icons-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base">vpn_key</span>
+                    <input type="password" name="newPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-all">
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1 pl-1">Min. 8 chars, 1 uppercase, 1 lowercase & 1 number.</p>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 pl-1">Confirm New Password</label>
+                <div class="relative group">
+                    <span class="material-icons-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base">check_circle_outline</span>
+                    <input type="password" name="confirmPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-all">
+                </div>
+            </div>
+            <div class="pt-3 flex gap-3">
+                <button type="button" onclick="closeModal()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" class="flex-1 py-3 bg-primary hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-colors shadow-lg shadow-primary/20">
+                    Update Password
+                </button>
+            </div>
+        </form>
+    `;
+    showModal('Change Password', content, 'max-w-md');
+}
 

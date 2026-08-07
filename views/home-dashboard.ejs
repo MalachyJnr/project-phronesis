@@ -137,6 +137,27 @@
         </p>
       </section>
 
+      <% if (typeof user !== 'undefined' && user && user.is_default_password) { %>
+        <!-- Security Reminder Banner -->
+        <div id="default-password-banner" class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 p-4 md:p-5 rounded-2xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-800/50 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+              <span class="material-icons-outlined text-xl">warning</span>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider">Security Notice</h4>
+              <p class="text-xs text-amber-800 dark:text-amber-300 mt-1 leading-relaxed">
+                Your account is still using the default password assigned by the administrator (<strong><%= typeof defaultStudentPassword !== 'undefined' ? defaultStudentPassword : 'Password123' %></strong>). For the security of your account, it is strongly recommended that you change your password as soon as possible.
+              </p>
+            </div>
+          </div>
+          <button onclick="openChangePasswordModal()" class="w-full md:w-auto px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold whitespace-nowrap transition-colors shadow-sm flex items-center justify-center gap-1.5 shrink-0">
+            <span class="material-icons-outlined text-sm">lock_reset</span>
+            Change Password
+          </button>
+        </div>
+      <% } %>
+
       <!-- Dashboard Stats Grid -->
       <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
         <!-- Attendance Card -->
@@ -146,10 +167,10 @@
             <span class="material-icons-outlined text-xl text-white/80">calendar_month</span>
           </div>
           <div>
-            <div class="text-4xl md:text-5xl font-bold mb-1 tracking-tight">90%</div>
+            <div class="text-4xl md:text-5xl font-bold mb-1 tracking-tight"><%= typeof attendance !== 'undefined' && attendance ? Math.round(attendance.percentage) : '90' %>%</div>
           </div>
           <div class="mt-auto flex items-end justify-between">
-            <p class="text-[11px] md:text-sm font-light text-white/90 leading-tight max-w-[100px] md:max-w-[120px]">This Term - Good attendance!</p>
+            <p class="text-[11px] md:text-sm font-light text-white/90 leading-tight max-w-[100px] md:max-w-[120px]"><%= typeof attendance !== 'undefined' && attendance ? attendance.remarks : 'Good attendance!' %></p>
             <a href="/student/results" class="px-3 py-1.5 md:px-4 md:py-2 bg-white/20 hover:bg-white/30 rounded-lg text-[10px] md:text-xs font-bold transition-colors whitespace-nowrap backdrop-blur-sm">
               View Details
             </a>
@@ -163,10 +184,16 @@
             <span class="material-icons-outlined text-xl text-white/80">star</span>
           </div>
           <div>
-            <div class="text-4xl md:text-5xl font-bold mb-1 tracking-tight">3.8</div>
+            <div class="text-4xl md:text-5xl font-bold mb-1 tracking-tight"><%= typeof resultSummary !== 'undefined' && resultSummary ? resultSummary.gpa : '3.80' %></div>
           </div>
           <div class="mt-auto flex items-end justify-between">
-            <p class="text-[11px] md:text-sm font-light text-white/90 leading-tight max-w-[100px] md:max-w-[120px]">Current GPA - Keep it up!</p>
+            <p class="text-[11px] md:text-sm font-light text-white/90 leading-tight max-w-[100px] md:max-w-[120px]">
+              <% if (typeof resultSummary !== 'undefined' && resultSummary) { %>
+                Rank: <%= resultSummary.class_position %> / <%= resultSummary.total_students %>
+              <% } else { %>
+                Current GPA - Keep it up!
+              <% } %>
+            </p>
             <a href="/student/results" class="px-3 py-1.5 md:px-4 md:py-2 bg-white/20 hover:bg-white/30 rounded-lg text-[10px] md:text-xs font-bold transition-colors whitespace-nowrap backdrop-blur-sm">
               View Details
             </a>
@@ -180,10 +207,12 @@
             <span class="material-icons-outlined text-xl text-white/80">payments</span>
           </div>
           <div>
-            <div class="text-3xl md:text-4xl font-bold mb-1 tracking-tight">Up-to-Date</div>
+            <div class="text-3xl md:text-4xl font-bold mb-1 tracking-tight"><%= typeof paymentSummary !== 'undefined' && paymentSummary ? paymentSummary.status : 'Up-to-Date' %></div>
           </div>
           <div class="mt-auto flex items-end justify-between">
-            <p class="text-[11px] md:text-sm font-light text-white/90 leading-tight">Balance: ₦0.00</p>
+            <p class="text-[11px] md:text-sm font-light text-white/90 leading-tight">
+              Balance: ₦<%= typeof paymentSummary !== 'undefined' && paymentSummary ? paymentSummary.outstandingBalance.toLocaleString() : '0.00' %>
+            </p>
             <a href="/student/payments" class="px-3 py-1.5 md:px-4 md:py-2 bg-white/20 hover:bg-white/30 rounded-lg text-[10px] md:text-xs font-bold transition-colors whitespace-nowrap backdrop-blur-sm">
               View Details
             </a>
@@ -297,8 +326,8 @@
         </a>
       </section>
 
-      <!-- Desktop Extra Sections -->
-      <div class="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mt-6">
+      <!-- Recent Assessments & Announcements -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mt-6">
         <!-- Recent Assessments -->
         <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm p-5 md:p-6">
           <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100 dark:border-slate-700">
@@ -335,20 +364,17 @@
             <h3 class="font-bold text-slate-900 dark:text-white">Announcements</h3>
           </div>
           <div class="space-y-4">
-            <div class="border-l-2 border-primary pl-3 hidden lg:block">
-              <p class="text-[10px] font-bold text-primary dark:text-blue-400 uppercase tracking-wider mb-0.5">Campus Event</p>
-              <p class="text-sm font-bold text-slate-900 dark:text-white">Annual Science Fair Registration</p>
-              <p class="text-xs text-slate-500 mt-1 line-clamp-1">Register your project by Friday to secure a booth...</p>
-            </div>
-            <div class="border-l-2 border-primary pl-3 lg:hidden">
-                <p class="text-[10px] font-bold text-primary dark:text-blue-400 uppercase tracking-wider mb-0.5">Campus Event</p>
-                <p class="text-sm font-bold text-slate-900 dark:text-white">Annual Science Fair Registration</p>
-            </div>
-            <div class="border-l-2 border-slate-300 dark:border-slate-600 pl-3">
-              <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5">Admin</p>
-              <p class="text-sm font-bold text-slate-900 dark:text-white">Library Holiday Hours</p>
-              <p class="text-xs text-slate-500 mt-1 line-clamp-1">Please note the adjusted library schedule...</p>
-            </div>
+            <% if (typeof announcements !== 'undefined' && announcements.length > 0) { %>
+              <% announcements.forEach(function(item) { %>
+                <div class="border-l-2 border-primary pl-3">
+                  <p class="text-[10px] font-bold text-primary dark:text-blue-400 uppercase tracking-wider mb-0.5"><%= item.category %></p>
+                  <p class="text-sm font-bold text-slate-900 dark:text-white"><%= item.title %></p>
+                  <p class="text-xs text-slate-500 mt-1 line-clamp-2"><%= item.content %></p>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p class="text-xs text-slate-500">No recent announcements.</p>
+            <% } %>
           </div>
         </section>
       </div>

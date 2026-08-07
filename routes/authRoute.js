@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
+const loginLimiter = require("../middlewares/loginLimiter");
 
 
 router
   .route("/login/student")
   .get(authController.getStudentLogin)
-  .post(authController.postStudentLogin);
+  .post(loginLimiter, authController.postStudentLogin);
 
 router.get("/student/logout", authController.getStudentLogout);
 

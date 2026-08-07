@@ -16,6 +16,8 @@ router.get("/student/payments", studentController.getStudentPayments);
 router.get("/student/settings", studentController.getStudentSettings);
 router.get("/student/profile", studentController.getStudentProfile);
 router.post("/student/profile/upload-pic", studentController.uploadProfilePic);
+router.post("/student/change-password", studentController.changePassword);
+router.get("/student/api/subject-details", studentController.getSubjectDetailsAPI);
 
 module.exports = router;
 
