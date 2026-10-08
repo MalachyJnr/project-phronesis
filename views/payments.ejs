@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+<%- include('partials/head', { title: 'Payments - PHRONESIS' }) %>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen md:flex">
+<%- include('partials/sidebar', { activePage: 'payments' }) %>
+
+    <!-- Main Container -->
+    <div id="page-container" class="max-w-[480px] md:max-w-none md:ml-[260px] md:flex-1 w-full mx-auto md:mx-0 bg-background-light dark:bg-background-dark min-h-screen relative fade-in pb-20 md:pb-0">
+    
+<%- include('partials/header', { headerTitle: 'Fees & Payments' }) %>
+
+<main class="p-4 md:px-8 md:py-6 space-y-6 md:space-y-8 pb-24 md:pb-8 max-w-7xl mx-auto">
+
+      <!-- Mobile Welcome Area -->
+      <section class="md:hidden">
+        <h2 class="text-2xl font-bold dark:text-white">Payment & Billing</h2>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+          View your payment history and current balance.
+        </p>
+      </section>
+
+      <!-- Desktop Top Section Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-1 h-full">
+            <!-- Payment Status Card injected -->
+            <div class="bg-primary p-5 md:p-8 rounded-2xl text-white shadow-lg border border-white/10 h-full flex flex-col justify-between items-start lg:min-h-[220px] relative overflow-hidden group">
+              <div class="absolute -right-6 -bottom-6 opacity-10 pointer-events-none group-hover:scale-110 transition-transform duration-700 origin-bottom-right">
+                <span class="material-icons-outlined text-[150px]">verified_user</span>
+              </div>
+              
+              <div class="flex items-start justify-between w-full mb-4 relative z-10">
+                <div>
+                  <p class="text-xs md:text-sm font-semibold opacity-90 mb-1 tracking-wide uppercase">Current Status</p>
+                  <h3 class="text-2xl md:text-4xl font-extrabold drop-shadow-sm text-white">
+                    <%= typeof paymentSummary !== 'undefined' ? paymentSummary.status : 'Up-to-Date' %>
+                  </h3>
+                  <p class="text-xs md:text-sm opacity-90 mt-1 md:mt-2">
+                    <%= typeof paymentSummary !== 'undefined' && paymentSummary.outstandingBalance > 0 ? 'Pending payments due' : 'All payments cleared' %>
+                  </p>
+                </div>
+                <div class="w-12 h-12 md:w-16 md:h-16 bg-white/20 backdrop-blur-sm shadow-inner rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="material-icons-outlined text-3xl md:text-4xl text-white">verified</span>
+                </div>
+              </div>
+              <div class="bg-black/20 backdrop-blur-md rounded-xl p-4 md:p-5 mt-4 w-full relative z-10 border border-white/10">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs md:text-sm font-medium tracking-wide">Outstanding Balance</span>
+                  <span class="text-lg md:text-3xl font-bold">
+                    ₦<%= typeof paymentSummary !== 'undefined' ? paymentSummary.outstandingBalance.toLocaleString() : '0.00' %>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="lg:col-span-2 h-full">
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-3 gap-3 md:gap-6 h-full">
+              <div class="bg-white dark:bg-slate-800 p-3 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm md:shadow-md hover:shadow-lg transition-all flex flex-col justify-center items-center h-full group text-center relative overflow-hidden">
+                <div class="absolute -left-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:-rotate-12 transition-transform duration-500">
+                  <span class="material-icons-outlined text-7xl md:text-8xl">history</span>
+                </div>
+                <div class="text-xl md:text-4xl font-extrabold text-primary dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                  <%= typeof paymentSummary !== 'undefined' ? paymentSummary.termsPaidCount : 0 %>
+                </div>
+                <p class="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 md:mt-2">Terms Paid</p>
+              </div>
+              <div class="bg-white dark:bg-slate-800 p-3 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm md:shadow-md hover:shadow-lg transition-all flex flex-col justify-center items-center h-full group text-center relative overflow-hidden">
+                <div class="absolute -left-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:rotate-12 transition-transform duration-500">
+                  <span class="material-icons-outlined text-7xl md:text-8xl">bolt</span>
+                </div>
+                <div class="text-xl md:text-4xl font-extrabold text-primary dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                  <%= typeof paymentSummary !== 'undefined' ? paymentSummary.onTimePercentage : 100 %>%
+                </div>
+                <p class="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 md:mt-2">On Time</p>
+              </div>
+              <div class="bg-white dark:bg-slate-800 p-3 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm md:shadow-md hover:shadow-lg transition-all flex flex-col justify-center items-center h-full group text-center relative overflow-hidden">
+                 <div class="absolute -left-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-500">
+                  <span class="material-icons-outlined text-7xl md:text-8xl">money_off</span>
+                </div>
+                <div class="text-xl md:text-4xl font-extrabold text-secondary hover:text-yellow-600 transition-colors duration-300">
+                  ₦<%= typeof paymentSummary !== 'undefined' ? paymentSummary.pendingFees.toLocaleString() : '0' %>
+                </div>
+                <p class="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 md:mt-2">Pending Fees</p>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- Payment History -->
+      <section class="space-y-3 md:space-y-6 pt-2 md:pt-4">
+        <h3 class="text-lg md:text-2xl font-bold dark:text-white flex items-center gap-2">
+          <span class="material-icons-outlined text-primary dark:text-blue-400 md:text-3xl">history</span>
+          Payment History
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
+          <% if (typeof payments !== 'undefined' && payments.length > 0) { %>
+            <% payments.forEach(function(item) { %>
+              <% 
+                const paymentDateStr = item.payment_date ? new Date(item.payment_date).toLocaleDateString() : 'N/A';
+                const formattedAmount = parseFloat(item.amount_paid).toLocaleString();
+              %>
+              <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm cursor-pointer hover:border-primary/30 dark:hover:border-blue-400/30 transition-all active:scale-[0.98]"
+                onclick="showReceiptDetails('<%= item.title.replace(/'/g, "\\'") %>', '<%= item.session_name.replace(/'/g, "\\'") %>', '<%= formattedAmount %>', '<%= paymentDateStr %>', '<%= item.payment_method.replace(/'/g, "\\'") %>', '<%= item.transaction_ref.replace(/'/g, "\\'") %>')"
+              >
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 bg-primary/10 text-primary dark:text-blue-400 rounded-lg flex items-center justify-center text-primary">
+                      <span class="material-icons-outlined text-xl">check_circle</span>
+                    </div>
+                    <div>
+                      <h4 class="text-sm font-bold"><%= item.title %></h4>
+                      <p class="text-[10px] text-slate-500 dark:text-slate-400"><%= item.session_name %> • <%= item.term_name %></p>
+                    </div>
+                  </div>
+                  <span class="px-2 py-1 <%= item.status === 'Paid' ? 'bg-primary/10 text-primary dark:text-blue-400' : 'bg-yellow-500/10 text-yellow-500' %> text-[9px] font-bold rounded-full uppercase">
+                    <%= item.status %>
+                  </span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500 dark:text-slate-400">Amount Paid</span>
+                    <span class="font-bold">₦<%= formattedAmount %></span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500 dark:text-slate-400">Payment Date</span>
+                    <span class="font-semibold"><%= paymentDateStr %></span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500 dark:text-slate-400">Method</span>
+                    <span class="font-semibold"><%= item.payment_method %></span>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="col-span-full py-8 text-center text-slate-400">
+              No payment history recorded.
+            </div>
+          <% } %>
+        </div>
+      </section>
+
+      <!-- Download Receipt Button -->
+      <div class="pt-4 md:pt-6 flex justify-center md:justify-start">
+        <button
+          onclick="downloadReceipt()"
+          class="w-full md:w-auto md:px-8 py-3 bg-primary hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all hover:shadow-lg active:scale-[0.98] shadow-md flex items-center justify-center gap-2"
+        >
+          <span class="material-icons-outlined text-lg">download</span>
+          Download Payment Receipt
+        </button>
+      </div>
+    
+    </main>
+
+<%- include('partials/bottom-nav', { activePage: 'payments' }) %>
+<%- include('partials/modals') %>
+
+    </div>
+  </body>
+</html>

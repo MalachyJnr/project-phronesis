@@ -1,0 +1,57 @@
+<% const navItems=[ { href: '/student/dashboard' , icon: 'home' , label: 'Home' , id: 'home' }, {
+  href: '/student/results' , icon: 'fact_check' , label: 'Results' , id: 'results' }, { href: '/student/timetable' ,
+  icon: 'calendar_today' , label: 'Timetable' , id: 'timetable' }, { href: '/student/assessments' , icon: 'description'
+  , label: 'Assessments' , id: 'assessments' }, { href: '/student/payments' , icon: 'payments' , label: 'Payments' ,
+  id: 'payments' } ]; %>
+  <!-- Desktop Sidebar -->
+  <aside
+    class="hidden md:flex flex-col w-[260px] fixed inset-y-0 left-0 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 z-30 shadow-sm">
+    <!-- Logo -->
+    <div class="h-[72px] flex items-center px-6 border-b border-slate-100 dark:border-slate-800 shrink-0">
+      <img src="/images/school_logo.png" alt="PHRONESIS Logo" class="h-8 w-auto object-contain drop-shadow-sm"
+        onerror="this.src='https://via.placeholder.com/40'">
+      <div class="ml-3">
+        <h1 class="text-sm font-bold text-primary dark:text-blue-400 uppercase tracking-wider leading-none">PHRONESIS
+        </h1>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium tracking-wider uppercase">SUNESIS ACADEMY</p>
+      </div>
+    </div>
+    <!-- Navigation -->
+    <nav class="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
+      <% navItems.forEach(function(item) { %>
+        <a href="<%= item.href %>"
+          class="flex items-center gap-3 px-4 py-3 <%= typeof activePage !== 'undefined' && activePage === item.id ? 'bg-secondary/10 text-secondary dark:text-yellow-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:hover:text-slate-200 font-medium' %> rounded-xl transition-colors">
+          <span class="material-icons-outlined text-[20px]">
+            <%= item.icon %>
+          </span>
+          <span class="text-sm">
+            <%= item.label %>
+          </span>
+        </a>
+        <% }); %>
+    </nav>
+    <!-- Profile / Bottom -->
+    <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between mt-auto">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-full flex flex-shrink-0 items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700">
+          <img
+            src="<%= typeof user !== 'undefined' && user && user.profile_pic && user.profile_pic !== 'NULL' ? '/uploads/' + user.profile_pic : '/images/default-avatar.svg' %>"
+            alt="User Profile" class="w-full h-full object-cover">
+        </div>
+        <div>
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">
+            <%= typeof user !=='undefined' && user ? user.first_name + ' ' + user.last_name : 'John Doe' %>
+          </h4>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+            ID: <%= typeof user !=='undefined' && user ? user.admission_number : '20230891' %>
+          </p>
+        </div>
+      </div>
+      <button onclick="logout()"
+        class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800"
+        title="Logout">
+        <span class="material-icons-outlined text-lg">logout</span>
+      </button>
+    </div>
+  </aside>
