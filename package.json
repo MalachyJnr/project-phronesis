@@ -1,11 +1,11 @@
 {
   "name": "ps_academy",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "PHRONESIS Academy Portal Backend API",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "test": "node scripts/test_models.js"
   },
   "keywords": [],
   "author": "",
