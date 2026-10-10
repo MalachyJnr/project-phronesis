@@ -10,13 +10,8 @@ const csrf = require("@dr.pogodin/csurf");
 require("./config/dbConnection");
 
 // Import Feature Routes
-const authRoute = require("./Auth/auth.route");
-const studentRoute = require("./Student/student.route");
-const resultsRoute = require("./Results/results.route");
-const timetableRoute = require("./Timetable/timetable.route");
-const assessmentsRoute = require("./Assessments/assessments.route");
-const paymentsRoute = require("./Payments/payments.route");
-const announcementsRoute = require("./Announcements/announcements.route");
+const authRoutes = require("./modules/auth/auth.routes");
+const studentRoutes = require("./modules/students/student.routes");
 
 const app = express();
 
@@ -79,13 +74,8 @@ app.get("/admission-info", (req, res) => {
 });
 
 // Mount Modular Feature Routes
-app.use(authRoute);
-app.use(studentRoute);
-app.use(resultsRoute);
-app.use(timetableRoute);
-app.use(assessmentsRoute);
-app.use(paymentsRoute);
-app.use(announcementsRoute);
+app.use(authRoutes);
+app.use(studentRoutes);
 
 // ─── 404 API Handler
 app.use((req, res) => {

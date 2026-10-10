@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("./auth.controller");
-const loginLimiter = require("../middleware/loginLimiter");
+const loginLimiter = require("../../middlewares/loginLimiter");
 
 router
   .route("/login/student")

@@ -1,5 +1,5 @@
 const authModel = require("./auth.model");
-const handleLogin = require("../utils/handleLogin");
+const handleLogin = require("../../utils/handleLogin");
 
 // Student login endpoint information
 const getStudentLogin = (req, res) => {

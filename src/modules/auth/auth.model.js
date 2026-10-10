@@ -1,4 +1,4 @@
-const connection = require("../config/dbConnection");
+const connection = require("../../config/dbConnection");
 
 /**
  * Get student by admission number for authentication

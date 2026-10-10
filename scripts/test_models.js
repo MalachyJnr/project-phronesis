@@ -1,10 +1,10 @@
 require('dotenv').config();
-const studentModel = require("../src/Student/student.model");
-const resultsModel = require("../src/Results/results.model");
-const timetableModel = require("../src/Timetable/timetable.model");
-const assessmentsModel = require("../src/Assessments/assessments.model");
-const paymentsModel = require("../src/Payments/payments.model");
-const announcementsModel = require("../src/Announcements/announcements.model");
+const studentModel = require("../src/modules/students/student.model");
+const resultsModel = studentModel;
+const timetableModel = studentModel;
+const assessmentsModel = studentModel;
+const paymentsModel = studentModel;
+const announcementsModel = studentModel;
 
 async function runTests() {
   console.log("=== Testing Database Models ===");
