@@ -42,6 +42,7 @@ async function handleLogin(identifier, password, role, model, idField, res) {
       id: user[idField],
       role,
     };
+    
     const token = createToken(payload);
 
     // 5. Set secure cookie
